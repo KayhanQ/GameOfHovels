@@ -46,4 +46,7 @@
 - (void)deselectTile;
 - (BOOL)canHaveTree;
 
+- (Structure*)getStructure;
+
+
 @end

@@ -22,6 +22,7 @@
     if (self=[super initWithStructureType:BAUM]) {
         //custom code here
         
+        //We have to check if a tree has just grown this turn
         _newlyGrown = true;
         
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"baum.png"];

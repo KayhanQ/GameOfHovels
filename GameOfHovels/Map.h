@@ -18,6 +18,7 @@
 
 - (id)initWithRandomMap:(NSMutableArray*)players;
 - (void)treeGrowthPhase;
+- (void)endTurnUpdates;
 
 - (void)upgradeVillageWithTile:(Tile*)tile;
 

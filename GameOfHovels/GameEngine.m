@@ -135,13 +135,16 @@
     [_map treeGrowthPhase];
     
     //player can now make inputs again
-    //_map.touchable = true;
+    _map.touchable = true;
     
 }
 
 - (void)endTurn:(GHEvent*)event
 {
-    //_map.touchable = false;
+    _map.touchable = false;
+    
+    [_map endTurnUpdates];
+    
     //relay turn has ended
     //Begin Turn will get called again
     //Now we just simulate it by giving our player another turn

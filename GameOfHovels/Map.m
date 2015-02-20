@@ -156,11 +156,16 @@
 {
     NSLog(@"Tree Growth Phase");
     for (Tile* tile in _tilesSprite) {
-        if ([tile getStructureType] == BAUM) {
-            for (Tile* nTile in [tile getNeighbours]) {
-                if ([nTile canHaveTree]) {
-                    int num = arc4random() % 10;
-                    if (num==0) [nTile addStructure:BAUM];
+        Structure* s = [tile getStructure];
+        if (s.sType == BAUM) {
+            Baum* b = (Baum*)s;
+            //only grow near a tree if it not newly grown.
+            if (!b.newlyGrown) {
+                for (Tile* nTile in [tile getNeighbours]) {
+                    if ([nTile canHaveTree]) {
+                        int num = arc4random() % 10;
+                        if (num==0) [nTile addStructure:BAUM];
+                    }
                 }
             }
         }
@@ -198,6 +203,19 @@
             [t setColor:t.village.player.color];
         }
     }
+}
+
+- (void)endTurnUpdates
+{
+    //update the trees
+    for (Tile* tile in _tilesSprite) {
+        Structure* s = [tile getStructure];
+        if (s.sType == BAUM) {
+            Baum* b = (Baum*)s;
+            b.newlyGrown = false;
+        }
+    }
+    
 }
 
 - (void)createRandomMap
