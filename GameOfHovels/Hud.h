@@ -16,8 +16,10 @@
     
 }
 
-- (id)init;
-- (void)updateWithPlayer:(GamePlayer*)player;
+@property (nonatomic, readonly) GamePlayer* player;
+
+- (id)initWithPlayer:(GamePlayer*)player;
+- (void)update;
 
 
 

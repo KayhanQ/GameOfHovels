@@ -10,19 +10,31 @@
 
 @class Tile;
 @class GamePlayer;
+@class Hud;
+
 
 @interface Map : BasicSprite {
     
     
 }
 
-- (id)initWithRandomMap:(NSMutableArray*)players;
+
+@property (nonatomic) GamePlayer* currentPlayer;
+@property (nonatomic, readonly) Hud* hud;
+
+
+- (id)initWithRandomMap:(NSMutableArray*)players hud:(Hud*)hud;
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 
 - (void)upgradeVillageWithTile:(Tile*)tile;
 
 - (void)showPlayersTeritory;
+
+- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile;
+
+- (void)chopTree:(Tile*)tile;
+- (void)updateHud;
 
 
 @end

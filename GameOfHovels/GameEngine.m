@@ -27,10 +27,10 @@
     
     ActionMenu* _actionMenu;
     SPSprite* _contents;
-    Hud* hud;
+    Hud* _hud;
     SPSprite* _popupMenuSprite;
     
-    Tile* _tileOfSelectedUnit;
+    Tile* _selectedTile;
     BOOL _unitActionIntent;
     
     GamePlayer* _currentPlayer;
@@ -72,9 +72,8 @@
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
-    hud = [[Hud alloc] init];
-    [_contents addChild:hud];
-    [hud updateWithPlayer:_currentPlayer];
+    _hud = [[Hud alloc] initWithPlayer:_currentPlayer];
+    [_contents addChild:_hud];
     
     
     SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*4 height:Sparrow.stage.height*4];
@@ -84,7 +83,7 @@
     [_world addChild:q];
     
     
-    _map = [[Map alloc] initWithRandomMap:_players];
+    _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
@@ -100,7 +99,8 @@
     //event Listeners
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
     [self addEventListener:@selector(villageUpgradeIntent:) atObject:self forType:EVENT_TYPE_VILLAGE_UPGRADE_INTENT];
-    [self addEventListener:@selector(unitUpgraded:) atObject:self forType:EVENT_TYPE_UPGRADE_UNIT];
+    [self addEventListener:@selector(upgradeUnit:) atObject:self forType:EVENT_TYPE_UPGRADE_UNIT];
+    [self addEventListener:@selector(upgradeVillage:) atObject:self forType:EVENT_TYPE_UPGRADE_VILLAGE];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
 
     
@@ -132,6 +132,8 @@
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
     _currentPlayer = player;
+    [_map updateHud];
+    _map.currentPlayer = _currentPlayer;
     [_map treeGrowthPhase];
     
     //player can now make inputs again
@@ -151,20 +153,27 @@
     [self beginTurnWithPlayer:_currentPlayer];
 }
 
-- (void)unitUpgraded:(TileTouchedEvent*) event
+- (void)upgradeUnit:(TileTouchedEvent*) event
 {
-    
     NSLog(@"unit upgraded");
-    
+}
+
+- (void)upgradeVillage:(TileTouchedEvent*) event
+{
+    NSLog(@"Upgrade Village");
+    Tile* tile = event.tile;
+    [_map upgradeVillageWithTile:tile];
 }
 
 //upgrade from hovel to town etc.
 - (void)villageUpgradeIntent:(TileTouchedEvent*) event
 {
+    /*
     [_actionMenu removeFromParent];
     NSLog(@"village upgrade intent");
     Tile* tile = event.tile;
     [_map upgradeVillageWithTile:tile];
+     */
 }
 
 
@@ -172,49 +181,52 @@
 {
     Tile* tile = event.tile;
     
-    if (tile.isVillage) {
-        NSLog(@"tile is a village");
-        _actionMenu = [[ActionMenu alloc] initWithTile:tile];
-        [_popupMenuSprite addChild: _actionMenu];
-        
-    }
-    if (tile.unit!=nil && !_unitActionIntent) {
-        NSLog(@"Move Unit Intent");
-        [self selectUnit:tile];
-    }
-    else if (_unitActionIntent) {
-        NSLog(@"Perform action");
-        Tile* destTile = tile;
-        if (tile == _tileOfSelectedUnit) {
-            [self buildMeadow:tile];
-        }
-        else {
-            [self moveUnitWithTile:_tileOfSelectedUnit tile:destTile];
-        }
-    }
     
+    if (_selectedTile == nil && [tile canBeSelected]) {
+        [self selectTile:tile];
+    }
+    else {
+        Tile* destTile = tile;
+        Unit* unit = _selectedTile.unit;
+
+        //perform Unit actions
+        if (unit != nil) {
+            NSLog(@"Perform Unit action");
+            if (tile == _selectedTile) {
+                [self buildMeadow:tile];
+            }
+            else {
+                [self moveUnitWithTile:_selectedTile tile:destTile];
+            }
+        }
+        else if (_selectedTile.isVillage) {
+            [_map buyUnitFromTile:_selectedTile tile:destTile];
+        }
+        
+        [self deselectTile:_selectedTile];
+    }
     
     
 }
 
-- (void)selectUnit:(Tile*)tile
+
+
+- (void)selectTile:(Tile*)tile
 {
-    _tileOfSelectedUnit = tile;
-    _unitActionIntent = true;
+    _selectedTile = tile;
     [tile selectTile];
 }
 
-- (void)deselectUnit:(Tile*)tile
+- (void)deselectTile:(Tile*)tile
 {
-    _tileOfSelectedUnit = nil;
-    _unitActionIntent = false;
+    _selectedTile = nil;
     [tile deselectTile];
 }
 
 - (void)buildMeadow:(Tile*)tile
 {
     [tile addStructure:MEADOW];
-    [self deselectUnit:tile];
+    [self deselectTile:tile];
     NSLog(@"build Meadow");
     
 }
@@ -222,7 +234,6 @@
 //comletes the move to new tile
 - (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
 {
-    [self deselectUnit:unitTile];
     
     Unit* unit = unitTile.unit;
     
@@ -247,7 +258,7 @@
     //if the move is possible we continue here
     
     if (destTile.getStructureType == BAUM) {
-        [self chopTree:destTile unit:unit];
+        [_map chopTree:destTile];
     }
     if (unitTile.village != destTile.village) {
         [self takeOverTile:unitTile tile:destTile];
@@ -271,13 +282,6 @@
     
 }
 
-//should this be in Game Engine??
-- (void)chopTree:(Tile*)tile unit: (Unit*)unit
-{
-    [tile removeStructure];
-    _currentPlayer.woodPile++;
-    [hud updateWithPlayer:_currentPlayer];
-}
 
 - (void)onResize:(SPResizeEvent *)event
 {

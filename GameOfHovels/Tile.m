@@ -138,6 +138,7 @@
     }
     [_villageSprite removeAllChildren];
     [_villageSprite addChild: newVillage];
+    newVillage.player = v.player;
     _village = newVillage;
 }
 
@@ -203,10 +204,10 @@
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
         //if the tile has a unit we can build a meadow
-        if (_unit!=nil) {
+        if (_unit!=nil || _isVillage) {
             _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                       target:self
-                                                    selector:@selector(startUpgradingUnit:)
+                                                    selector:@selector(startUpgrading:)
                                                     userInfo:nil
                                                      repeats:NO];
         }
@@ -235,22 +236,24 @@
     _timer = nil;
 }
 
-- (void)startUpgradingUnit:(NSTimer*)timer
+- (void)startUpgrading:(NSTimer*)timer
 {
-    NSLog(@"Start Upgrading Unit");
+    NSLog(@"Start Upgrading");
     _timer = [NSTimer scheduledTimerWithTimeInterval:1
                                               target:self
-                                            selector:@selector(finishUpgradingUnit:)
+                                            selector:@selector(finishUpgrading:)
                                             userInfo:nil
                                              repeats:NO];
 }
 
-- (void)finishUpgradingUnit:(NSTimer*)timer
+- (void)finishUpgrading:(NSTimer*)timer
 {
-    NSLog(@"Finsih Upgrading Unit");
-    TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_UPGRADE_UNIT tile:self];
-    [self dispatchEvent:event];
-    
+    NSLog(@"Finsih Upgrading");
+    if (_isVillage) {
+        TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_UPGRADE_VILLAGE tile:self];
+        [self dispatchEvent:event];
+    }
+
 }
 
 - (BOOL)neighboursContainTile:(Tile*)tile
@@ -279,6 +282,14 @@
     return true;
     
 }
+- (BOOL)canHaveUnit
+{
+    if (_unit == nil && _isVillage == false && [self getStructureType] == GRASS) {
+        return true;
+    }
+    return false;
+}
+
 - (BOOL)canHaveTree
 {
     if (_unit == nil && _isVillage == false && [self getStructureType] == GRASS) {
@@ -287,10 +298,17 @@
     return false;
 }
 
+- (BOOL)canBeSelected
+{
+    if (_unit != nil) return true;
+    if (_isVillage) return true;
+
+    return false;
+}
+
 - (void)setColor:(int)color
 {
     _tileLayer.color = color;
-    NSLog(@"set Color of Tile");
 }
 
 - (void)selectTile

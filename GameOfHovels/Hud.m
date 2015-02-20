@@ -20,11 +20,15 @@
     int _yOffsetMinor;
 }
 
+@synthesize player = _player;
 
--(id)init
+-(id)initWithPlayer:(GamePlayer *)player
 {
     if (self=[super init]) {
         //custom code here
+        
+        _player = player;
+        
         
         _yOffsetMinor = 10;
         
@@ -54,12 +58,12 @@
     return self;
 }
 
-- (void)updateWithPlayer:(GamePlayer*)player
+- (void)update
 {
-    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", player.woodPile];
+    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", _player.woodPile];
     _woodField.text = woodString;
     
-    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", player.goldPile];
+    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", _player.goldPile];
     _goldField.text = goldString;
     
 }

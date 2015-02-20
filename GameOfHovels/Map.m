@@ -13,6 +13,7 @@
 #import "Baum.h"
 #import "Hovel.h"
 #import "GamePlayer.h"
+#import "Hud.h"
 
 
 
@@ -29,17 +30,24 @@
     
 }
 
+@synthesize currentPlayer = _currentPlayer;
+@synthesize hud = _hud;
 
--(id)initWithRandomMap:(NSMutableArray*)players
+
+-(id)initWithRandomMap:(NSMutableArray *)players hud:(Hud *)hud
 {
     if (self=[super init]) {
         //custom code here
 
+        //currently we are not using the array players and game Engine is updating us with the current player
+        
         _gridWidth = 20;
         _gridHeight = 20;
         _tileWidth = 54;
         _tileHeight = 57;
         _offsetHeight = 40;
+
+        _hud = hud;
 
         
         _tilesSprite = [SPSprite sprite];
@@ -146,8 +154,6 @@
         if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
             [t addStructure:BAUM];
         }
-        
-        
     }
 }
 
@@ -175,12 +181,23 @@
 
 - (void)upgradeVillageWithTile:(Tile*)tile
 {
-    [tile upgradeVillage];
-    NSMutableArray* tiles = [self getTilesforVillage:tile];
+    BOOL actionPossible = true;
+    if (_currentPlayer.woodPile<11) actionPossible = false;
     
+    if (actionPossible == false) {
+        return;
+    }
+    
+    //get the tiles of the old village and set the village to the new one after upgrading
+    NSMutableArray* tiles = [self getTilesforVillage:tile];
+    [tile upgradeVillage];
+
     for (Tile* t in tiles) {
         t.village = tile.village;
     }
+    
+    _currentPlayer.woodPile -=10;
+    [self updateHud];
 }
 
 - (NSMutableArray*)getTilesforVillage:(Tile*)tile
@@ -216,6 +233,40 @@
         }
     }
     
+}
+
+
+- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
+{
+    BOOL actionPossible = true;
+    if (villageTile == destTile) actionPossible = false;
+    if (villageTile.village != destTile.village) actionPossible = false;
+    if (![destTile canHaveUnit]) actionPossible = false;
+    if (_currentPlayer.goldPile<11) actionPossible = false;
+
+    if (actionPossible == false) {
+        return;
+    }
+    
+    //action is possible
+    Ritter* r = [[Ritter alloc] initWithTile:destTile];
+    [_unitsSprite addChild:r];
+    destTile.unit = r;
+    
+    _currentPlayer.goldPile-=10;
+    [self updateHud];
+}
+
+- (void)chopTree:(Tile*)tile
+{
+    [tile removeStructure];
+    _currentPlayer.woodPile++;
+    [self updateHud];
+}
+
+- (void)updateHud
+{
+    [_hud update];
 }
 
 - (void)createRandomMap

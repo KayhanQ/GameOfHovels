@@ -22,8 +22,8 @@
 
 - (id)initWithString:(NSString *)name color:(int)color
 {
-    _woodPile = 0;
-    _goldPile = 7;
+    _woodPile = 40;
+    _goldPile = 36;
     
     _color = color;
     

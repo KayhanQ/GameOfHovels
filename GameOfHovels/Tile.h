@@ -44,7 +44,9 @@
 
 - (void)selectTile;
 - (void)deselectTile;
+- (BOOL)canBeSelected;
 - (BOOL)canHaveTree;
+- (BOOL)canHaveUnit;
 
 - (Structure*)getStructure;
 

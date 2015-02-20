@@ -15,7 +15,6 @@
 {
     //NSSet *touches = [event touchesWithTarget:self andPhase:SPTouchPhaseEnded];
     
-    NSLog(@"in move map touched");
     _touching = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] count] == 0;
     if (!_touching) return;
     

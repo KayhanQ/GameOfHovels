@@ -31,6 +31,7 @@
         
         [SparrowHelper centerPivot:self];
         
+        self.pivotY = self.pivotY+15;
     }
     return self;
     
