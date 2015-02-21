@@ -39,8 +39,6 @@
 		F380662B1A964CD7009D3C56 /* SparrowHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F380662A1A964CD7009D3C56 /* SparrowHelper.m */; };
 		F380662F1A964CFA009D3C56 /* ActionMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F380662E1A964CFA009D3C56 /* ActionMenu.m */; };
 		F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066321A964D10009D3C56 /* TileTouchedEvent.m */; };
-		F38066381A964D10009D3C56 /* UnitEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066341A964D10009D3C56 /* UnitEvent.m */; };
-		F38066391A964D10009D3C56 /* UnitEventMoveIntent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066361A964D10009D3C56 /* UnitEventMoveIntent.m */; };
 		F380663D1A964D21009D3C56 /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = F380663C1A964D21009D3C56 /* Media.m */; };
 		F38066411A964F30009D3C56 /* sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = F38066401A964F30009D3C56 /* sound.caf */; };
 		F38066531A964F3B009D3C56 /* baum.png in Resources */ = {isa = PBXBuildFile; fileRef = F38066451A964F3B009D3C56 /* baum.png */; };
@@ -61,6 +59,8 @@
 		F380666F1A966DE4009D3C56 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380666E1A966DE4009D3C56 /* GameKit.framework */; };
 		F38066721A967C8F009D3C56 /* GHEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066711A967C8F009D3C56 /* GHEvent.m */; };
 		F38066751A96836B009D3C56 /* Grass.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066741A96836B009D3C56 /* Grass.m */; };
+		F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */; };
+		F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71E21A99303F00E40479 /* ActionButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,10 +130,6 @@
 		F380662E1A964CFA009D3C56 /* ActionMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionMenu.m; sourceTree = "<group>"; };
 		F38066311A964D10009D3C56 /* TileTouchedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileTouchedEvent.h; sourceTree = "<group>"; };
 		F38066321A964D10009D3C56 /* TileTouchedEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TileTouchedEvent.m; sourceTree = "<group>"; };
-		F38066331A964D10009D3C56 /* UnitEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitEvent.h; sourceTree = "<group>"; };
-		F38066341A964D10009D3C56 /* UnitEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitEvent.m; sourceTree = "<group>"; };
-		F38066351A964D10009D3C56 /* UnitEventMoveIntent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitEventMoveIntent.h; sourceTree = "<group>"; };
-		F38066361A964D10009D3C56 /* UnitEventMoveIntent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitEventMoveIntent.m; sourceTree = "<group>"; };
 		F380663B1A964D21009D3C56 /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Media.h; sourceTree = "<group>"; };
 		F380663C1A964D21009D3C56 /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
 		F38066401A964F30009D3C56 /* sound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound.caf; sourceTree = "<group>"; };
@@ -159,6 +155,10 @@
 		F38066711A967C8F009D3C56 /* GHEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHEvent.m; sourceTree = "<group>"; };
 		F38066731A968361009D3C56 /* Grass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Grass.h; sourceTree = "<group>"; };
 		F38066741A96836B009D3C56 /* Grass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grass.m; sourceTree = "<group>"; };
+		F3CC71DE1A992CB300E40479 /* ActionMenuEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionMenuEvent.h; sourceTree = "<group>"; };
+		F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionMenuEvent.m; sourceTree = "<group>"; };
+		F3CC71E11A992FF800E40479 /* ActionButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionButton.h; sourceTree = "<group>"; };
+		F3CC71E21A99303F00E40479 /* ActionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -363,6 +363,8 @@
 				F380666C1A966398009D3C56 /* Hud.m */,
 				F380662D1A964CFA009D3C56 /* ActionMenu.h */,
 				F380662E1A964CFA009D3C56 /* ActionMenu.m */,
+				F3CC71E11A992FF800E40479 /* ActionButton.h */,
+				F3CC71E21A99303F00E40479 /* ActionButton.m */,
 			);
 			name = "UI Elements";
 			sourceTree = "<group>";
@@ -374,10 +376,8 @@
 				F38066711A967C8F009D3C56 /* GHEvent.m */,
 				F38066311A964D10009D3C56 /* TileTouchedEvent.h */,
 				F38066321A964D10009D3C56 /* TileTouchedEvent.m */,
-				F38066331A964D10009D3C56 /* UnitEvent.h */,
-				F38066341A964D10009D3C56 /* UnitEvent.m */,
-				F38066351A964D10009D3C56 /* UnitEventMoveIntent.h */,
-				F38066361A964D10009D3C56 /* UnitEventMoveIntent.m */,
+				F3CC71DE1A992CB300E40479 /* ActionMenuEvent.h */,
+				F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -637,7 +637,6 @@
 				F380661B1A964C69009D3C56 /* Town.m in Sources */,
 				F380661A1A964C69009D3C56 /* Hovel.m in Sources */,
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
-				F38066391A964D10009D3C56 /* UnitEventMoveIntent.m in Sources */,
 				F38066631A9650F9009D3C56 /* GameEngine+iOSTouchEvents.m in Sources */,
 				F38065C61A96441B009D3C56 /* ViewController.m in Sources */,
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
@@ -649,9 +648,9 @@
 				F38065C31A96441B009D3C56 /* AppDelegate.m in Sources */,
 				F38066011A964C1A009D3C56 /* GamePlayer.m in Sources */,
 				F38065C01A96441B009D3C56 /* main.m in Sources */,
+				F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */,
 				F38066261A964C7E009D3C56 /* Meadow.m in Sources */,
 				F380662F1A964CFA009D3C56 /* ActionMenu.m in Sources */,
-				F38066381A964D10009D3C56 /* UnitEvent.m in Sources */,
 				F38066751A96836B009D3C56 /* Grass.m in Sources */,
 				F38066001A964C1A009D3C56 /* BasicSprite.m in Sources */,
 				F38065FA1A9649CA009D3C56 /* GameEngine.m in Sources */,
@@ -659,6 +658,7 @@
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,
 				F380662B1A964CD7009D3C56 /* SparrowHelper.m in Sources */,
+				F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */,
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,
 			);
@@ -871,6 +871,7 @@
 				F38065DF1A96441B009D3C56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F38065E01A96441B009D3C56 /* Build configuration list for PBXNativeTarget "GameOfHovelsTests" */ = {
 			isa = XCConfigurationList;
@@ -879,6 +880,7 @@
 				F38065E21A96441B009D3C56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

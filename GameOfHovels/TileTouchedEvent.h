@@ -14,6 +14,9 @@
 
 #define EVENT_TYPE_UPGRADE_UNIT @"upgradeUnit"
 
+#define EVENT_TYPE_SHOW_ACTION_MENU @"showActionMenu"
+
+
 @interface TileTouchedEvent : SPEvent
 
 - (id)initWithType:(NSString *)type tile:(Tile*)tile;

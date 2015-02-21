@@ -14,7 +14,7 @@
 #import "Hovel.h"
 #import "GamePlayer.h"
 #import "Hud.h"
-
+#import "Media.h"
 
 
 @implementation Map {
@@ -222,18 +222,6 @@
     }
 }
 
-- (void)endTurnUpdates
-{
-    //update the trees
-    for (Tile* tile in _tilesSprite) {
-        Structure* s = [tile getStructure];
-        if (s.sType == BAUM) {
-            Baum* b = (Baum*)s;
-            b.newlyGrown = false;
-        }
-    }
-    
-}
 
 
 - (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
@@ -257,11 +245,68 @@
     [self updateHud];
 }
 
+//comletes the move to new tile
+- (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
+{
+    
+    Unit* unit = unitTile.unit;
+    
+    BOOL movePossible = true;
+    if (unit.movesCompleted) {
+        movePossible = false;
+    }
+    if ([unitTile neighboursContainTile:destTile] == false) {
+        movePossible = false;
+    }
+    //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
+    if (destTile.isVillage) movePossible = false;
+    if (unit.distTravelled == unit.stamina) {
+        movePossible = false;
+    }
+    if (!movePossible) {
+        NSLog(@"move impossible");
+        [Media playSound:@"sound.caf"];
+        return;
+    }
+    
+    //if the move is possible we continue here
+    
+    if (destTile.getStructureType == BAUM) {
+        [self chopTree:destTile];
+    }
+    if (unitTile.village != destTile.village) {
+        [self takeOverTile:unitTile tile:destTile];
+    }
+    
+    //the last thing we do is update the coordinates and reset the selected unit's Tile
+    unit.x = destTile.x;
+    unit.y = destTile.y;
+    unitTile.unit = nil;
+    destTile.unit = unit;
+    
+    unit.distTravelled++;
+    
+    //need to refresh the colour, where should this actually be done?
+    [self showPlayersTeritory];
+}
+
+- (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
+{
+    destTile.village = unitTile.village;
+    
+}
+
 - (void)chopTree:(Tile*)tile
 {
     [tile removeStructure];
     _currentPlayer.woodPile++;
     [self updateHud];
+}
+
+- (void)buildMeadow:(Tile*)tile
+{
+    [tile addStructure:MEADOW];
+    NSLog(@"build Meadow");
 }
 
 - (void)updateHud
@@ -273,6 +318,20 @@
 {
     
 }
+
+- (void)endTurnUpdates
+{
+    //update the trees
+    for (Tile* tile in _tilesSprite) {
+        Structure* s = [tile getStructure];
+        if (s.sType == BAUM) {
+            Baum* b = (Baum*)s;
+            b.newlyGrown = false;
+        }
+    }
+    
+}
+
 
 
 
