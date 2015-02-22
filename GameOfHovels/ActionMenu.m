@@ -38,6 +38,8 @@
         
         if (tile.isVillage) {
             [self makeButton:UPGRADEVILLAGE];
+            [self makeButton:BUYUNIT];
+
         }
         if (tile.unit != nil) {
             [self makeButton:BUILDMEADOW];

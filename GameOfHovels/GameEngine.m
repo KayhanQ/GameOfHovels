@@ -151,7 +151,6 @@
 
 - (void)actionMenuAction:(ActionMenuEvent*) event
 {
-    [self enableScroll];
     NSLog(@"Action Menu Action");
     Tile* tile = event.tile;
     Tile* destTile = tile;
@@ -165,7 +164,7 @@
         }
         case BUYUNIT:
         {
-            [_map buyUnitFromTile:_selectedTile tile:destTile];
+            _selectedTile = tile;
             break;
         }
         case BUILDMEADOW:
@@ -183,7 +182,8 @@
     }
     
     [_actionMenu removeFromParent];
-    _map.touchable = true;
+    [self addTileListener];
+    [self deselectTile:_selectedTile];
 }
 
 - (void)tileTouched:(TileTouchedEvent*) event
@@ -205,6 +205,9 @@
                 [_map moveUnitWithTile:_selectedTile tile:destTile];
             }
         }
+        else if (_selectedTile.isVillage) {
+            [_map buyUnitFromTile:_selectedTile tile:destTile];
+        }
 
         [self deselectTile:_selectedTile];
     }
@@ -214,11 +217,10 @@
 {
     Tile* tile = event.tile;
 
+    [self removeTileListener];
     [self selectTile:tile];
-    [self disableScroll];
     
     NSLog(@"action menu from GE");
-    _map.touchable = false;
     
     _actionMenu = [[ActionMenu alloc] initWithTile:tile];
     [_popupMenuSprite addChild:_actionMenu];
@@ -249,7 +251,16 @@
     [self removeEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
 }
 
+- (void)removeTileListener
+{
+    [self removeEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+}
 
+- (void)addTileListener
+{
+    [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+
+}
 
 
 
