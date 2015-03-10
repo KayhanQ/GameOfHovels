@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GCViewcontroller.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+	GCViewcontroller	*viewController;
+}
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, retain) GCViewcontroller *viewController;
 
 
 @end

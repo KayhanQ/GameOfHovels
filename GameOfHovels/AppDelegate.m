@@ -19,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+	viewController = [[GCViewcontroller alloc] initWithNibName:nil bundle:nil];
     return YES;
 }
 
