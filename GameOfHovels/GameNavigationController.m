@@ -8,7 +8,7 @@
 
 #import "GameNavigationController.h"
 #import "GameNavigationController.h"
-#import "GameKitHelper.h"
+#import "MessageLayer.h"
 
 @implementation GameNavigationController
 
@@ -21,17 +21,16 @@
      name:PresentAuthenticationViewController
      object:nil];
     
-    [[GameKitHelper sharedGameKitHelper]
-     authenticateLocalPlayer];
+    [MessageLayer sharedMessageLayer];
 }
 
 - (void)showAuthenticationViewController
 {
-    GameKitHelper *gameKitHelper =
-    [GameKitHelper sharedGameKitHelper];
+    MessageLayer *messageLayer =
+    [MessageLayer sharedMessageLayer];
     
     [self.topViewController presentViewController:
-     gameKitHelper.authenticationViewController
+     messageLayer.authenticationViewController
                                          animated:YES
                                        completion:nil];
 }

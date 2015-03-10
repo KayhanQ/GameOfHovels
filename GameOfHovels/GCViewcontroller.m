@@ -8,9 +8,9 @@
 //
 
 #import "GCViewcontroller.h"
-#import "GameKitHelper.h"
+#import "MessageLayer.h"
 
-@interface GCViewcontroller()<GameKitHelperDelegate>
+@interface GCViewcontroller()
 @end
 
 @implementation GCViewcontroller
@@ -21,21 +21,9 @@
 }
 
 - (void)playerAuthenticated {
-	[[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self delegate:self];
+	NSLog(@"asdfasdf");
+	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self
+	];
 }
-
-#pragma mark GameKitHelperDelegate
-- (void)matchStarted {
-	NSLog(@"Match started");
-}
-
-- (void)matchEnded {
-	NSLog(@"Match ended");
-}
-
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-	NSLog(@"Received data");
-}
-
 
 @end

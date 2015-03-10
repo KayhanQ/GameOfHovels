@@ -60,8 +60,8 @@
 		F380666F1A966DE4009D3C56 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380666E1A966DE4009D3C56 /* GameKit.framework */; };
 		F38066721A967C8F009D3C56 /* GHEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066711A967C8F009D3C56 /* GHEvent.m */; };
 		F38066751A96836B009D3C56 /* Grass.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066741A96836B009D3C56 /* Grass.m */; };
+		FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = FC120EDE1AAD06540071D47A /* MessageLayer.m */; };
 		FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC1E8331AACE51E009A42DC /* GameNavigationController.m */; };
-		FCC1E8361AACE52F009A42DC /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC1E8351AACE52F009A42DC /* GameKitHelper.m */; };
 		FCC1E9E71AACE5D5009A42DC /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCC1E9131AACE5B1009A42DC /* Sparrow.framework */; };
 		FCCA7BA61A97B28B0019E192 /* GCViewcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */; };
 /* End PBXBuildFile section */
@@ -210,10 +210,10 @@
 		F38066711A967C8F009D3C56 /* GHEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHEvent.m; sourceTree = "<group>"; };
 		F38066731A968361009D3C56 /* Grass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Grass.h; sourceTree = "<group>"; };
 		F38066741A96836B009D3C56 /* Grass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grass.m; sourceTree = "<group>"; };
+		FC120EDD1AAD06540071D47A /* MessageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageLayer.h; sourceTree = "<group>"; };
+		FC120EDE1AAD06540071D47A /* MessageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageLayer.m; sourceTree = "<group>"; };
 		FCC1E8321AACE51E009A42DC /* GameNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameNavigationController.h; sourceTree = "<group>"; };
 		FCC1E8331AACE51E009A42DC /* GameNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameNavigationController.m; sourceTree = "<group>"; };
-		FCC1E8351AACE52F009A42DC /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
-		FCC1E8371AACE53D009A42DC /* GameKitHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
 		FCC1E8391AACE5B1009A42DC /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		FCC1E83A1AACE5B1009A42DC /* BUILDING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = BUILDING.md; sourceTree = "<group>"; };
 		FCC1E83B1AACE5B1009A42DC /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -622,8 +622,6 @@
 				F38065C21A96441B009D3C56 /* AppDelegate.m */,
 				F38065C41A96441B009D3C56 /* ViewController.h */,
 				F38065C51A96441B009D3C56 /* ViewController.m */,
-				FCCA7BA41A97B28B0019E192 /* GCViewcontroller.h */,
-				FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */,
 				F38065FB1A964A6D009D3C56 /* Sparrow */,
 				F38066301A964D07009D3C56 /* Events */,
 				F380662C1A964CED009D3C56 /* UI Elements */,
@@ -1698,8 +1696,10 @@
 		FCCA7BA01A97AE9F0019E192 /* GameKit */ = {
 			isa = PBXGroup;
 			children = (
-				FCC1E8371AACE53D009A42DC /* GameKitHelper.h */,
-				FCC1E8351AACE52F009A42DC /* GameKitHelper.m */,
+				FC120EDD1AAD06540071D47A /* MessageLayer.h */,
+				FC120EDE1AAD06540071D47A /* MessageLayer.m */,
+				FCCA7BA41A97B28B0019E192 /* GCViewcontroller.h */,
+				FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */,
 			);
 			name = GameKit;
 			path = GameOfHovels;
@@ -1909,7 +1909,6 @@
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
 				F38066391A964D10009D3C56 /* UnitEventMoveIntent.m in Sources */,
 				F38066631A9650F9009D3C56 /* GameEngine+iOSTouchEvents.m in Sources */,
-				FCC1E8361AACE52F009A42DC /* GameKitHelper.m in Sources */,
 				F38065C61A96441B009D3C56 /* ViewController.m in Sources */,
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
 				F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */,
@@ -1933,6 +1932,7 @@
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,
 				FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */,
+				FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

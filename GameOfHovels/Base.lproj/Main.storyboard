@@ -12,7 +12,7 @@
                         <viewControllerLayoutGuide type="top" id="cMw-4J-Lo1"/>
                         <viewControllerLayoutGuide type="bottom" id="ml0-92-ceq"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Sdv-B0-4F8" customClass="GCViewcontro">
+                    <view key="view" contentMode="scaleToFill" id="Sdv-B0-4F8">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
