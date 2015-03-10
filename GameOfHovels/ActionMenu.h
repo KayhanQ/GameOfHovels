@@ -11,7 +11,8 @@
 
 @interface ActionMenu : BasicSprite {
     
-    
+    enum ActionType {UPGRADEVILLAGE = 0, BUYUNIT, BUILDMEADOW, BUILDROAD};
+
     
 }
 

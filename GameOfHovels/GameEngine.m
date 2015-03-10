@@ -11,14 +11,13 @@
 #import "Map.h"
 #import "TileTouchedEvent.h"
 #import "ActionMenu.h"
-#import "UnitEventMoveIntent.h"
 #import "Ritter.h"
 #import "Baum.h"
 #import "GamePlayer.h"
 #import "Hud.h"
 #import "Media.h"
 #import "GHEvent.h"
-
+#import "ActionMenuEvent.h"
 
 
 @implementation GameEngine
@@ -61,9 +60,12 @@
     //init Players
     //this will actually happen outside Game Engine
     GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
+    GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
+
     _players = [NSMutableArray array];
     [_players addObject:player1];
-    
+    [_players addObject:player2];
+
     _currentPlayer = player1;
     
     _contents = [SPSprite sprite];
@@ -98,15 +100,12 @@
     
     //event Listeners
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
-    [self addEventListener:@selector(villageUpgradeIntent:) atObject:self forType:EVENT_TYPE_VILLAGE_UPGRADE_INTENT];
-    [self addEventListener:@selector(upgradeUnit:) atObject:self forType:EVENT_TYPE_UPGRADE_UNIT];
-    [self addEventListener:@selector(upgradeVillage:) atObject:self forType:EVENT_TYPE_UPGRADE_VILLAGE];
+    [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
+    [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
 
-    
-    //reimplement scrolling
-    [_world addEventListener:@selector(onMapTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    [self addEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
+    [self enableScroll];
+
     
     _animationJuggler = [SPJuggler juggler];
     [self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
@@ -144,7 +143,7 @@
 - (void)endTurn:(GHEvent*)event
 {
     _map.touchable = false;
-    
+    _selectedTile = nil;
     [_map endTurnUpdates];
     
     //relay turn has ended
@@ -153,35 +152,59 @@
     [self beginTurnWithPlayer:_currentPlayer];
 }
 
-- (void)upgradeUnit:(TileTouchedEvent*) event
+- (void)actionMenuAction:(ActionMenuEvent*) event
 {
-    NSLog(@"unit upgraded");
-}
-
-- (void)upgradeVillage:(TileTouchedEvent*) event
-{
-    NSLog(@"Upgrade Village");
+    NSLog(@"Action Menu Action");
     Tile* tile = event.tile;
-    [_map upgradeVillageWithTile:tile];
-}
+    Tile* destTile = tile;
 
-//upgrade from hovel to town etc.
-- (void)villageUpgradeIntent:(TileTouchedEvent*) event
-{
-    /*
+    BOOL actionCompleted = true;
+    
+    switch (event.aType) {
+        case UPGRADEVILLAGE:
+        {
+            [_map upgradeVillageWithTile:tile];
+            
+            break;
+        }
+        case BUYUNIT:
+        {
+            [self selectTile:tile];
+            actionCompleted = false;
+            break;
+        }
+        case BUILDMEADOW:
+        {
+            [_map buildMeadow:tile];
+            break;
+        }
+        case BUILDROAD:
+        {
+            
+            break;
+        }
+        default:
+            break;
+    }
+    
     [_actionMenu removeFromParent];
-    NSLog(@"village upgrade intent");
-    Tile* tile = event.tile;
-    [_map upgradeVillageWithTile:tile];
-     */
-}
+    [self addTileListener];
+    if (actionCompleted) {
 
+        [self deselectTile:_selectedTile];
+    }
+}
 
 - (void)tileTouched:(TileTouchedEvent*) event
 {
     Tile* tile = event.tile;
     
+    if (tile.village.player != _currentPlayer && _selectedTile == nil) {
+        return;
+    }
     
+    NSLog(@"Tile touched");
+
     if (_selectedTile == nil && [tile canBeSelected]) {
         [self selectTile:tile];
     }
@@ -192,24 +215,37 @@
         //perform Unit actions
         if (unit != nil) {
             NSLog(@"Perform Unit action");
-            if (tile == _selectedTile) {
-                [self buildMeadow:tile];
-            }
-            else {
-                [self moveUnitWithTile:_selectedTile tile:destTile];
+            if (tile != _selectedTile) {
+                [_map moveUnitWithTile:_selectedTile tile:destTile];
             }
         }
         else if (_selectedTile.isVillage) {
+            NSLog(@"Village Action");
+
             [_map buyUnitFromTile:_selectedTile tile:destTile];
         }
-        
+
         [self deselectTile:_selectedTile];
     }
-    
-    
 }
 
+- (void)showActionMenu:(TileTouchedEvent*) event
+{
+    Tile* tile = event.tile;
 
+    if (tile.village.player != _currentPlayer) {
+        return;
+    }
+    
+    [self removeTileListener];
+    [self selectTile:tile];
+    
+    NSLog(@"action menu from GE");
+    
+    _actionMenu = [[ActionMenu alloc] initWithTile:tile];
+    [_popupMenuSprite addChild:_actionMenu];
+    
+}
 
 - (void)selectTile:(Tile*)tile
 {
@@ -223,64 +259,30 @@
     [tile deselectTile];
 }
 
-- (void)buildMeadow:(Tile*)tile
+- (void)enableScroll
 {
-    [tile addStructure:MEADOW];
-    [self deselectTile:tile];
-    NSLog(@"build Meadow");
-    
+    [_world addEventListener:@selector(onMapTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    [self addEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
 }
 
-//comletes the move to new tile
-- (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
+- (void)disableScroll
 {
-    
-    Unit* unit = unitTile.unit;
-    
-    BOOL movePossible = true;
-    if (unit.movesCompleted) {
-        movePossible = false;
-    }
-    if ([unitTile neighboursContainTile:destTile] == false) {
-        movePossible = false;
-    }
-    //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
-    if (destTile.isVillage) movePossible = false;
-    if (unit.distTravelled == unit.stamina) {
-        movePossible = false;
-    }
-    if (!movePossible) {
-        NSLog(@"move impossible");
-        [Media playSound:@"sound.caf"];
-        return;
-    }
-    
-    //if the move is possible we continue here
-    
-    if (destTile.getStructureType == BAUM) {
-        [_map chopTree:destTile];
-    }
-    if (unitTile.village != destTile.village) {
-        [self takeOverTile:unitTile tile:destTile];
-    }
-    
-    //the last thing we do is update the coordinates and reset the selected unit's Tile
-    unit.x = destTile.x;
-    unit.y = destTile.y;
-    unitTile.unit = nil;
-    destTile.unit = unit;
-    
-    unit.distTravelled++;
-    
-    //need to refresh the colour, where should this actually be done?
-    [_map showPlayersTeritory];
+    [_world removeEventListener:@selector(onMapTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    [self removeEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
 }
 
-- (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
+- (void)removeTileListener
 {
-    destTile.village = unitTile.village;
-    
+    [self removeEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
 }
+
+- (void)addTileListener
+{
+    [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+
+}
+
+
 
 
 - (void)onResize:(SPResizeEvent *)event

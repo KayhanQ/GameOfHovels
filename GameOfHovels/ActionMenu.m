@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "ActionMenu.h"
 #import "TileTouchedEvent.h"
-#import "UnitEventMoveIntent.h"
+#import "Media.h"
+#import "SparrowHelper.h"
+#import "ActionMenuEvent.h"
+#import "ActionButton.h"
+
 
 @implementation ActionMenu {
     SPTexture *_baseTexture;
@@ -31,33 +35,38 @@
         
         _buttonSprite = [SPSprite sprite];
         [self addChild:_buttonSprite];
+        
+        if (tile.isVillage) {
+            [self makeButton:UPGRADEVILLAGE];
+            [self makeButton:BUYUNIT];
 
-    
-        _baseTexture = [SPTexture textureWithContentsOfFile:@"tile_grass.png"];
-        _baseImage = [SPImage imageWithTexture:_baseTexture];
-        self.x = _tile.x;
-        self.y = _tile.y-30;
+        }
+        if (tile.unit != nil) {
+            [self makeButton:BUILDMEADOW];
+            [self makeButton:BUILDROAD];
+        }
+
         
-        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-        
-        SPButton* moveButton = [SPButton buttonWithUpState:buttonTexture];
-        moveButton.text = @"Upgrade Village";
-        [moveButton addEventListener:@selector(onTouch:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        [_buttonSprite addChild:moveButton];
-        
+        [self arrangeButtons];
     }
     return self;
 }
 
-- (void)onTouch:(SPTouchEvent*)event
+- (void)makeButton:(enum ActionType)aType
 {
-    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
-    if (touch)
-    {
-        NSLog(@"touchedButton");
+    ActionButton* b =[[ActionButton alloc] initWithActionType:aType tile:_tile];
+    [_buttonSprite addChild:b];
+}
 
-        TileTouchedEvent* event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_VILLAGE_UPGRADE_INTENT tile: _tile];
-        [self dispatchEvent:event];
+- (void)arrangeButtons
+{
+    int xGap = 20;
+    int index = 0;
+    
+    for (SPDisplayObject* d in _buttonSprite) {
+        d.x = _tile.x + index*(xGap + d.width);
+        d.y = _tile.y - 40 - d.height/2;
+        index++;
     }
 }
 

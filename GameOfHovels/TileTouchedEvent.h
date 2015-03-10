@@ -9,10 +9,11 @@
 #import "Tile.h"
 
 #define EVENT_TYPE_TILE_TOUCHED @"tileTouched"
-#define EVENT_TYPE_VILLAGE_UPGRADE_INTENT @"villageTouched"
-#define EVENT_TYPE_UPGRADE_VILLAGE @"upgradeVillage"
 
 #define EVENT_TYPE_UPGRADE_UNIT @"upgradeUnit"
+
+#define EVENT_TYPE_SHOW_ACTION_MENU @"showActionMenu"
+
 
 @interface TileTouchedEvent : SPEvent
 

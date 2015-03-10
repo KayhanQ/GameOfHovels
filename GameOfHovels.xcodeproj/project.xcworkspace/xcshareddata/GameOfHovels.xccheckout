@@ -10,8 +10,6 @@
 	<string>GameOfHovels</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>1d5a7336-c65e-6947-a78c-d4236001c669++505</key>
-		<string>svn://cserg0.site.uottawa.ca/projetseg/trunk</string>
 		<key>40DC266EC0FC92B6988AE3DB7387A98879419975</key>
 		<string>https://github.com/KayhanQ/GameOfHovels.git</string>
 	</dict>
@@ -19,15 +17,8 @@
 	<string>GameOfHovels.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1d5a7336-c65e-6947-a78c-d4236001c669++505</key>
-		<string>../../..</string>
 		<key>40DC266EC0FC92B6988AE3DB7387A98879419975</key>
 		<string>../..</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>1d5a7336-c65e-6947-a78c-d4236001c669++505</key>
-		<string>svn://cserg0.site.uottawa.ca/projetseg</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/KayhanQ/GameOfHovels.git</string>
@@ -37,14 +28,6 @@
 	<string>40DC266EC0FC92B6988AE3DB7387A98879419975</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1d5a7336-c65e-6947-a78c-d4236001c669++505</string>
-			<key>IDESourceControlWCCName</key>
-			<string></string>
-		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

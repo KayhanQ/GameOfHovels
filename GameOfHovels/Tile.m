@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "Tile.h"
 #import "TileTouchedEvent.h"
-#import "UnitEventMoveIntent.h"
 
 #import "Structure.h"
 #import "Grass.h"
@@ -205,9 +204,9 @@
     if (touchBegan) {
         //if the tile has a unit we can build a meadow
         if (_unit!=nil || _isVillage) {
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+            _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
                                                       target:self
-                                                    selector:@selector(startUpgrading:)
+                                                    selector:@selector(showActionMenu:)
                                                     userInfo:nil
                                                      repeats:NO];
         }
@@ -236,24 +235,11 @@
     _timer = nil;
 }
 
-- (void)startUpgrading:(NSTimer*)timer
+- (void)showActionMenu:(NSTimer*)timer
 {
-    NSLog(@"Start Upgrading");
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1
-                                              target:self
-                                            selector:@selector(finishUpgrading:)
-                                            userInfo:nil
-                                             repeats:NO];
-}
-
-- (void)finishUpgrading:(NSTimer*)timer
-{
-    NSLog(@"Finsih Upgrading");
-    if (_isVillage) {
-        TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_UPGRADE_VILLAGE tile:self];
-        [self dispatchEvent:event];
-    }
-
+    NSLog(@"Show action Menu");
+    TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_SHOW_ACTION_MENU tile:self];
+    [self dispatchEvent:event];
 }
 
 - (BOOL)neighboursContainTile:(Tile*)tile
@@ -301,7 +287,7 @@
 - (BOOL)canBeSelected
 {
     if (_unit != nil) return true;
-    if (_isVillage) return true;
+    //if (_isVillage) return true;
 
     return false;
 }

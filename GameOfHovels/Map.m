@@ -10,11 +10,12 @@
 #import "Map.h"
 #import "Tile.h"
 #import "Ritter.h"
+#import "Peasant.h"
 #import "Baum.h"
 #import "Hovel.h"
 #import "GamePlayer.h"
 #import "Hud.h"
-
+#import "Media.h"
 
 
 @implementation Map {
@@ -65,8 +66,10 @@
         [self makeBasicMap];
         [self setNeighbours];
         [self makePlayer1Tiles: [players objectAtIndex:0]];
-        
+        [self makePlayer2Tiles: [players objectAtIndex:1]];
+
         [self addTrees];
+        [self addMeadows];
         
         [self showPlayersTeritory];
         
@@ -99,7 +102,7 @@
                 t.village = villageTile.village;
                 [t setColor:villageTile.village.player.color];
                 if (j == 12 && i == 10) {
-                    Ritter* u = [[Ritter alloc] initWithTile:t];
+                    Peasant* u = [[Peasant alloc] initWithTile:t];
                     [_unitsSprite addChild:u];
                     t.unit = u;
                 }
@@ -112,6 +115,39 @@
             t.village.player = player1;
         }
         
+        i++;
+        if (i == _gridWidth) {
+            i=0;
+            j++;
+        }
+    }
+}
+
+- (void)makePlayer2Tiles:(GamePlayer*)player2
+{
+    Tile* villageTile;
+    int i = 0;
+    int j = 0;
+    
+    for (Tile* t in _tilesSprite) {
+        
+        if (j == 4 && i == 5) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player2;
+        }
+        
+        if (j>3 && j<7) {
+            if (i<10 && i>4) {
+                t.village = villageTile.village;
+                [t setColor:villageTile.village.player.color];
+                if (j == 12 && i == 10) {
+                    Peasant* u = [[Peasant alloc] initWithTile:t];
+                    [_unitsSprite addChild:u];
+                    t.unit = u;
+                }
+            }
+        }
         i++;
         if (i == _gridWidth) {
             i=0;
@@ -148,7 +184,7 @@
 
 -(void)addTrees
 {
-    for (int j  = 1 ; j<30; j++) {
+    for (int j  = 1 ; j<80; j++) {
         int index = arc4random() % [_tilesSprite numChildren];
         Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
         if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
@@ -156,7 +192,16 @@
         }
     }
 }
-
+-(void)addMeadows
+{
+    for (int j  = 1 ; j<40; j++) {
+        int index = arc4random() % [_tilesSprite numChildren];
+        Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
+        if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+            [t addStructure:MEADOW];
+        }
+    }
+}
 
 - (void)treeGrowthPhase
 {
@@ -182,7 +227,7 @@
 - (void)upgradeVillageWithTile:(Tile*)tile
 {
     BOOL actionPossible = true;
-    if (_currentPlayer.woodPile<11) actionPossible = false;
+    if (_currentPlayer.woodPile<8) actionPossible = false;
     
     if (actionPossible == false) {
         return;
@@ -196,7 +241,7 @@
         t.village = tile.village;
     }
     
-    _currentPlayer.woodPile -=10;
+    _currentPlayer.woodPile -= 8;
     [self updateHud];
 }
 
@@ -222,6 +267,106 @@
     }
 }
 
+
+
+- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
+{
+    BOOL actionPossible = true;
+    if (villageTile.village != destTile.village) actionPossible = false;
+    if (![destTile canHaveUnit]) actionPossible = false;
+    //if (_currentPlayer.goldPile<11) actionPossible = false;
+
+    if (actionPossible == false) {
+        return;
+    }
+    
+    //action is possible
+    Peasant* r = [[Peasant alloc] initWithTile:destTile];
+    [_unitsSprite addChild:r];
+    destTile.unit = r;
+    
+    _currentPlayer.goldPile-=10;
+    [self updateHud];
+}
+
+//comletes the move to new tile
+- (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
+{
+    
+    Unit* unit = unitTile.unit;
+    
+    BOOL movePossible = true;
+    if (unit.movesCompleted) {
+        movePossible = false;
+    }
+    if ([unitTile neighboursContainTile:destTile] == false) {
+        movePossible = false;
+    }
+    //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
+    if (destTile.isVillage) movePossible = false;
+    if (unit.distTravelled == unit.stamina) {
+        movePossible = false;
+    }
+    
+    if (unitTile.village != destTile.village) {
+        //[self takeOverTile:unitTile tile:destTile];
+        movePossible = false;
+    }
+    
+    if (!movePossible) {
+        NSLog(@"move impossible");
+        [Media playSound:@"sound.caf"];
+        return;
+    }
+    
+    //if the move is possible we continue here
+    
+    if (destTile.getStructureType == BAUM) {
+        [self chopTree:destTile];
+    }
+
+    
+    //the last thing we do is update the coordinates and reset the selected unit's Tile
+    unit.x = destTile.x;
+    unit.y = destTile.y;
+    unitTile.unit = nil;
+    destTile.unit = unit;
+    
+    unit.distTravelled++;
+    
+    //need to refresh the colour, where should this actually be done?
+    [self showPlayersTeritory];
+}
+
+- (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
+{
+    destTile.village = unitTile.village;
+    
+}
+
+- (void)chopTree:(Tile*)tile
+{
+    [tile removeStructure];
+    _currentPlayer.woodPile++;
+    [self updateHud];
+}
+
+- (void)buildMeadow:(Tile*)tile
+{
+    [tile addStructure:MEADOW];
+    NSLog(@"build Meadow");
+}
+
+- (void)updateHud
+{
+    [_hud update];
+}
+
+- (void)createRandomMap
+{
+    
+}
+
 - (void)endTurnUpdates
 {
     //update the trees
@@ -235,44 +380,6 @@
     
 }
 
-
-- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
-{
-    BOOL actionPossible = true;
-    if (villageTile == destTile) actionPossible = false;
-    if (villageTile.village != destTile.village) actionPossible = false;
-    if (![destTile canHaveUnit]) actionPossible = false;
-    if (_currentPlayer.goldPile<11) actionPossible = false;
-
-    if (actionPossible == false) {
-        return;
-    }
-    
-    //action is possible
-    Ritter* r = [[Ritter alloc] initWithTile:destTile];
-    [_unitsSprite addChild:r];
-    destTile.unit = r;
-    
-    _currentPlayer.goldPile-=10;
-    [self updateHud];
-}
-
-- (void)chopTree:(Tile*)tile
-{
-    [tile removeStructure];
-    _currentPlayer.woodPile++;
-    [self updateHud];
-}
-
-- (void)updateHud
-{
-    [_hud update];
-}
-
-- (void)createRandomMap
-{
-    
-}
 
 
 

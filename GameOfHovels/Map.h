@@ -31,9 +31,14 @@
 
 - (void)showPlayersTeritory;
 
+- (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile;
+- (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile;
+
 - (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile;
 
 - (void)chopTree:(Tile*)tile;
+- (void)buildMeadow:(Tile*)tile;
+
 - (void)updateHud;
 
 

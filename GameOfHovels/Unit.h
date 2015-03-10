@@ -16,7 +16,7 @@
     
     
     enum UnitType {PEASANT = 0, INFANTRY, SOLDIER, RITTER};
-    enum WorkState {NOTHING = 0, BUILDMEADOW, BUILDROAD};
+    enum WorkState {NOTHING = 0, BUILDINGMEADOW, BUILDINGROAD};
 }
 
 
