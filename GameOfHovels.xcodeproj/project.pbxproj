@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
+		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
 		F38065C31A96441B009D3C56 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065C21A96441B009D3C56 /* AppDelegate.m */; };
 		F38065C61A96441B009D3C56 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065C51A96441B009D3C56 /* ViewController.m */; };
@@ -74,6 +76,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
+		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
+		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
 		F38065BA1A96441B009D3C56 /* GameOfHovels.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfHovels.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F38065BE1A96441B009D3C56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F38065BF1A96441B009D3C56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -317,6 +322,8 @@
 			children = (
 				F380660B1A964C5F009D3C56 /* Unit.h */,
 				F380660C1A964C5F009D3C56 /* Unit.m */,
+				F35D38251AAF2A2500E97F78 /* Peasant.h */,
+				F35D38261AAF2A3300E97F78 /* Peasant.m */,
 				F380660D1A964C5F009D3C56 /* Ritter.h */,
 				F380660E1A964C5F009D3C56 /* Ritter.m */,
 			);
@@ -463,6 +470,7 @@
 		F380664B1A964F3B009D3C56 /* Units */ = {
 			isa = PBXGroup;
 			children = (
+				F35D38281AAF2BF700E97F78 /* peasant.png */,
 				F380664C1A964F3B009D3C56 /* Archer */,
 			);
 			path = Units;
@@ -610,6 +618,7 @@
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
+				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
@@ -642,6 +651,7 @@
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
 				F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */,
 				F380663D1A964D21009D3C56 /* Media.m in Sources */,
+				F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */,
 				F38066191A964C69009D3C56 /* Village.m in Sources */,
 				F38066251A964C7E009D3C56 /* Baum.m in Sources */,
 				F38066091A964C53009D3C56 /* Map.m in Sources */,

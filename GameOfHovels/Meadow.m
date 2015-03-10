@@ -25,7 +25,7 @@
         
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"meadow.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.18;
+        baseImage.scale = 0.35;
         
         [self addChild:baseImage];
 

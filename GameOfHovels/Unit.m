@@ -38,6 +38,14 @@
         _movesCompleted = false;
         
         switch (uType) {
+            case PEASANT:
+            {
+                _buyCost = 50;
+                _upkeepCost = 54;
+                _stamina = 20;
+                break;
+                
+            }
             case RITTER:
             {
                 _buyCost = 50;
@@ -45,8 +53,6 @@
                 _stamina = 20;
                 
             }
-                break;
-                
             default:
                 break;
         }

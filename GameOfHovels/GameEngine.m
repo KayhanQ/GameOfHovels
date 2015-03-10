@@ -60,9 +60,12 @@
     //init Players
     //this will actually happen outside Game Engine
     GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
+    GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
+
     _players = [NSMutableArray array];
     [_players addObject:player1];
-    
+    [_players addObject:player2];
+
     _currentPlayer = player1;
     
     _contents = [SPSprite sprite];
@@ -155,6 +158,8 @@
     Tile* tile = event.tile;
     Tile* destTile = tile;
 
+    BOOL actionCompleted = true;
+    
     switch (event.aType) {
         case UPGRADEVILLAGE:
         {
@@ -164,7 +169,8 @@
         }
         case BUYUNIT:
         {
-            _selectedTile = tile;
+            [self selectTile:tile];
+            actionCompleted = false;
             break;
         }
         case BUILDMEADOW:
@@ -183,14 +189,22 @@
     
     [_actionMenu removeFromParent];
     [self addTileListener];
-    [self deselectTile:_selectedTile];
+    if (actionCompleted) {
+
+        [self deselectTile:_selectedTile];
+    }
 }
 
 - (void)tileTouched:(TileTouchedEvent*) event
 {
     Tile* tile = event.tile;
     
+    if (tile.village.player != _currentPlayer && _selectedTile == nil) {
+        return;
+    }
     
+    NSLog(@"Tile touched");
+
     if (_selectedTile == nil && [tile canBeSelected]) {
         [self selectTile:tile];
     }
@@ -206,6 +220,8 @@
             }
         }
         else if (_selectedTile.isVillage) {
+            NSLog(@"Village Action");
+
             [_map buyUnitFromTile:_selectedTile tile:destTile];
         }
 
@@ -217,6 +233,10 @@
 {
     Tile* tile = event.tile;
 
+    if (tile.village.player != _currentPlayer) {
+        return;
+    }
+    
     [self removeTileListener];
     [self selectTile:tile];
     
