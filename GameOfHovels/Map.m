@@ -44,6 +44,8 @@
     if (self=[super init]) {
         //custom code here
 
+        _messageLayer = [MessageLayer sharedMessageLayer];
+        
         //currently we are not using the array players and game Engine is updating us with the current player
         
         _gridWidth = 20;
