@@ -63,7 +63,6 @@
     //init Players
     
     //Create the Message Layer
-    _messageLayer = [MessageLayer init];
     
     
     //this will actually happen outside Game Engine
@@ -96,7 +95,6 @@
     
     _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
     _map.mePlayer = _mePlayer;
-    _map.messageLayer = _messageLayer;
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
