@@ -19,7 +19,6 @@
 #import "MessageLayer.h"
 
 @implementation Map {
-    SPSprite* _tilesSprite;
     SPSprite* _unitsSprite;
     SPSprite* _villagesSprite;
 
@@ -30,9 +29,8 @@
     float _tileWidth;
     float _tileHeight;
     float _offsetHeight;
-    
 }
-
+@synthesize tilesSprite = _tilesSprite;
 @synthesize messageLayer = _messageLayer;
 @synthesize currentPlayer = _currentPlayer;
 @synthesize mePlayer = _mePlayer;
@@ -42,9 +40,8 @@
 -(id)initWithRandomMap:(NSMutableArray *)players hud:(Hud *)hud
 {
     if (self=[super init]) {
-        //custom code here
-
-        _messageLayer = [MessageLayer sharedMessageLayer];
+		
+		_messageLayer = [MessageLayer sharedMessageLayer];
         
         //currently we are not using the array players and game Engine is updating us with the current player
         
@@ -74,9 +71,10 @@
         [self makePlayer1Tiles: [players objectAtIndex:0]];
         [self makePlayer2Tiles: [players objectAtIndex:1]];
 
-        [self addTrees];
-        [self addMeadows];
-        
+        //[self addTrees];
+        //[self addMeadows];
+        [self makeTreesAndMeadows];
+		
         [self showPlayersTeritory];
         
     }
@@ -93,6 +91,30 @@
             [_tilesSprite addChild:t];
         }
     }
+}
+
+- (void)makeTreesAndMeadows
+{
+	NSInteger treesData[80] = {1, 2, 19, 26, 33, 35, 37, 50, 51, 57, 63, 72, 74, 78, 83, 84, 92, 99, 105, 110, 116, 119, 120, 142, 143, 146, 148, 149, 164, 186, 191, 193, 196, 201, 207, 208, 211, 213, 216, 222, 225, 228, 234, 238, 240, 252, 257, 265, 274, 280, 281, 283, 289, 294, 298, 322, 326, 333, 334, 335, 336, 338, 340, 348, 350, 358, 359, 366, 375, 377, 380, 383, 394, 395, 396};
+	NSInteger meadowsData[40] = {8, 14, 25, 36, 65, 69, 79, 96, 103, 109, 144, 145, 155, 176, 182, 192, 195, 206, 219, 220, 229, 248, 271, 287, 304, 324, 325, 327, 361, 363, 371, 393, 397};
+	
+	for (Tile* t in _tilesSprite) {
+	int tileIndex = [_tilesSprite childIndex: t];
+		for (int i = 0; i<80; i++) {
+			if (tileIndex == treesData[i]) {
+				if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+					[t addStructure:BAUM];
+				}
+			}
+		}
+		for (int i = 0; i<40; i++) {
+			if (tileIndex == meadowsData[i]) {
+				if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+					[t addStructure:MEADOW];
+				}
+			}
+		}
+	}
 }
 
 - (void)makePlayer1Tiles:(GamePlayer*)player1

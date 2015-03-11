@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIDevice.h>
+#import "MessageLayer.h"
 
 @class Map;
 @class GamePlayer;
@@ -21,6 +22,6 @@
 }
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
-
+- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 
 @end

@@ -19,7 +19,7 @@
 }
 
 @property (nonatomic) MessageLayer* messageLayer;
-
+@property (nonatomic) SPSprite* tilesSprite;
 @property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;
 @property (nonatomic, readonly) Hud* hud;

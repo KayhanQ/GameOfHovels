@@ -72,9 +72,13 @@
     _players = [NSMutableArray array];
     [_players addObject:player1];
     [_players addObject:player2];
-
-    _currentPlayer = player1;
-    _mePlayer = player1;
+	_currentPlayer = player1;
+	if([MessageLayer sharedMessageLayer].isPlayer1){
+		_mePlayer = player1;
+	}
+	else{
+		_mePlayer = player2;
+	}
 
     _contents = [SPSprite sprite];
     [self addChild:_contents];
@@ -132,17 +136,15 @@
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
     [self beginTurnWithPlayer:_currentPlayer];
-    
-    
+	[MessageLayer sharedMessageLayer].gameEngine = self;
 }
 
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
-    _currentPlayer = player;
     [_map updateHud];
     _map.currentPlayer = _currentPlayer;
-    [_map treeGrowthPhase];
+    //[_map treeGrowthPhase];
     
     //player can now make inputs again
     _map.touchable = true;
@@ -154,7 +156,13 @@
     _map.touchable = false;
     _selectedTile = nil;
     [_map endTurnUpdates];
-    
+	if(_currentPlayer == [_players objectAtIndex:0]){
+		_currentPlayer = [_players objectAtIndex:1];
+	}
+	else{
+		_currentPlayer = [_players objectAtIndex:0];
+	}
+	
     //relay turn has ended
     //Begin Turn will get called again
     //Now we just simulate it by giving our player another turn
@@ -162,8 +170,14 @@
 }
 
 //here we play the opponents move
-- (void)playOtherPlayersMove:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile
+- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex
 {
+	Tile *tile = (Tile*)[_map.tilesSprite childAtIndex:tileIndex];
+	Tile *destTile;
+	if (destTileIndex != -1){
+		destTile = (Tile*)[_map.tilesSprite childAtIndex:destTileIndex];
+	}
+	
     switch (aType) {
         case UPGRADEVILLAGE:
         {
@@ -172,7 +186,7 @@
         }
         case BUYUNIT:
         {
-            [_map buyUnitFromTile:_selectedTile tile:destTile];
+            [_map buyUnitFromTile:tile tile:destTile];
             break;
         }
         case BUILDMEADOW:
@@ -182,7 +196,7 @@
         }
         case MOVEUNIT:
         {
-            [_map moveUnitWithTile:_selectedTile tile:destTile];
+            [_map moveUnitWithTile:tile tile:destTile];
             break;
         }
         default:
@@ -316,6 +330,10 @@
 
 }
 
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data
+   fromPlayer:(NSString *)playerID{
+	
+}
 
 
 

@@ -11,11 +11,12 @@
 #import "Tile.h"
 #define playerIdKey @"PlayerId"
 #define randomNumberKey @"randomNumber"
+#import "GameEngine.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
-
+@synthesize gameEngine = _gameEngine;
 
 // on "init" you need to initialize your instance
 -(id) init
@@ -133,15 +134,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	MessageGameBegin message;
 	message.message.messageType = kMessageTypeGameBegin;
 	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
-	[self sendData:data];
-	
-}
-
-- (void)sendMove {
-	
-	MessageMove message;
-	message.message.messageType = kMessageTypeMove;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageMove)];
 	[self sendData:data];
 	
 }
@@ -270,13 +262,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	} else if (message->messageType == kMessageTypeMove) {
 		NSLog(@"Received move");
 		
-		/*apply the move*/
-		if (self.isPlayer1) {
 			//[player2 moveForward];
-		} else {
-			//[player1 moveForward];
-		}
-		
+			MessageMove * messageMove = (MessageMove *) [data bytes];
+			[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
 	} else if (message->messageType == kMessageTypeGameOver) {
 		MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
 		NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
@@ -396,16 +384,14 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 //We receive which move occured and encode and send it to all players
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile *)tile destTile:(Tile *)destTile
 {
-    int tileIndex = -1;
-    int destTileIndex = -1;
-    
-    tileIndex = [tile childIndex:tile];
-    if (destTile!=nil) destTileIndex = [destTile childIndex:destTile];
-    
-    
-    //No we send a message with three ints
-    //the actionType, tile, and destTile
-    
+	MessageMove message;
+	message.message.messageType = kMessageTypeMove;
+	message.aType=aType;
+	message.tileIndex=[tile.parent childIndex:tile];
+	message.destTileIndex=-1;
+	if (destTile!=nil) message.destTileIndex = [destTile.parent childIndex:destTile];
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageMove)];
+	[self sendData:data];
 }
 
 
