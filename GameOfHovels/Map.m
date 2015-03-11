@@ -16,13 +16,15 @@
 #import "GamePlayer.h"
 #import "Hud.h"
 #import "Media.h"
-
+#import "MessageLayer.h"
 
 @implementation Map {
     SPSprite* _tilesSprite;
     SPSprite* _unitsSprite;
     SPSprite* _villagesSprite;
 
+    MessageLayer* _messageLayer;
+    
     float _gridWidth;
     float _gridHeight;
     float _tileWidth;
@@ -31,7 +33,9 @@
     
 }
 
+@synthesize messageLayer = _messageLayer;
 @synthesize currentPlayer = _currentPlayer;
+@synthesize mePlayer = _mePlayer;
 @synthesize hud = _hud;
 
 
@@ -227,7 +231,10 @@
 - (void)upgradeVillageWithTile:(Tile*)tile
 {
     BOOL actionPossible = true;
-    if (_currentPlayer.woodPile<8) actionPossible = false;
+    
+    if ([self isMyTurn]) {
+        if (_currentPlayer.woodPile<8) actionPossible = false;
+    }
     
     if (actionPossible == false) {
         return;
@@ -236,13 +243,15 @@
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile];
     [tile upgradeVillage];
-
     for (Tile* t in tiles) {
         t.village = tile.village;
     }
     
-    _currentPlayer.woodPile -= 8;
-    [self updateHud];
+    if ([self isMyTurn]) {
+        _currentPlayer.woodPile -= 8;
+        [self updateHud];
+        [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
+    }
 }
 
 - (NSMutableArray*)getTilesforVillage:(Tile*)tile
@@ -272,45 +281,47 @@
 - (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
 {
     BOOL actionPossible = true;
-    if (villageTile.village != destTile.village) actionPossible = false;
-    if (![destTile canHaveUnit]) actionPossible = false;
-    //if (_currentPlayer.goldPile<11) actionPossible = false;
-
-    if (actionPossible == false) {
-        return;
+    if ([self isMyTurn]) {
+        if (villageTile.village != destTile.village) actionPossible = false;
+        if (![destTile canHaveUnit]) actionPossible = false;
     }
     
-    //action is possible
+    if (actionPossible == false) return;
+    
     Peasant* r = [[Peasant alloc] initWithTile:destTile];
     [_unitsSprite addChild:r];
     destTile.unit = r;
     
-    _currentPlayer.goldPile-=10;
-    [self updateHud];
+    if ([self isMyTurn]) {
+        _currentPlayer.goldPile-=10;
+        [self updateHud];
+        [_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
+    }
 }
 
-//comletes the move to new tile
+//completes the move to new tile
 - (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
 {
-    
     Unit* unit = unitTile.unit;
     
     BOOL movePossible = true;
-    if (unit.movesCompleted) {
-        movePossible = false;
-    }
-    if ([unitTile neighboursContainTile:destTile] == false) {
-        movePossible = false;
-    }
-    //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
-    if (destTile.isVillage) movePossible = false;
-    if (unit.distTravelled == unit.stamina) {
-        movePossible = false;
-    }
-    
-    if (unitTile.village != destTile.village) {
-        //[self takeOverTile:unitTile tile:destTile];
-        movePossible = false;
+    if ([self isMyTurn]) {
+        if (unit.movesCompleted) {
+            movePossible = false;
+        }
+        if ([unitTile neighboursContainTile:destTile] == false) {
+            movePossible = false;
+        }
+        //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
+        if (destTile.isVillage) movePossible = false;
+        if (unit.distTravelled == unit.stamina) {
+            movePossible = false;
+        }
+        
+        if (unitTile.village != destTile.village) {
+            //[self takeOverTile:unitTile tile:destTile];
+            movePossible = false;
+        }
     }
     
     if (!movePossible) {
@@ -336,6 +347,10 @@
     
     //need to refresh the colour, where should this actually be done?
     [self showPlayersTeritory];
+    
+    if ([self isMyTurn]) {
+        [_messageLayer sendMoveWithType:MOVEUNIT tile:unitTile destTile:destTile];
+    }
 }
 
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
@@ -347,14 +362,16 @@
 - (void)chopTree:(Tile*)tile
 {
     [tile removeStructure];
-    _currentPlayer.woodPile++;
-    [self updateHud];
+    if ([self isMyTurn]) {
+        _currentPlayer.woodPile++;
+        [self updateHud];
+    }
 }
 
 - (void)buildMeadow:(Tile*)tile
 {
     [tile addStructure:MEADOW];
-    NSLog(@"build Meadow");
+    
 }
 
 - (void)updateHud
@@ -380,6 +397,10 @@
     
 }
 
+- (BOOL)isMyTurn
+{
+    return _currentPlayer == _mePlayer;
+}
 
 
 

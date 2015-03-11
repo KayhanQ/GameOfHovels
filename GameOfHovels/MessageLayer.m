@@ -8,6 +8,7 @@
 //
 
 #import "MessageLayer.h"
+#import "Tile.h"
 #define playerIdKey @"PlayerId"
 #define randomNumberKey @"randomNumber"
 
@@ -355,7 +356,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		}
 		NSLog(@"[GKLocalPlayer localPlayer].playerID=%@", [GKLocalPlayer localPlayer].playerID);
 		
-		//for some reason [GKLocalPlayer localPlayer].playerID returns null, but ONLY ON SIMULATOR 
+		//for some reason [GKLocalPlayer localPlayer].playerID returns null, but ONLY ON SIMULATOR
 		if([GKLocalPlayer localPlayer].playerID != nil){
 			NSLog([GKLocalPlayer localPlayer].playerID);
 			[self.orderOfPlayers addObject:@{playerIdKey : [GKLocalPlayer localPlayer].playerID,
@@ -392,6 +393,19 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	return NO;
 }
 
+//We receive which move occured and encode and send it to all players
+- (void)sendMoveWithType:(enum ActionType)aType tile:(Tile *)tile destTile:(Tile *)destTile
+{
+    int tileIndex = -1;
+    int destTileIndex = -1;
+    
+    tileIndex = [tile childIndex:tile];
+    if (destTile!=nil) destTileIndex = [destTile childIndex:destTile];
+    
+    //No we send a message with three ints
+    //the actionType, tile, and destTile
+    
+}
 
 
 

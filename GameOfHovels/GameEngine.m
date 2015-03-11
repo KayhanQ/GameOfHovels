@@ -18,7 +18,7 @@
 #import "Media.h"
 #import "GHEvent.h"
 #import "ActionMenuEvent.h"
-
+#import "MessageLayer.h"
 
 @implementation GameEngine
 {
@@ -27,11 +27,14 @@
     ActionMenu* _actionMenu;
     SPSprite* _contents;
     Hud* _hud;
+    MessageLayer* _messageLayer;
+    
     SPSprite* _popupMenuSprite;
     
     Tile* _selectedTile;
     BOOL _unitActionIntent;
     
+    GamePlayer* _mePlayer;
     GamePlayer* _currentPlayer;
     
     
@@ -58,6 +61,11 @@
 - (void)setup
 {
     //init Players
+    
+    //Create the Message Layer
+    _messageLayer = [MessageLayer init];
+    
+    
     //this will actually happen outside Game Engine
     GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
     GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
@@ -67,7 +75,8 @@
     [_players addObject:player2];
 
     _currentPlayer = player1;
-    
+    _mePlayer = player1;
+
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
@@ -86,6 +95,8 @@
     
     
     _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
+    _map.mePlayer = _mePlayer;
+    _map.messageLayer = _messageLayer;
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
@@ -152,19 +163,45 @@
     [self beginTurnWithPlayer:_currentPlayer];
 }
 
+//here we play the opponents move
+- (void)playOtherPlayersMove:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile
+{
+    switch (aType) {
+        case UPGRADEVILLAGE:
+        {
+            [_map upgradeVillageWithTile:tile];
+            break;
+        }
+        case BUYUNIT:
+        {
+            [_map buyUnitFromTile:_selectedTile tile:destTile];
+            break;
+        }
+        case BUILDMEADOW:
+        {
+            [_map buildMeadow:tile];
+            break;
+        }
+        case MOVEUNIT:
+        {
+            [_map moveUnitWithTile:_selectedTile tile:destTile];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 - (void)actionMenuAction:(ActionMenuEvent*) event
 {
     NSLog(@"Action Menu Action");
     Tile* tile = event.tile;
-    Tile* destTile = tile;
-
     BOOL actionCompleted = true;
     
     switch (event.aType) {
         case UPGRADEVILLAGE:
         {
             [_map upgradeVillageWithTile:tile];
-            
             break;
         }
         case BUYUNIT:
@@ -190,7 +227,6 @@
     [_actionMenu removeFromParent];
     [self addTileListener];
     if (actionCompleted) {
-
         [self deselectTile:_selectedTile];
     }
 }
@@ -199,7 +235,7 @@
 {
     Tile* tile = event.tile;
     
-    if (tile.village.player != _currentPlayer && _selectedTile == nil) {
+    if (_mePlayer != _currentPlayer && _selectedTile == nil) {
         return;
     }
     

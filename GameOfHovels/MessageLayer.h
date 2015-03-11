@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "ActionMenu.h"
 extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
+
+@class Tile;
 
 typedef enum {
 	kMessageTypeRandomNumber = 0,
@@ -71,6 +74,7 @@ typedef enum {
 				 viewController:(UIViewController *)viewController;
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController;
 - (BOOL)allRandomNumbersAreReceived;
+- (void)sendMoveWithType:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile;
 
 @property NSMutableArray *orderOfPlayers;
 @property BOOL isPlayer1, receivedAllRandomNumbers;

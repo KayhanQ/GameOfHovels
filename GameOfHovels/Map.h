@@ -11,14 +11,16 @@
 @class Tile;
 @class GamePlayer;
 @class Hud;
-
+@class MessageLayer;
 
 @interface Map : BasicSprite {
     
     
 }
 
+@property (nonatomic) MessageLayer* messageLayer;
 
+@property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;
 @property (nonatomic, readonly) Hud* hud;
 
