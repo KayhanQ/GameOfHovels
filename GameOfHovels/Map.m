@@ -343,8 +343,8 @@
         }
         
         if (unitTile.village != destTile.village) {
-            //[self takeOverTile:unitTile tile:destTile];
-            movePossible = false;
+            [self takeOverTile:unitTile tile:destTile];
+            //movePossible = false;
         }
     }
     

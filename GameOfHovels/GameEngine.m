@@ -69,6 +69,7 @@
     [_players addObject:player1];
     [_players addObject:player2];
 	_currentPlayer = player1;
+	
 	if([MessageLayer sharedMessageLayer].isPlayer1){
 		_mePlayer = player1;
 	}
@@ -82,7 +83,7 @@
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
-    _hud = [[Hud alloc] initWithPlayer:_currentPlayer];
+    _hud = [[Hud alloc] initWithPlayer:_mePlayer];
     [_contents addChild:_hud];
     
     
@@ -94,6 +95,7 @@
     
     
     _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
+	_map.gameEngine = self;
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
@@ -160,7 +162,9 @@
     //relay turn has ended
     //Begin Turn will get called again
     //Now we just simulate it by giving our player another turn
-    [self beginTurnWithPlayer:_currentPlayer];
+	if(_currentPlayer == _mePlayer){
+		[self beginTurnWithPlayer:_currentPlayer];
+	}
 }
 
 //here we play the opponents move

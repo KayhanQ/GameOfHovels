@@ -106,6 +106,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	if ([dictionary[playerIdKey]
 		 isEqualToString:[GKLocalPlayer localPlayer].playerID]) {
 		NSLog(@"I'm player 1");
+
 		return YES;
 	}
 	return NO;
