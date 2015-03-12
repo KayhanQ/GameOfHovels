@@ -17,6 +17,7 @@
 #import "Hud.h"
 #import "Media.h"
 #import "MessageLayer.h"
+#import "GameEngine.h"
 
 @implementation Map {
     SPSprite* _unitsSprite;
@@ -32,9 +33,8 @@
 }
 @synthesize tilesSprite = _tilesSprite;
 @synthesize messageLayer = _messageLayer;
-@synthesize currentPlayer = _currentPlayer;
-@synthesize mePlayer = _mePlayer;
 @synthesize hud = _hud;
+@synthesize gameEngine = _gameEngine;
 
 
 -(id)initWithRandomMap:(NSMutableArray *)players hud:(Hud *)hud
@@ -257,7 +257,7 @@
     BOOL actionPossible = true;
     
     if ([self isMyTurn]) {
-        if (_currentPlayer.woodPile<8) actionPossible = false;
+        if (_gameEngine.currentPlayer.woodPile<8) actionPossible = false;
     }
     
     if (actionPossible == false) {
@@ -272,7 +272,7 @@
     }
     
     if ([self isMyTurn]) {
-        _currentPlayer.woodPile -= 8;
+        _gameEngine.currentPlayer.woodPile -= 8;
         [self updateHud];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
@@ -317,7 +317,7 @@
     destTile.unit = r;
     
     if ([self isMyTurn]) {
-        _currentPlayer.goldPile-=10;
+        _gameEngine.currentPlayer.goldPile-=10;
         [self updateHud];
         [_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
     }
@@ -387,7 +387,7 @@
 {
     [tile removeStructure];
     if ([self isMyTurn]) {
-        _currentPlayer.woodPile++;
+        _gameEngine.currentPlayer.woodPile++;
         [self updateHud];
     }
 }
@@ -423,7 +423,7 @@
 
 - (BOOL)isMyTurn
 {
-    return _currentPlayer == _mePlayer;
+    return _gameEngine.currentPlayer == _gameEngine.mePlayer;
 }
 
 

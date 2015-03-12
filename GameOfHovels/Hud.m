@@ -41,7 +41,7 @@
 
         
         _woodField = [SPTextField textFieldWithWidth:200 height:30 text:@"Wood: 0"];
-        _woodField.x = 700 - _woodField.width;
+        _woodField.x = 500 - _woodField.width;
         _woodField.pivotX = _woodField.width;
         _woodField.hAlign = SPHAlignRight;
         _woodField.border = false;

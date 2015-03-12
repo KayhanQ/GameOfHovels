@@ -32,11 +32,7 @@
     SPSprite* _popupMenuSprite;
     
     Tile* _selectedTile;
-    BOOL _unitActionIntent;
-    
-    GamePlayer* _mePlayer;
-    GamePlayer* _currentPlayer;
-    
+    BOOL _unitActionIntent;    
     
     NSMutableArray* _players;
     SPJuggler* _animationJuggler;
@@ -98,7 +94,6 @@
     
     
     _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
-    _map.mePlayer = _mePlayer;
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
@@ -143,7 +138,6 @@
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
     [_map updateHud];
-    _map.currentPlayer = _currentPlayer;
     //[_map treeGrowthPhase];
     
     //player can now make inputs again
