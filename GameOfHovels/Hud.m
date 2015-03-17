@@ -10,6 +10,7 @@
 #import "Hud.h"
 #import "GamePlayer.h"
 #import "GHEvent.h"
+#import "SparrowHelper.h"
 
 @implementation Hud {
     
@@ -18,6 +19,9 @@
     SPTextField* _goldField;
 
     int _yOffsetMinor;
+    float _middleX;
+    float _height;
+    float _width;
 }
 
 @synthesize player = _player;
@@ -30,32 +34,48 @@
         _player = player;
         
         
-        _yOffsetMinor = 10;
+        _height = 380;
+        _width = 130;
+
+        _yOffsetMinor = 3;
         
+        
+        SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
+        background.color = 0xcccccc;
+        [self addChild:background];
+        
+        _middleX = _width/2;
         
         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
         _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
         _endTurnButton.text = @"End Turn";
+        [SparrowHelper centerPivot:_endTurnButton];
+        _endTurnButton.x = _middleX;
+        _endTurnButton.y = _height - _endTurnButton.height;
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
         
-        _woodField = [SPTextField textFieldWithWidth:200 height:30 text:@"Wood: 0"];
-        _woodField.x = 500 - _woodField.width;
-        _woodField.pivotX = _woodField.width;
-        _woodField.hAlign = SPHAlignRight;
-        _woodField.border = false;
+        _woodField = [self newTextField];
+        _woodField.text = @"Wood: ";
+        _woodField.y = 200;
         [self addChild:_woodField];
         
-        _goldField = [SPTextField textFieldWithWidth:200 height:30 text:@"Gold: 0"];
-        _goldField.x = _woodField.x;
+        _goldField = [self newTextField];
+        _goldField.text = @"Gold: ";
         _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
-        _goldField.pivotX = _goldField.width;
-        _goldField.hAlign = SPHAlignRight;
-
         [self addChild:_goldField];
     }
     return self;
+}
+
+- (SPTextField*)newTextField
+{
+    SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
+    t.x = _middleX;
+    t.border = true;
+    [SparrowHelper centerPivot:t];
+    return t;
 }
 
 - (void)update

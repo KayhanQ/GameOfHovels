@@ -16,8 +16,18 @@
 @implementation GCViewcontroller
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
-												 name:LocalPlayerIsAuthenticated object:nil];
+    
+    BOOL startWithGC = false;
+    
+    if (startWithGC) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
+                                                     name:LocalPlayerIsAuthenticated object:nil];
+    }
+    else {
+        ViewController *vc = [[ViewController alloc]init];
+        [self presentViewController:vc animated:YES completion:nil];
+    }
+
 }
 
 - (void)playerAuthenticated {
