@@ -10,8 +10,10 @@
 #import "Map.h"
 #import "Tile.h"
 #import "Unit.h"
-#import "Ritter.h"
 #import "Peasant.h"
+#import "Infantry.h"
+#import "Soldier.h"
+#import "Ritter.h"
 #import "Baum.h"
 #import "Hovel.h"
 #import "GamePlayer.h"
@@ -245,6 +247,7 @@
         }
     }
 }
+
 -(void)addMeadows
 {
     for (int j  = 1 ; j<40; j++) {
@@ -284,6 +287,36 @@
         [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
+}
+
+- (void)upgradeUnitWithTile:(Tile *)tile
+{
+    Unit* u = tile.unit;
+    Unit* newUnit;
+    
+    switch (u.uType) {
+        case PEASANT:
+        {
+            newUnit = [[Infantry alloc] initWithTile:tile];
+            break;
+        }
+        case INFANTRY:
+        {
+            newUnit = [[Soldier alloc] initWithTile:tile];
+            break;
+        }
+        case SOLDIER:
+        {
+            newUnit = [[Ritter alloc] initWithTile:tile];
+            break;
+        }
+        default:
+            break;
+    }
+    
+    [u removeFromParent];
+    [_unitsSprite addChild:newUnit];
+    tile.unit = newUnit;
 }
 
 - (NSMutableArray*)getTilesforVillage:(Tile*)tile
@@ -338,13 +371,13 @@
     
     BOOL movePossible = true;
     if ([self isMyTurn]) {
-        if (unit.movesCompleted) {
+        if (!unit.movable) {
             movePossible = false;
         }
         if ([unitTile neighboursContainTile:destTile] == false) {
             movePossible = false;
         }
-        //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
+        if (destTile.getStructureType == BAUM && unit.uType == RITTER) movePossible = false;
         if (destTile.isVillage) movePossible = false;
         if (unit.distTravelled == unit.stamina) {
             movePossible = false;
@@ -404,12 +437,12 @@
 {
     Unit* u = tile.unit;
     if (u.workState == NOWORKSTATE) {
-        u.workState = BUILDINGMEADOW;
+        [u setWorkState:BUILDINGMEADOW];
     }
     else if (u.workState == BUILDINGMEADOW) {
         if (u.workstateCompleted) {
             [tile addStructure:MEADOW];
-            u.workState = NOWORKSTATE;
+            [u setWorkState:NOWORKSTATE];
         }
     }
     

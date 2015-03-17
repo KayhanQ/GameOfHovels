@@ -287,7 +287,7 @@
 
 - (BOOL)canBeSelected
 {
-    if (_unit != nil) return true;
+    if (_unit != nil && _unit.movable) return true;
     //if (_isVillage) return true;
 
     return false;

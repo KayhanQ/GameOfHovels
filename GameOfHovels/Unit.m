@@ -24,7 +24,7 @@
 //@synthesize tile = _tile;
 @synthesize buyCost = _buyCost;
 @synthesize uType = _uType;
-@synthesize movesCompleted = _movesCompleted;
+@synthesize movable = _movable;
 @synthesize stamina = _stamina;
 @synthesize distTravelled = _distTravelled;
 @synthesize workState = _workState;
@@ -38,7 +38,8 @@
         //custom code here'
         _uType = uType;
         _distTravelled = 0;
-        _movesCompleted = false;
+        _movable = false;
+        _workstateCompleted = false;
         _upgradeCost = 10;
         
         switch (uType) {
@@ -76,12 +77,9 @@
         }
         
         
-        _workstateCompleted = false;
         
         
         self.touchable = false;
-        
-
     }
     return self;
 }
@@ -89,24 +87,31 @@
 //if you are in no workstate your completed is false
 - (void)incrementWorkstate
 {
-    if (_workState != NOWORKSTATE) _turnsInWS++;
-
-    _workstateCompleted = false;
+    if (_workState == NOWORKSTATE) return;
+        
+    _turnsInWS++;
     
     switch (_workState) {
         case BUILDINGMEADOW:
         {
-            if (_turnsInWS<2) _workstateCompleted = false;
+            if (_turnsInWS==3) _workstateCompleted = true;
             break;
         }
         default:
             break;
     }
+}
+
+- (void)setWorkState:(enum WorkState)workState
+{
+    _workState = workState;
+    _workstateCompleted = false;
+    _movable = false;
     
-    if (_workstateCompleted == true) {
+    if (_workState == NOWORKSTATE) {
+        _movable = true;
         _turnsInWS = 0;
     }
 }
-
 
 @end

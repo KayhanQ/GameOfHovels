@@ -231,6 +231,10 @@
             
             break;
         }
+        case UPGRADEUNIT:
+        {
+            [_map upgradeUnitWithTile:tile];
+        }
         default:
             break;
     }

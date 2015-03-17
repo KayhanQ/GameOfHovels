@@ -25,7 +25,7 @@
 @property (nonatomic, readonly) int buyCost;
 @property (nonatomic, readonly) int upkeepCost;
 @property (nonatomic, readonly) int upgradeCost;
-@property (nonatomic) BOOL movesCompleted;
+@property (nonatomic) BOOL movable;
 @property (nonatomic, readonly) int stamina;
 @property (nonatomic) int distTravelled;
 
@@ -37,7 +37,8 @@
 
 -(id)initWithUnitType: (enum UnitType) uType;
 -(void)incrementWorkstate;
-
+-(void)upgradeUnit;
+-(void)setWorkState:(enum WorkState)workState;
 
 
 
