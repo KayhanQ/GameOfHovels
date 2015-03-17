@@ -137,21 +137,18 @@
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
-    [_map beginTurnPhases];
+    //[_map treeGrowthPhase];
+    
     //player can now make inputs again
     _map.touchable = true;
     
 }
 
-//This method is important. Change stuff in it depending on what you want to do
 - (void)endTurn:(GHEvent*)event
 {
     _map.touchable = false;
     _selectedTile = nil;
     [_map endTurnUpdates];
-    [self beginTurnWithPlayer:_currentPlayer];
-    
-    /*
 	if(_currentPlayer == [_players objectAtIndex:0]){
 		_currentPlayer = [_players objectAtIndex:1];
 	}
@@ -165,7 +162,6 @@
 	if(_currentPlayer == _mePlayer){
 		[self beginTurnWithPlayer:_currentPlayer];
 	}
-     */
 }
 
 //here we play the opponents move

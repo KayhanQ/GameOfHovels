@@ -21,7 +21,7 @@
     
     if (self=[super initWithUnitType:PEASANT]) {
         //custom code here
-         
+        
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"peasant.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
         baseImage.scale = 0.5;

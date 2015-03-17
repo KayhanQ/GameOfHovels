@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "Map.h"
 #import "Tile.h"
-#import "Unit.h"
 #import "Ritter.h"
 #import "Peasant.h"
 #import "Baum.h"
@@ -22,7 +21,7 @@
 
 @implementation Map {
     SPSprite* _unitsSprite;
-    NSMutableArray* _villagesTileArray;
+    NSMutableArray* _villagesArray;
 
     MessageLayer* _messageLayer;
     
@@ -62,7 +61,7 @@
         _unitsSprite.y = -28;
         [self addChild:_unitsSprite];
         
-        _villagesTileArray = [NSMutableArray array];
+        _villagesArray = [NSMutableArray array];
         
         
         [self makeBasicMap];
@@ -127,7 +126,7 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player1;
-            [_villagesTileArray addObject:villageTile];
+            [_villagesArray addObject:villageTile];
         }
         
         if (j>9 && j<13) {
@@ -156,7 +155,7 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player1;
-            [_villagesTileArray addObject:villageTile];
+            [_villagesArray addObject:villageTile];
         }
         
         if (j>9 && j<13) {
@@ -187,7 +186,7 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player2;
-            [_villagesTileArray addObject:villageTile];
+            [_villagesArray addObject:villageTile];
         }
         
         if (j>3 && j<7) {
@@ -256,6 +255,25 @@
     }
 }
 
+- (void)treeGrowthPhase
+{
+    NSLog(@"Tree Growth Phase");
+    for (Tile* tile in _tilesSprite) {
+        Structure* s = [tile getStructure];
+        if (s.sType == BAUM) {
+            Baum* b = (Baum*)s;
+            //only grow near a tree if it not newly grown.
+            if (!b.newlyGrown) {
+                for (Tile* nTile in [tile getNeighbours]) {
+                    if ([nTile canHaveTree]) {
+                        int num = arc4random() % 10;
+                        if (num==0) [nTile addStructure:BAUM];
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 - (void)upgradeVillageWithTile:(Tile*)tile
@@ -402,16 +420,7 @@
 
 - (void)buildMeadow:(Tile*)tile
 {
-    Unit* u = tile.unit;
-    if (u.workState == NOWORKSTATE) {
-        u.workState = BUILDINGMEADOW;
-    }
-    else if (u.workState == BUILDINGMEADOW) {
-        if (u.workstateCompleted) {
-            [tile addStructure:MEADOW];
-            u.workState = NOWORKSTATE;
-        }
-    }
+    [tile addStructure:MEADOW];
     
 }
 
@@ -425,55 +434,6 @@
     
 }
 
-- (void)beginTurnPhases
-{
-    [self treeGrowthPhase];
-    [self buildPhase];
-    
-    
-}
-
-- (void)treeGrowthPhase
-{
-    NSLog(@"Tree Growth Phase");
-    for (Tile* tile in _tilesSprite) {
-        Structure* s = [tile getStructure];
-        if (s.sType == BAUM) {
-            Baum* b = (Baum*)s;
-            //only grow near a tree if it not newly grown.
-            if (!b.newlyGrown) {
-                for (Tile* nTile in [tile getNeighbours]) {
-                    if ([nTile canHaveTree]) {
-                        int num = arc4random() % 10;
-                        if (num==0) [nTile addStructure:BAUM];
-                    }
-                }
-            }
-        }
-    }
-}
-
-- (void)buildPhase
-{
-    for (Tile* vTile in _villagesTileArray) {
-        for (Tile* t in [self getTilesforVillage:vTile]) {
-            if (t.unit!=nil) {
-                if (t.unit.workstateCompleted) {
-                    switch (t.unit.workState) {
-                        case BUILDINGMEADOW:
-                        {
-                            [self buildMeadow:t];
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
-}
-
 - (void)endTurnUpdates
 {
     //update the trees
@@ -482,15 +442,6 @@
         if (s.sType == BAUM) {
             Baum* b = (Baum*)s;
             b.newlyGrown = false;
-        }
-    }
-    
-    //We go through ever single tile we own and do all updates
-    for (Tile* vTile in _villagesTileArray) {
-        for (Tile* t in [self getTilesforVillage:vTile]) {
-            if (t.unit!=nil) {
-                [t.unit incrementWorkstate];
-            }
         }
     }
     

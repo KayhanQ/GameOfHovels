@@ -29,7 +29,7 @@
 
         
         [self addChild:baseImage];
-         
+        
         
         [SparrowHelper centerPivot:self];
 
