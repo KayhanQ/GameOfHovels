@@ -19,6 +19,8 @@
 
 @property (nonatomic) GamePlayer* player;
 @property (nonatomic, readonly) enum VillageType vType;
+@property (nonatomic) int woodPile;
+@property (nonatomic) int goldPile;
 
 -(id)initWithStructureType:(enum VillageType)vType;
 

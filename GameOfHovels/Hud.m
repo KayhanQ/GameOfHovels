@@ -11,6 +11,8 @@
 #import "GamePlayer.h"
 #import "GHEvent.h"
 #import "SparrowHelper.h"
+#import "Tile.h"
+#import "Village.h"
 
 @implementation Hud {
     
@@ -78,12 +80,14 @@
     return t;
 }
 
-- (void)update
+- (void)update:(Tile *)tile
 {
-    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", _player.woodPile];
+    Village* v = tile.village;
+    
+    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
     _woodField.text = woodString;
     
-    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", _player.goldPile];
+    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
     _goldField.text = goldString;
     
 }

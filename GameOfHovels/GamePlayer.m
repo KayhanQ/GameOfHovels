@@ -15,14 +15,12 @@
 }
 
 @synthesize pColor = _pColor;
-@synthesize woodPile = _woodPile;
-@synthesize goldPile = _goldPile;
+
 
 
 - (id)initWithString:(NSString *)name color:(enum PlayerColor)pColor
 {
-    _woodPile = 40;
-    _goldPile = 36;
+
     
     _pColor = pColor;
     

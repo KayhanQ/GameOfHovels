@@ -137,7 +137,6 @@
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
-    [_map updateHud];
     //[_map treeGrowthPhase];
     
     //player can now make inputs again
@@ -294,6 +293,7 @@
 - (void)selectTile:(Tile*)tile
 {
     _selectedTile = tile;
+    [_hud update:tile];
     [tile selectTile];
 }
 

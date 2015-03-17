@@ -185,12 +185,12 @@
     return s.sType;
 }
 
-- (void)setNeighbour:(int)tileNeighbour tile: (Tile*)tile
+- (void)setNeighbour:(enum TileNeighbours)tileNeighbour tile: (Tile*)tile
 {
-    [_neighboursArray insertObject:tile atIndex: (int)tileNeighbour];
+    [_neighboursArray insertObject:tile atIndex: tileNeighbour];
 }
 
-- (Tile*)getNeighbour:(int)tileNeighbour
+- (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour
 {
     Tile* t = [_neighboursArray objectAtIndex:tileNeighbour];
     return t;
@@ -204,7 +204,6 @@
 {
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
-        //if the tile has a unit we can build a meadow
         if (_unit!=nil || _isVillage) {
             _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
                                                       target:self

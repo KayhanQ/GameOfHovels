@@ -11,7 +11,7 @@
 #import "ActionButton.h"
 #import "Media.h"
 #import "SparrowHelper.h"
-#import "Tile.h";
+#import "Tile.h"
 
 @implementation ActionButton {
     

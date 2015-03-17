@@ -28,8 +28,8 @@
 @property (nonatomic) enum PlayerColor pColor;
 
 - (id)initWithPosition: (SPPoint*)position structure: (enum StructureType)sType;
-- (void)setNeighbour:(int)tileNeighbour tile: (Tile*)tile;
-- (Tile*)getNeighbour:(int)tileNeighbour;
+- (void)setNeighbour:(enum TileNeighbours)tileNeighbour tile: (Tile*)tile;
+- (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
 
 - (void)setPColor:(enum PlayerColor)pColor;

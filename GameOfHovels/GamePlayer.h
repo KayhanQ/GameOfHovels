@@ -14,8 +14,7 @@
 }
 
 @property (nonatomic, readonly) enum PlayerColor pColor;
-@property (nonatomic) int woodPile;
-@property (nonatomic) int goldPile;
+
 
 
 -(id)initWithString:(NSString*)name color:(enum PlayerColor)pColor;

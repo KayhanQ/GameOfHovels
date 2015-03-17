@@ -21,7 +21,7 @@
 
 @implementation Map {
     SPSprite* _unitsSprite;
-    SPSprite* _villagesSprite;
+    NSMutableArray* _villagesArray;
 
     MessageLayer* _messageLayer;
     
@@ -61,9 +61,7 @@
         _unitsSprite.y = -28;
         [self addChild:_unitsSprite];
         
-        //unused so far
-        _villagesSprite = [SPSprite sprite];
-        [self addChild:_villagesSprite];
+        _villagesArray = [NSMutableArray array];
         
         
         [self makeBasicMap];
@@ -124,15 +122,14 @@
     int j = 0;
     
     for (Tile* t in _tilesSprite) {
-        
-        
         if (j == 10 && i == 10) {
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player1;
+            [_villagesArray addObject:villageTile];
         }
         
-        if (j>9 && j<15) {
+        if (j>9 && j<13) {
             if (i<15 && i>9) {
                 t.village = villageTile.village;
                 [t setPColor: villageTile.village.player.pColor];
@@ -144,6 +141,29 @@
             }
         }
 
+        i++;
+        if (i == _gridWidth) {
+            i=0;
+            j++;
+        }
+    }
+    
+    i=0;
+    j=0;
+    for (Tile* t in _tilesSprite) {
+        if (j == 10 && i == 6) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player1;
+            [_villagesArray addObject:villageTile];
+        }
+        
+        if (j>9 && j<13) {
+            if (i<8 && i>6) {
+                t.village = villageTile.village;
+                [t setPColor: villageTile.village.player.pColor];
+            }
+        }
         
         i++;
         if (i == _gridWidth) {
@@ -151,6 +171,7 @@
             j++;
         }
     }
+    
 }
 
 - (void)makePlayer2Tiles:(GamePlayer*)player2
@@ -165,6 +186,7 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player2;
+            [_villagesArray addObject:villageTile];
         }
         
         if (j>3 && j<7) {
@@ -258,8 +280,10 @@
 {
     BOOL actionPossible = true;
     
+    Village* tileVillage = tile.village;
+    
     if ([self isMyTurn]) {
-        if (_gameEngine.currentPlayer.woodPile<8) actionPossible = false;
+        if (tileVillage.woodPile<8) actionPossible = false;
     }
     
     if (actionPossible == false) {
@@ -270,12 +294,12 @@
     NSMutableArray* tiles = [self getTilesforVillage:tile];
     [tile upgradeVillage];
     for (Tile* t in tiles) {
-        t.village = tile.village;
+        t.village = tileVillage;
     }
     
     if ([self isMyTurn]) {
-        _gameEngine.currentPlayer.woodPile -= 8;
-        [self updateHud];
+        tileVillage.woodPile -= 8;
+        [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
 }
@@ -319,8 +343,8 @@
     destTile.unit = r;
     
     if ([self isMyTurn]) {
-        _gameEngine.currentPlayer.goldPile-=10;
-        [self updateHud];
+        villageTile.village.goldPile-=10;
+        [self updateHud:villageTile];
         [_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
     }
 }
@@ -389,8 +413,8 @@
 {
     [tile removeStructure];
     if ([self isMyTurn]) {
-        _gameEngine.currentPlayer.woodPile++;
-        [self updateHud];
+        tile.village.woodPile++;
+        [self updateHud: tile];
     }
 }
 
@@ -400,9 +424,9 @@
     
 }
 
-- (void)updateHud
+- (void)updateHud:(Tile*)tile
 {
-    [_hud update];
+    [_hud update:tile];
 }
 
 - (void)createRandomMap
