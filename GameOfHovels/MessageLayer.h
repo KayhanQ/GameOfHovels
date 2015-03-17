@@ -11,6 +11,7 @@
 #import "ViewController.h"
 #import "ActionMenu.h"
 @class GameEngine;
+@class GamePlayer;
 
 extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
@@ -77,9 +78,13 @@ typedef enum {
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController;
 - (BOOL)allRandomNumbersAreReceived;
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile;
+- (void)makePlayers;
+- (GamePlayer*)getCurrentPlayer;
 
 @property GameEngine* gameEngine;
 @property NSMutableArray *orderOfPlayers;
+@property NSMutableArray *players;
+
 @property BOOL isPlayer1, receivedAllRandomNumbers;
 @property BOOL receivedRandom;
 @property GameState gameState;

@@ -12,6 +12,7 @@
 #define playerIdKey @"PlayerId"
 #define randomNumberKey @"randomNumber"
 #import "GameEngine.h"
+#import "GamePlayer.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -39,6 +40,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		self.ourRandom = arc4random();
 		NSLog(@"OurRandom=%d", self.ourRandom);
 		[self setGameState:kGameStateWaitingForMatch];
+        
+        _players = [NSMutableArray array];
+        
 		self.orderOfPlayers = [NSMutableArray array];
 		[self authenticateLocalPlayer];
 	}
@@ -395,6 +399,20 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[self sendData:data];
 }
 
+//code Kayhan has implemented
+- (void)makePlayers
+{
+    GamePlayer* p1 = [[GamePlayer alloc] initWithString:@"Player 1" color:RED];
+    [_players addObject:p1];
+    
+    GamePlayer* p2 = [[GamePlayer alloc] initWithString:@"Player 2" color:BLUE];
+    [_players addObject:p2];
+}
 
+//TODO
+- (GamePlayer*)getCurrentPlayer
+{
+    return [_players objectAtIndex:0];
+}
 
 @end

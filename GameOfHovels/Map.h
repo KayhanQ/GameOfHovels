@@ -26,7 +26,7 @@
 @property (nonatomic, readonly) Hud* hud;
 
 
-- (id)initWithRandomMap:(NSMutableArray*)players hud:(Hud*)hud;
+- (id)initWithRandomMap:(Hud*)hud;
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 

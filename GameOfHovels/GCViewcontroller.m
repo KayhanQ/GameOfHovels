@@ -9,6 +9,8 @@
 
 #import "GCViewcontroller.h"
 #import "MessageLayer.h"
+#import "GlobalFlags.h"
+
 
 @interface GCViewcontroller()
 @end
@@ -17,7 +19,7 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
     
-    BOOL startWithGC = false;
+    BOOL startWithGC = [GlobalFlags isGameWithGC];
     
     if (startWithGC) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)

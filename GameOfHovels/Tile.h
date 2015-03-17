@@ -10,6 +10,7 @@
 #import "BasicSprite.h"
 #import "Village.h"
 #import "Structure.h"
+#import "GamePlayer.h"
 
 @class Unit;
 
@@ -22,14 +23,16 @@
 
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
-@property (nonatomic) int color;
 @property (nonatomic) BOOL isVillage;
 @property (nonatomic) Village* village;
+@property (nonatomic) enum PlayerColor pColor;
 
 - (id)initWithPosition: (SPPoint*)position structure: (enum StructureType)sType;
 - (void)setNeighbour:(int)tileNeighbour tile: (Tile*)tile;
 - (Tile*)getNeighbour:(int)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
+
+- (void)setPColor:(enum PlayerColor)pColor;
 
 - (void)addStructure:(enum StructureType)sType;
 

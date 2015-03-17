@@ -37,7 +37,7 @@
 @synthesize gameEngine = _gameEngine;
 
 
--(id)initWithRandomMap:(NSMutableArray *)players hud:(Hud *)hud
+-(id)initWithRandomMap:(Hud *)hud
 {
     if (self=[super init]) {
 		
@@ -68,8 +68,8 @@
         
         [self makeBasicMap];
         [self setNeighbours];
-        [self makePlayer1Tiles: [players objectAtIndex:0]];
-        [self makePlayer2Tiles: [players objectAtIndex:1]];
+        [self makePlayer1Tiles: _messageLayer.players[0]];
+        [self makePlayer2Tiles: _messageLayer.players[1]];
 
         //[self addTrees];
         //[self addMeadows];
@@ -125,10 +125,17 @@
     
     for (Tile* t in _tilesSprite) {
         
+        
+        if (j == 10 && i == 10) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player1;
+        }
+        
         if (j>9 && j<15) {
             if (i<15 && i>9) {
                 t.village = villageTile.village;
-                [t setColor:villageTile.village.player.color];
+                [t setPColor: villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
                     Peasant* u = [[Peasant alloc] initWithTile:t];
                     [_unitsSprite addChild:u];
@@ -136,12 +143,7 @@
                 }
             }
         }
-        
-        if (j == 10 && i == 10) {
-            [t addVillage:HOVEL];
-            villageTile = t;
-            t.village.player = player1;
-        }
+
         
         i++;
         if (i == _gridWidth) {
@@ -168,7 +170,7 @@
         if (j>3 && j<7) {
             if (i<10 && i>4) {
                 t.village = villageTile.village;
-                [t setColor:villageTile.village.player.color];
+                [t setPColor:villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
                     Peasant* u = [[Peasant alloc] initWithTile:t];
                     [_unitsSprite addChild:u];
@@ -295,7 +297,7 @@
 {
     for (Tile* t in _tilesSprite) {
         if (t.village!=nil) {
-            [t setColor:t.village.player.color];
+            [t setPColor:t.village.player.pColor];
         }
     }
 }

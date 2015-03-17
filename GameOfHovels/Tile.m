@@ -20,7 +20,7 @@
 #import "Fort.h"
 
 #import "Media.h"
-
+#import "GamePlayer.h"
 
 #import "SparrowHelper.h"
 
@@ -34,6 +34,8 @@
     Tile* bottomRightNeighbour;
 
     SPImage* _tileLayer;
+    SPImage* _selectionLayer;
+    
     
     NSMutableArray* _neighboursArray;
     //NSMutableArray* _structuresArray;
@@ -45,10 +47,9 @@
 
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
-@synthesize color = _color;
 @synthesize isVillage = _isVillage;
 @synthesize village = _village;
-
+@synthesize pColor = _pColor;
 
 -(id)initWithPosition:(SPPoint *)position structure:(enum StructureType)sType
 {
@@ -71,13 +72,14 @@
         //Tile needs some image to bw touched so we give it an 'empty' Tile
         //Right now this is a grass but eventually it will be white
         SPTexture* tileTexture = [Media atlasTexture:@"tileGrass_tile.png"];
-        _tileLayer = [SPImage imageWithTexture:tileTexture];
-        _tileLayer.alpha = 0.2;
-        [SparrowHelper centerPivot:_tileLayer];
-        [self addChild:_tileLayer];
+        _selectionLayer = [SPImage imageWithTexture:tileTexture];
+        [SparrowHelper centerPivot:_selectionLayer];
+        _selectionLayer.alpha = 0.2;
+        [self addChild:_selectionLayer];
+        
+        _pColor = NOCOLOR;
         
         [self addStructure:sType];
-
         
         _villageSprite = [SPSprite sprite];
         [self addChild:_villageSprite];
@@ -292,19 +294,22 @@
     return false;
 }
 
-- (void)setColor:(int)color
+- (void)setPColor:(enum PlayerColor)pColor
 {
-    _tileLayer.color = color;
+    _pColor = pColor;
+    [_structuresSprite removeChildAtIndex:0];
+    Grass* g = [[Grass alloc] initWithTile:self];
+    [_structuresSprite addChild:g atIndex:0];
 }
 
 - (void)selectTile
 {
-    _tileLayer.alpha = 0.5;
+    _selectionLayer.alpha = 0.5;
 }
 
 - (void)deselectTile
 {
-    _tileLayer.alpha = 0.2;
+    _selectionLayer.alpha = 0.2;
 }
 
 @end

@@ -19,6 +19,7 @@
 #import "GHEvent.h"
 #import "ActionMenuEvent.h"
 #import "MessageLayer.h"
+#import "GlobalFlags.h"
 
 @implementation GameEngine
 {
@@ -59,23 +60,20 @@
     //init Players
     
     //Create the Message Layer
+    _messageLayer = [MessageLayer sharedMessageLayer];
     
+    //we check if we are using GC networking
+    //if not we can manually create our own setup
+    if ([GlobalFlags isGameWithGC]) {
+        
+    }
+    else {
+        [_messageLayer makePlayers];
+        _currentPlayer = [_messageLayer getCurrentPlayer];
+        _mePlayer = _currentPlayer;
+    }
     
-    //this will actually happen outside Game Engine
-    GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
-    GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
 
-    _players = [NSMutableArray array];
-    [_players addObject:player1];
-    [_players addObject:player2];
-	_currentPlayer = player1;
-	
-	if([MessageLayer sharedMessageLayer].isPlayer1){
-		_mePlayer = player1;
-	}
-	else{
-		_mePlayer = player2;
-	}
 
     _contents = [SPSprite sprite];
     [self addChild:_contents];
@@ -94,7 +92,7 @@
     [_world addChild:q];
     
     
-    _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
+    _map = [[Map alloc] initWithRandomMap:_hud];
 	_map.gameEngine = self;
     [_world addChild:_map];
     
