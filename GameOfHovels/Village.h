@@ -21,6 +21,7 @@
 @property (nonatomic, readonly) enum VillageType vType;
 @property (nonatomic) int woodPile;
 @property (nonatomic) int goldPile;
+@property (nonatomic) int cost;
 
 -(id)initWithStructureType:(enum VillageType)vType;
 
