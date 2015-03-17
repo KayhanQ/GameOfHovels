@@ -24,6 +24,7 @@
 @property (nonatomic, readonly) int health;
 @property (nonatomic, readonly) int buyCost;
 @property (nonatomic, readonly) int upkeepCost;
+@property (nonatomic, readonly) int upgradeCost;
 @property (nonatomic) BOOL movesCompleted;
 @property (nonatomic, readonly) int stamina;
 @property (nonatomic) int distTravelled;
