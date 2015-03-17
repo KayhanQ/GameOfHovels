@@ -16,7 +16,8 @@
     SPTexture *_baseTexture;
     SPImage *_baseImage;
     
-
+    int _turnsInWS;
+    
     
 }
 
@@ -27,6 +28,7 @@
 @synthesize stamina = _stamina;
 @synthesize distTravelled = _distTravelled;
 @synthesize workState = _workState;
+@synthesize workstateCompleted = _workstateCompleted;
 
 
 -(id)initWithUnitType:(enum UnitType)uType
@@ -57,6 +59,10 @@
                 break;
         }
         
+        
+        _workstateCompleted = false;
+        
+        
         self.touchable = false;
         
 
@@ -64,6 +70,27 @@
     return self;
 }
 
+//if you are in no workstate your completed is false
+- (void)incrementWorkstate
+{
+    if (_workState != NOWORKSTATE) _turnsInWS++;
+
+    _workstateCompleted = false;
+    
+    switch (_workState) {
+        case BUILDINGMEADOW:
+        {
+            if (_turnsInWS<2) _workstateCompleted = false;
+            break;
+        }
+        default:
+            break;
+    }
+    
+    if (_workstateCompleted == true) {
+        _turnsInWS = 0;
+    }
+}
 
 
 @end

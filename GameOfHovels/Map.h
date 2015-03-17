@@ -27,6 +27,8 @@
 
 
 - (id)initWithRandomMap:(Hud*)hud;
+- (void)beginTurnPhases;
+
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 
