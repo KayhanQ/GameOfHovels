@@ -38,7 +38,7 @@
         //custom code here'
         _uType = uType;
         _distTravelled = 0;
-        _movable = false;
+        _movable = true;
         _workstateCompleted = false;
         _upgradeCost = 10;
         
@@ -95,6 +95,11 @@
         case BUILDINGMEADOW:
         {
             if (_turnsInWS==3) _workstateCompleted = true;
+            break;
+        }
+        case BUILDINGROAD:
+        {
+            if (_turnsInWS==2) _workstateCompleted = true;
             break;
         }
         default:

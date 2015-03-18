@@ -12,6 +12,7 @@
 #import "Structure.h"
 #import "GamePlayer.h"
 
+
 @class Unit;
 
 @interface Tile : BasicSprite {
@@ -23,7 +24,6 @@
 
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
-@property (nonatomic) BOOL isVillage;
 @property (nonatomic) Village* village;
 @property (nonatomic) enum PlayerColor pColor;
 
@@ -43,7 +43,14 @@
 - (BOOL)isTraversableForUnitType: (int)unitType;
 - (void)addVillage:(enum VillageType) vType;
 - (void)upgradeVillage;
+- (BOOL)hasVillage;
+- (BOOL)isVillage;
 
+- (void)addUnitWithType:(enum UnitType)uType;
+- (void)addUnit:(Unit*)unit;
+- (void)removeUnit;
+- (BOOL)hasUnit;
+- (void)upgradeUnit:(enum UnitType)uType;
 
 - (void)selectTile;
 - (void)deselectTile;

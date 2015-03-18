@@ -42,8 +42,6 @@
 
 - (void)chopTree:(Tile*)tile;
 - (void)buildMeadow:(Tile*)tile;
-
-- (void)updateHud;
-
+- (void)buildRoad:(Tile*)tile;
 
 @end

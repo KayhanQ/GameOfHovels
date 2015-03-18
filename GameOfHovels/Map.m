@@ -23,7 +23,6 @@
 #import "GameEngine.h"
 
 @implementation Map {
-    SPSprite* _unitsSprite;
     NSMutableArray* _villagesTileArray;
 
     MessageLayer* _messageLayer;
@@ -59,10 +58,6 @@
         
         _tilesSprite = [SPSprite sprite];
         [self addChild:_tilesSprite];
-        _unitsSprite = [SPSprite sprite];
-        _unitsSprite.x = -28;
-        _unitsSprite.y = -28;
-        [self addChild:_unitsSprite];
         
         _villagesTileArray = [NSMutableArray array];
         
@@ -137,9 +132,7 @@
                 t.village = villageTile.village;
                 [t setPColor: villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
-                    Peasant* u = [[Peasant alloc] initWithTile:t];
-                    [_unitsSprite addChild:u];
-                    t.unit = u;
+                    [t addUnitWithType:PEASANT];
                 }
             }
         }
@@ -197,9 +190,7 @@
                 t.village = villageTile.village;
                 [t setPColor:villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
-                    Peasant* u = [[Peasant alloc] initWithTile:t];
-                    [_unitsSprite addChild:u];
-                    t.unit = u;
+                    [t addUnitWithType:PEASANT];
                 }
             }
         }
@@ -291,32 +282,7 @@
 
 - (void)upgradeUnitWithTile:(Tile *)tile
 {
-    Unit* u = tile.unit;
-    Unit* newUnit;
-    
-    switch (u.uType) {
-        case PEASANT:
-        {
-            newUnit = [[Infantry alloc] initWithTile:tile];
-            break;
-        }
-        case INFANTRY:
-        {
-            newUnit = [[Soldier alloc] initWithTile:tile];
-            break;
-        }
-        case SOLDIER:
-        {
-            newUnit = [[Ritter alloc] initWithTile:tile];
-            break;
-        }
-        default:
-            break;
-    }
-    
-    [u removeFromParent];
-    [_unitsSprite addChild:newUnit];
-    tile.unit = newUnit;
+
 }
 
 - (NSMutableArray*)getTilesforVillage:(Tile*)tile
@@ -353,9 +319,7 @@
     
     if (actionPossible == false) return;
     
-    Peasant* r = [[Peasant alloc] initWithTile:destTile];
-    [_unitsSprite addChild:r];
-    destTile.unit = r;
+    [destTile addUnitWithType:PEASANT];
     
     if ([self isMyTurn]) {
         villageTile.village.goldPile-=10;
@@ -402,12 +366,9 @@
     }
 
     
-    //the last thing we do is update the coordinates and reset the selected unit's Tile
-    unit.x = destTile.x;
-    unit.y = destTile.y;
-    unitTile.unit = nil;
-    destTile.unit = unit;
-    
+    //the last thing we do is actually move the units on the tile
+    [unitTile removeUnit];
+    [destTile addUnit:unit];
     unit.distTravelled++;
     
     //need to refresh the colour, where should this actually be done?
@@ -446,6 +407,20 @@
         }
     }
     
+}
+
+- (void)buildRoad:(Tile *)tile
+{
+    Unit* u = tile.unit;
+    if (u.workState == NOWORKSTATE) {
+        [u setWorkState:BUILDINGROAD];
+    }
+    else if (u.workState == BUILDINGROAD) {
+        if (u.workstateCompleted) {
+            //[tile addStructure:ROAD];
+            [u setWorkState:NOWORKSTATE];
+        }
+    }
 }
 
 - (void)updateHud:(Tile*)tile

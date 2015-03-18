@@ -13,8 +13,6 @@
 @class Tile;
 
 @interface Unit : BasicSprite {
-    
-    
     enum UnitType {PEASANT = 0, INFANTRY, SOLDIER, RITTER};
     enum WorkState {NOWORKSTATE = 0, BUILDINGMEADOW, BUILDINGROAD};
 }
