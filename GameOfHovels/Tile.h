@@ -6,18 +6,15 @@
 //
 //
 
-#import "Unit.h"
 #import "BasicSprite.h"
 #import "Village.h"
 #import "Structure.h"
 #import "GamePlayer.h"
-
+#import "Unit.h"
 
 @class Unit;
 
 @interface Tile : BasicSprite {
-    
- 
     enum TileNeighbours {TopRight = 0, Right, BottomRight, BottomLeft, Left, TopLeft};
 
 }

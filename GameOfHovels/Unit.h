@@ -6,7 +6,6 @@
 //
 //
 
-#import "Tile.h"
 #import "BasicSprite.h"
 
 
@@ -35,7 +34,6 @@
 
 -(id)initWithUnitType: (enum UnitType) uType;
 -(void)incrementWorkstate;
--(void)upgradeUnit;
 -(void)setWorkState:(enum WorkState)workState;
 
 

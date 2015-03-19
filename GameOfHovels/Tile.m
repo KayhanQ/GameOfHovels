@@ -66,9 +66,8 @@
         
         _unit = nil;
         _village = nil;
-        
+        _pColor = NOCOLOR;
 
-        
         _structuresSprite = [SPSprite sprite];
         _structuresSprite.x = self.width/2;
         _structuresSprite.y = self.height/2;
@@ -82,7 +81,6 @@
         _selectionLayer.alpha = 0.2;
         [self addChild:_selectionLayer];
         
-        _pColor = NOCOLOR;
         
         [self addStructure:sType];
         
@@ -147,6 +145,7 @@
     _unit = nil;
 }
 
+//currently this just upgrades to the next level
 - (void)upgradeUnit:(enum UnitType)uType
 {
     Unit* newUnit;
@@ -243,7 +242,6 @@
 {
     Structure* s = [self getStructure];
     [s removeFromParent];
-    
 }
 
 - (Structure*)getStructure
@@ -257,6 +255,23 @@
     return s.sType;
 }
 
+//cancels timer
+- (void)invalidateTimer
+{
+    [_timer invalidate];
+    _timer = nil;
+}
+
+- (void)showActionMenu:(NSTimer*)timer
+{
+    TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_SHOW_ACTION_MENU tile:self];
+    [self dispatchEvent:event];
+}
+
+//------------------------------
+//  NEIGHBOUR FUNCTIONS
+//------------------------------
+
 - (void)setNeighbour:(enum TileNeighbours)tileNeighbour tile: (Tile*)tile
 {
     [_neighboursArray insertObject:tile atIndex: tileNeighbour];
@@ -267,52 +282,10 @@
     Tile* t = [_neighboursArray objectAtIndex:tileNeighbour];
     return t;
 }
+
 - (NSMutableArray*)getNeighbours
 {
     return _neighboursArray;
-}
-
-- (void)onTouch:(SPTouchEvent*)event
-{
-    SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
-    if (touchBegan) {
-        if ([self hasUnit] || [self isVillage]) {
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
-                                                      target:self
-                                                    selector:@selector(showActionMenu:)
-                                                    userInfo:nil
-                                                     repeats:NO];
-        }
-    }
-    
-    SPTouch *touchEnded = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
-    if (touchEnded)
-    {
-        [self invalidateTimer];
-        
-        TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_TILE_TOUCHED tile:self];
-        [self dispatchEvent:event];
-    }
-    
-    SPTouch *touchCancelled = [[event touchesWithTarget:self andPhase:SPTouchPhaseCancelled] anyObject];
-    if (touchCancelled)
-    {
-        [self invalidateTimer];
-    }
-}
-
-//cancels timer
-- (void)invalidateTimer
-{
-    [_timer invalidate];
-    _timer = nil;
-}
-
-- (void)showActionMenu:(NSTimer*)timer
-{
-    NSLog(@"Show action Menu");
-    TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_SHOW_ACTION_MENU tile:self];
-    [self dispatchEvent:event];
 }
 
 - (BOOL)neighboursContainTile:(Tile*)tile
@@ -396,6 +369,35 @@
 - (void)deselectTile
 {
     _selectionLayer.alpha = 0.2;
+}
+
+- (void)onTouch:(SPTouchEvent*)event
+{
+    SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
+    if (touchBegan) {
+        if ([self hasUnit] || [self isVillage]) {
+            _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
+                                                      target:self
+                                                    selector:@selector(showActionMenu:)
+                                                    userInfo:nil
+                                                     repeats:NO];
+        }
+    }
+    
+    SPTouch *touchEnded = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touchEnded)
+    {
+        [self invalidateTimer];
+        
+        TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_TILE_TOUCHED tile:self];
+        [self dispatchEvent:event];
+    }
+    
+    SPTouch *touchCancelled = [[event touchesWithTarget:self andPhase:SPTouchPhaseCancelled] anyObject];
+    if (touchCancelled)
+    {
+        [self invalidateTimer];
+    }
 }
 
 @end

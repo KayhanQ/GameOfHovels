@@ -282,6 +282,7 @@
 
 - (void)upgradeUnitWithTile:(Tile *)tile
 {
+    [tile upgradeUnit:SOLDIER];
 
 }
 
@@ -506,7 +507,6 @@
             }
         }
     }
-    
 }
 
 - (BOOL)isMyTurn
