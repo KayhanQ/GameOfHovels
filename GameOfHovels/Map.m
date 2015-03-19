@@ -10,8 +10,10 @@
 #import "Map.h"
 #import "Tile.h"
 #import "Unit.h"
-#import "Ritter.h"
 #import "Peasant.h"
+#import "Infantry.h"
+#import "Soldier.h"
+#import "Ritter.h"
 #import "Baum.h"
 #import "Hovel.h"
 #import "GamePlayer.h"
@@ -21,7 +23,6 @@
 #import "GameEngine.h"
 
 @implementation Map {
-    SPSprite* _unitsSprite;
     NSMutableArray* _villagesTileArray;
 
     MessageLayer* _messageLayer;
@@ -57,10 +58,6 @@
         
         _tilesSprite = [SPSprite sprite];
         [self addChild:_tilesSprite];
-        _unitsSprite = [SPSprite sprite];
-        _unitsSprite.x = -28;
-        _unitsSprite.y = -28;
-        [self addChild:_unitsSprite];
         
         _villagesTileArray = [NSMutableArray array];
         
@@ -135,9 +132,7 @@
                 t.village = villageTile.village;
                 [t setPColor: villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
-                    Peasant* u = [[Peasant alloc] initWithTile:t];
-                    [_unitsSprite addChild:u];
-                    t.unit = u;
+                    [t addUnitWithType:PEASANT];
                 }
             }
         }
@@ -195,9 +190,7 @@
                 t.village = villageTile.village;
                 [t setPColor:villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
-                    Peasant* u = [[Peasant alloc] initWithTile:t];
-                    [_unitsSprite addChild:u];
-                    t.unit = u;
+                    [t addUnitWithType:PEASANT];
                 }
             }
         }
@@ -245,6 +238,7 @@
         }
     }
 }
+
 -(void)addMeadows
 {
     for (int j  = 1 ; j<40; j++) {
@@ -286,6 +280,11 @@
     }
 }
 
+- (void)upgradeUnitWithTile:(Tile *)tile
+{
+
+}
+
 - (NSMutableArray*)getTilesforVillage:(Tile*)tile
 {
     NSMutableArray* tiles = [NSMutableArray array];
@@ -320,9 +319,7 @@
     
     if (actionPossible == false) return;
     
-    Peasant* r = [[Peasant alloc] initWithTile:destTile];
-    [_unitsSprite addChild:r];
-    destTile.unit = r;
+    [destTile addUnitWithType:PEASANT];
     
     if ([self isMyTurn]) {
         villageTile.village.goldPile-=10;
@@ -338,13 +335,13 @@
     
     BOOL movePossible = true;
     if ([self isMyTurn]) {
-        if (unit.movesCompleted) {
+        if (!unit.movable) {
             movePossible = false;
         }
         if ([unitTile neighboursContainTile:destTile] == false) {
             movePossible = false;
         }
-        //if (destTile.getStructureType == BAUM && u.uType == RITTER) movePossible = false;
+        if (destTile.getStructureType == BAUM && unit.uType == RITTER) movePossible = false;
         if (destTile.isVillage) movePossible = false;
         if (unit.distTravelled == unit.stamina) {
             movePossible = false;
@@ -369,12 +366,9 @@
     }
 
     
-    //the last thing we do is update the coordinates and reset the selected unit's Tile
-    unit.x = destTile.x;
-    unit.y = destTile.y;
-    unitTile.unit = nil;
-    destTile.unit = unit;
-    
+    //the last thing we do is actually move the units on the tile
+    [unitTile removeUnit];
+    [destTile addUnit:unit];
     unit.distTravelled++;
     
     //need to refresh the colour, where should this actually be done?
@@ -404,15 +398,29 @@
 {
     Unit* u = tile.unit;
     if (u.workState == NOWORKSTATE) {
-        u.workState = BUILDINGMEADOW;
+        [u setWorkState:BUILDINGMEADOW];
     }
     else if (u.workState == BUILDINGMEADOW) {
         if (u.workstateCompleted) {
             [tile addStructure:MEADOW];
-            u.workState = NOWORKSTATE;
+            [u setWorkState:NOWORKSTATE];
         }
     }
     
+}
+
+- (void)buildRoad:(Tile *)tile
+{
+    Unit* u = tile.unit;
+    if (u.workState == NOWORKSTATE) {
+        [u setWorkState:BUILDINGROAD];
+    }
+    else if (u.workState == BUILDINGROAD) {
+        if (u.workstateCompleted) {
+            //[tile addStructure:ROAD];
+            [u setWorkState:NOWORKSTATE];
+        }
+    }
 }
 
 - (void)updateHud:(Tile*)tile

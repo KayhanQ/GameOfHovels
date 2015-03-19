@@ -33,7 +33,6 @@
     SPSprite* _popupMenuSprite;
     
     Tile* _selectedTile;
-    BOOL _unitActionIntent;    
     
     NSMutableArray* _players;
     SPJuggler* _animationJuggler;
@@ -99,13 +98,6 @@
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
     
-    
-
-
-    
-    
-    
-    
     //event Listeners
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
     [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
@@ -118,7 +110,6 @@
     _animationJuggler = [SPJuggler juggler];
     [self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
     
-    _unitActionIntent = false;
     _touching = NO;
     _lastScrollDist = 0;
     _scrollVector = [SPPoint pointWithX:0 y:0];
@@ -203,6 +194,19 @@
     }
 }
 
+- (void)showActionMenu:(TileTouchedEvent*) event
+{
+    Tile* tile = event.tile;
+    
+    if (tile.village.player != _currentPlayer) return;
+    
+    [self removeTileListener];
+    [self selectTile:tile];
+    
+    _actionMenu = [[ActionMenu alloc] initWithTile:tile];
+    [_popupMenuSprite addChild:_actionMenu];
+}
+
 - (void)actionMenuAction:(ActionMenuEvent*) event
 {
     NSLog(@"Action Menu Action");
@@ -228,8 +232,12 @@
         }
         case BUILDROAD:
         {
-            
+            [_map buildRoad:tile];
             break;
+        }
+        case UPGRADEUNIT:
+        {
+            [_map upgradeUnitWithTile:tile];
         }
         default:
             break;
@@ -276,24 +284,6 @@
     }
 }
 
-- (void)showActionMenu:(TileTouchedEvent*) event
-{
-    Tile* tile = event.tile;
-
-    if (tile.village.player != _currentPlayer) {
-        return;
-    }
-    
-    [self removeTileListener];
-    [self selectTile:tile];
-    
-    NSLog(@"action menu from GE");
-    
-    _actionMenu = [[ActionMenu alloc] initWithTile:tile];
-    [_popupMenuSprite addChild:_actionMenu];
-    
-}
-
 - (void)selectTile:(Tile*)tile
 {
     _selectedTile = tile;
@@ -327,7 +317,6 @@
 - (void)addTileListener
 {
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
-
 }
 
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data
