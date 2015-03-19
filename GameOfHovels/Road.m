@@ -25,7 +25,7 @@
         
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"road.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.35;
+        baseImage.scale = 0.5;
         
         [self addChild:baseImage];
         

@@ -62,6 +62,13 @@
 		F38066751A96836B009D3C56 /* Grass.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066741A96836B009D3C56 /* Grass.m */; };
 		F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */; };
 		F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71E21A99303F00E40479 /* ActionButton.m */; };
+		F3D8ADEC1ABB06B400920E99 /* Infantry.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADE91ABB06B400920E99 /* Infantry.m */; };
+		F3D8ADED1ABB06B400920E99 /* Soldier.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADEB1ABB06B400920E99 /* Soldier.m */; };
+		F3D8ADF21ABB06C100920E99 /* Road.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADEF1ABB06C100920E99 /* Road.m */; };
+		F3D8ADF31ABB06C100920E99 /* Tombstone.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADF11ABB06C100920E99 /* Tombstone.m */; };
+		F3D8ADF61ABB06D800920E99 /* GlobalFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */; };
+		F3D8ADF91ABB072E00920E99 /* road.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D8ADF71ABB072E00920E99 /* road.png */; };
+		F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D8ADF81ABB072E00920E99 /* tombstone.png */; };
 		FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = FC120EDE1AAD06540071D47A /* MessageLayer.m */; };
 		FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC1E8331AACE51E009A42DC /* GameNavigationController.m */; };
 		FCC1E9E71AACE5D5009A42DC /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCC1E9131AACE5B1009A42DC /* Sparrow.framework */; };
@@ -215,6 +222,18 @@
 		F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionMenuEvent.m; sourceTree = "<group>"; };
 		F3CC71E11A992FF800E40479 /* ActionButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionButton.h; sourceTree = "<group>"; };
 		F3CC71E21A99303F00E40479 /* ActionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionButton.m; sourceTree = "<group>"; };
+		F3D8ADE81ABB06B400920E99 /* Infantry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Infantry.h; sourceTree = "<group>"; };
+		F3D8ADE91ABB06B400920E99 /* Infantry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Infantry.m; sourceTree = "<group>"; };
+		F3D8ADEA1ABB06B400920E99 /* Soldier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Soldier.h; sourceTree = "<group>"; };
+		F3D8ADEB1ABB06B400920E99 /* Soldier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Soldier.m; sourceTree = "<group>"; };
+		F3D8ADEE1ABB06C100920E99 /* Road.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Road.h; sourceTree = "<group>"; };
+		F3D8ADEF1ABB06C100920E99 /* Road.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Road.m; sourceTree = "<group>"; };
+		F3D8ADF01ABB06C100920E99 /* Tombstone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tombstone.h; sourceTree = "<group>"; };
+		F3D8ADF11ABB06C100920E99 /* Tombstone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tombstone.m; sourceTree = "<group>"; };
+		F3D8ADF41ABB06D800920E99 /* GlobalFlags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalFlags.h; sourceTree = "<group>"; };
+		F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalFlags.m; sourceTree = "<group>"; };
+		F3D8ADF71ABB072E00920E99 /* road.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road.png; sourceTree = "<group>"; };
+		F3D8ADF81ABB072E00920E99 /* tombstone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tombstone.png; sourceTree = "<group>"; };
 		FC120EDD1AAD06540071D47A /* MessageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageLayer.h; sourceTree = "<group>"; };
 		FC120EDE1AAD06540071D47A /* MessageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageLayer.m; sourceTree = "<group>"; };
 		FCC1E8321AACE51E009A42DC /* GameNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameNavigationController.h; sourceTree = "<group>"; };
@@ -732,6 +751,10 @@
 				F380660C1A964C5F009D3C56 /* Unit.m */,
 				F35D38251AAF2A2500E97F78 /* Peasant.h */,
 				F35D38261AAF2A3300E97F78 /* Peasant.m */,
+				F3D8ADE81ABB06B400920E99 /* Infantry.h */,
+				F3D8ADE91ABB06B400920E99 /* Infantry.m */,
+				F3D8ADEA1ABB06B400920E99 /* Soldier.h */,
+				F3D8ADEB1ABB06B400920E99 /* Soldier.m */,
 				F380660D1A964C5F009D3C56 /* Ritter.h */,
 				F380660E1A964C5F009D3C56 /* Ritter.m */,
 			);
@@ -747,6 +770,10 @@
 				F38066741A96836B009D3C56 /* Grass.m */,
 				F38066201A964C7E009D3C56 /* Baum.h */,
 				F38066211A964C7E009D3C56 /* Baum.m */,
+				F3D8ADEE1ABB06C100920E99 /* Road.h */,
+				F3D8ADEF1ABB06C100920E99 /* Road.m */,
+				F3D8ADF01ABB06C100920E99 /* Tombstone.h */,
+				F3D8ADF11ABB06C100920E99 /* Tombstone.m */,
 				F38066221A964C7E009D3C56 /* Meadow.h */,
 				F38066231A964C7E009D3C56 /* Meadow.m */,
 			);
@@ -845,6 +872,8 @@
 		F38066431A964F3B009D3C56 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
+				F3D8ADF71ABB072E00920E99 /* road.png */,
+				F3D8ADF81ABB072E00920E99 /* tombstone.png */,
 				F38066441A964F3B009D3C56 /* Baum */,
 				F38066461A964F3B009D3C56 /* meadow.png */,
 			);
@@ -924,6 +953,8 @@
 		F38066651A96515E009D3C56 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				F3D8ADF41ABB06D800920E99 /* GlobalFlags.h */,
+				F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */,
 				F38065FC1A964C1A009D3C56 /* BasicSprite.h */,
 				F38065FD1A964C1A009D3C56 /* BasicSprite.m */,
 			);
@@ -1884,11 +1915,13 @@
 				F38066541A964F3B009D3C56 /* meadow.png in Resources */,
 				F38066551A964F3B009D3C56 /* tile_grass.png in Resources */,
 				F38066601A964F7A009D3C56 /* background.jpg in Resources */,
+				F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */,
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
+				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,
@@ -1918,16 +1951,21 @@
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
 				F38066631A9650F9009D3C56 /* GameEngine+iOSTouchEvents.m in Sources */,
 				F38065C61A96441B009D3C56 /* ViewController.m in Sources */,
+				F3D8ADF61ABB06D800920E99 /* GlobalFlags.m in Sources */,
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
 				F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */,
 				F380663D1A964D21009D3C56 /* Media.m in Sources */,
 				F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */,
 				F38066191A964C69009D3C56 /* Village.m in Sources */,
+				F3D8ADED1ABB06B400920E99 /* Soldier.m in Sources */,
 				F38066251A964C7E009D3C56 /* Baum.m in Sources */,
 				F38066091A964C53009D3C56 /* Map.m in Sources */,
 				F38065C31A96441B009D3C56 /* AppDelegate.m in Sources */,
 				F38066011A964C1A009D3C56 /* GamePlayer.m in Sources */,
 				F38065C01A96441B009D3C56 /* main.m in Sources */,
+				F3D8ADF31ABB06C100920E99 /* Tombstone.m in Sources */,
+				F3D8ADF21ABB06C100920E99 /* Road.m in Sources */,
+				F3D8ADEC1ABB06B400920E99 /* Infantry.m in Sources */,
 				F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */,
 				F38066261A964C7E009D3C56 /* Meadow.m in Sources */,
 				F380662F1A964CFA009D3C56 /* ActionMenu.m in Sources */,

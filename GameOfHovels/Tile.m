@@ -14,6 +14,7 @@
 #import "Grass.h"
 #import "Baum.h"
 #import "Meadow.h"
+#import "Road.h"
 
 #import "Hovel.h"
 #import "Town.h"
@@ -228,11 +229,11 @@
             [_structuresSprite addChild:m];
             break;
         }
-        /*case ROAD: {
-            ROAD* r = [[ROAD alloc] initWithTile:self];
+        case ROAD: {
+            Road* r = [[Road alloc] initWithTile:self];
             [_structuresSprite addChild:r];
             break;
-        }*/
+        }
         default:
             break;
     }
@@ -374,9 +375,8 @@
 
 - (BOOL)canBeSelected
 {
-    if (_unit != nil && _unit.movable) return true;
-    //if (_isVillage) return true;
-
+    if ([self hasUnit] && _unit.movable) return true;
+    if ([self isVillage]) return true;
     return false;
 }
 

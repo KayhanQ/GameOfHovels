@@ -417,7 +417,7 @@
     }
     else if (u.workState == BUILDINGROAD) {
         if (u.workstateCompleted) {
-            //[tile addStructure:ROAD];
+            [tile addStructure:ROAD];
             [u setWorkState:NOWORKSTATE];
         }
     }
@@ -471,6 +471,11 @@
                         case BUILDINGMEADOW:
                         {
                             [self buildMeadow:t];
+                            break;
+                        }
+                        case BUILDINGROAD:
+                        {
+                            [self buildRoad:t];
                             break;
                         }
                         default:
