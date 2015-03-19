@@ -367,7 +367,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 }
 
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController
-{
+{ 
 	if (authenticationViewController != nil) {
 		_authenticationViewController = authenticationViewController;
 		[[NSNotificationCenter defaultCenter]

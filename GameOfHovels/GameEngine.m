@@ -64,7 +64,6 @@
     
     //Create the Message Layer
     
-    
     //this will actually happen outside Game Engine
     GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
     GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
@@ -101,7 +100,6 @@
     [_world addChild:_popupMenuSprite];
     
     
-
 
     
     
