@@ -1,2 +1,8 @@
 sparrow/*
 GameOfHovels.xcodeproj/*
+
+*.pbxproj
+
+*.xccheckout
+
+*.xcuserstate

@@ -19,6 +19,7 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
     
+    
     BOOL startWithGC = [GlobalFlags isGameWithGC];
     
     if (startWithGC) {

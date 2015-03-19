@@ -19,6 +19,11 @@
 #import "Town.h"
 #import "Fort.h"
 
+#import "Peasant.h"
+#import "Soldier.h"
+#import "Infantry.h"
+#import "Ritter.h"
+
 #import "Media.h"
 #import "GamePlayer.h"
 
@@ -28,6 +33,7 @@
 @implementation Tile {
     SPSprite* _structuresSprite;
     SPSprite* _villageSprite;
+    SPSprite* _unitSprite;
 
     Tile* topRightNeighbour;
     Tile* rightNeighbour;
@@ -47,7 +53,6 @@
 
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
-@synthesize isVillage = _isVillage;
 @synthesize village = _village;
 @synthesize pColor = _pColor;
 
@@ -60,7 +65,6 @@
         
         _unit = nil;
         _village = nil;
-        _isVillage = false;
         
 
         
@@ -84,26 +88,91 @@
         _villageSprite = [SPSprite sprite];
         [self addChild:_villageSprite];
         
-        [SparrowHelper centerPivot:self];
-
+        _unitSprite = [SPSprite sprite];
+        [self addChild:_unitSprite];
         
+        [SparrowHelper centerPivot:self];
         self.x = position.x;
         self.y = position.y;
         
-
-
-
-
-
-        
-        
-
-        
         [self addEventListener:@selector(onTouch:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-
     }
     return self;
+}
+
+- (void)addUnitWithType:(enum UnitType)uType
+{
+    Unit* newUnit;
+    
+    switch (uType) {
+        case PEASANT:
+        {
+            newUnit = [[Peasant alloc] initWithTile:self];
+            break;
+        }
+        case INFANTRY:
+        {
+            newUnit = [[Infantry alloc] initWithTile:self];
+            break;
+        }
+        case SOLDIER:
+        {
+            newUnit = [[Soldier alloc] initWithTile:self];
+            break;
+        }
+        case RITTER:
+        {
+            newUnit = [[Ritter alloc] initWithTile:self];
+            break;
+        }
+        default:
+            break;
+    }
+    
+    _unit = newUnit;
+    [_unitSprite addChild:_unit];
+}
+
+- (void)addUnit:(Unit*)unit
+{
+    [_unitSprite removeAllChildren];
+    _unit = unit;
+    [_unitSprite addChild:_unit];
+}
+
+- (void)removeUnit
+{
+    [_unitSprite removeAllChildren];
+    _unit = nil;
+}
+
+- (void)upgradeUnit:(enum UnitType)uType
+{
+    Unit* newUnit;
+    
+    switch (_unit.uType) {
+        case PEASANT:
+        {
+            newUnit = [[Infantry alloc] initWithTile:self];
+            break;
+        }
+        case INFANTRY:
+        {
+            newUnit = [[Soldier alloc] initWithTile:self];
+            break;
+        }
+        case SOLDIER:
+        {
+            newUnit = [[Ritter alloc] initWithTile:self];
+            break;
+        }
+        default:
+            break;
+    }
+    
+    [_unitSprite removeAllChildren];
+    _unit = newUnit;
+    [_unitSprite addChild:_unit];
 }
 
 //adds a physical village to the tile
@@ -112,8 +181,6 @@
     Hovel* h = [[Hovel alloc] initWithTile:self];
     [_villageSprite addChild:h];
     _village = h;
-    
-    _isVillage = true;
 }
 
 - (void)upgradeVillage
@@ -161,7 +228,11 @@
             [_structuresSprite addChild:m];
             break;
         }
-            
+        /*case ROAD: {
+            ROAD* r = [[ROAD alloc] initWithTile:self];
+            [_structuresSprite addChild:r];
+            break;
+        }*/
         default:
             break;
     }
@@ -204,7 +275,7 @@
 {
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
-        if (_unit!=nil || _isVillage) {
+        if ([self hasUnit] || [self isVillage]) {
             _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
                                                       target:self
                                                     selector:@selector(showActionMenu:)
@@ -269,9 +340,25 @@
     return true;
     
 }
+
+- (BOOL)hasVillage
+{
+    return _village != nil;
+}
+
+- (BOOL)isVillage
+{
+    return _villageSprite.numChildren > 0;
+}
+
+- (BOOL)hasUnit
+{
+    return _unit != nil;
+}
+
 - (BOOL)canHaveUnit
 {
-    if (_unit == nil && _isVillage == false && [self getStructureType] == GRASS) {
+    if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {
         return true;
     }
     return false;
@@ -279,7 +366,7 @@
 
 - (BOOL)canHaveTree
 {
-    if (_unit == nil && _isVillage == false && [self getStructureType] == GRASS) {
+    if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {
         return true;
     }
     return false;
@@ -287,7 +374,7 @@
 
 - (BOOL)canBeSelected
 {
-    if (_unit != nil) return true;
+    if (_unit != nil && _unit.movable) return true;
     //if (_isVillage) return true;
 
     return false;
