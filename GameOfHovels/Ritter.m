@@ -32,6 +32,9 @@
          
         
         [SparrowHelper centerPivot:self];
+
+        self.x = tile.x;
+        self.y = tile.y;
         
 
     }

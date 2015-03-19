@@ -27,6 +27,9 @@
         baseImage.scale = 0.4;
         [self addChild:baseImage];
         [SparrowHelper centerPivot:self];
+         
+        self.x = tile.x;
+        self.y = tile.y;
     }
     return self;
     

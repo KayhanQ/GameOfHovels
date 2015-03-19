@@ -50,11 +50,6 @@
                 text = @"Build ROAD";
                 break;
             }
-            case UPGRADEUNIT:
-            {
-                text = @"Upgrade Unit";
-                break;
-            }
             default:
                 break;
         }

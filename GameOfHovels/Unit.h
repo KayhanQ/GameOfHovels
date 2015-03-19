@@ -13,6 +13,8 @@
 @class Tile;
 
 @interface Unit : BasicSprite {
+    
+    
     enum UnitType {PEASANT = 0, INFANTRY, SOLDIER, RITTER};
     enum WorkState {NOWORKSTATE = 0, BUILDINGMEADOW, BUILDINGROAD};
 }
@@ -23,7 +25,7 @@
 @property (nonatomic, readonly) int buyCost;
 @property (nonatomic, readonly) int upkeepCost;
 @property (nonatomic, readonly) int upgradeCost;
-@property (nonatomic) BOOL movable;
+@property (nonatomic) BOOL movesCompleted;
 @property (nonatomic, readonly) int stamina;
 @property (nonatomic) int distTravelled;
 
@@ -35,8 +37,7 @@
 
 -(id)initWithUnitType: (enum UnitType) uType;
 -(void)incrementWorkstate;
--(void)upgradeUnit;
--(void)setWorkState:(enum WorkState)workState;
+
 
 
 

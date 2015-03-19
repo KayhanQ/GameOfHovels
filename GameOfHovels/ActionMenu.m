@@ -42,10 +42,8 @@
 
         }
         if (tile.unit != nil) {
-            if (tile.unit.uType == PEASANT) [self makeButton:BUILDMEADOW];
-            if (tile.unit.uType == PEASANT) [self makeButton:BUILDROAD];
-            if (tile.unit.uType != RITTER) [self makeButton:UPGRADEUNIT];
-
+            [self makeButton:BUILDMEADOW];
+            [self makeButton:BUILDROAD];
         }
 
         

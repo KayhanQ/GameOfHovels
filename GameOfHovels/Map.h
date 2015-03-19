@@ -21,6 +21,8 @@
 @property GameEngine* gameEngine;
 @property (nonatomic) MessageLayer* messageLayer;
 @property (nonatomic) SPSprite* tilesSprite;
+//@property (nonatomic) GamePlayer* mePlayer;
+//@property (nonatomic) GamePlayer* currentPlayer;
 @property (nonatomic, readonly) Hud* hud;
 
 
@@ -31,7 +33,6 @@
 - (void)endTurnUpdates;
 
 - (void)upgradeVillageWithTile:(Tile*)tile;
-- (void)upgradeUnitWithTile:(Tile*)tile;
 
 - (void)showPlayersTeritory;
 
@@ -42,6 +43,8 @@
 
 - (void)chopTree:(Tile*)tile;
 - (void)buildMeadow:(Tile*)tile;
-- (void)buildRoad:(Tile*)tile;
+
+- (void)updateHud;
+
 
 @end
