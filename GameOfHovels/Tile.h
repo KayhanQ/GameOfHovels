@@ -10,6 +10,8 @@
 #import "BasicSprite.h"
 #import "Village.h"
 #import "Structure.h"
+#import "GamePlayer.h"
+
 
 @class Unit;
 
@@ -22,14 +24,15 @@
 
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
-@property (nonatomic) int color;
-@property (nonatomic) BOOL isVillage;
 @property (nonatomic) Village* village;
+@property (nonatomic) enum PlayerColor pColor;
 
 - (id)initWithPosition: (SPPoint*)position structure: (enum StructureType)sType;
-- (void)setNeighbour:(int)tileNeighbour tile: (Tile*)tile;
-- (Tile*)getNeighbour:(int)tileNeighbour;
+- (void)setNeighbour:(enum TileNeighbours)tileNeighbour tile: (Tile*)tile;
+- (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
+
+- (void)setPColor:(enum PlayerColor)pColor;
 
 - (void)addStructure:(enum StructureType)sType;
 
@@ -40,7 +43,14 @@
 - (BOOL)isTraversableForUnitType: (int)unitType;
 - (void)addVillage:(enum VillageType) vType;
 - (void)upgradeVillage;
+- (BOOL)hasVillage;
+- (BOOL)isVillage;
 
+- (void)addUnitWithType:(enum UnitType)uType;
+- (void)addUnit:(Unit*)unit;
+- (void)removeUnit;
+- (BOOL)hasUnit;
+- (void)upgradeUnit:(enum UnitType)uType;
 
 - (void)selectTile;
 - (void)deselectTile;

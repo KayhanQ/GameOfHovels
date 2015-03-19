@@ -1,17 +1,17 @@
 //
-//  Peasant.m
+//  Infantry.m
 //  GameOfHovels
 //
-//  Created by Kayhan Feroze Qaiser on 10/03/2015.
+//  Created by Aleksandra Lata on 3/17/15.
 //  Copyright (c) 2015 CivetAtelier. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "Peasant.h"
+#import "Infantry.h"
 #import "Tile.h"
 #import "SparrowHelper.h"
 
-@implementation Peasant {
+@implementation Infantry {
     
 }
 
@@ -19,16 +19,17 @@
 
 -(id)initWithTile:(Tile *)tile {
     
-    if (self=[super initWithUnitType:PEASANT]) {
+    if (self=[super initWithUnitType:INFANTRY]) {
         //custom code here
-         
-        SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"peasant.png"];
+        
+        SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"infantry.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.5;
+        baseImage.scale = 0.4;
         [self addChild:baseImage];
-        [SparrowHelper centerPivot:self];
+        [SparrowHelper centerPivot:self]; 
     }
     return self;
+    
 }
 
 

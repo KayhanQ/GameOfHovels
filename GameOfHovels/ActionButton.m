@@ -11,7 +11,7 @@
 #import "ActionButton.h"
 #import "Media.h"
 #import "SparrowHelper.h"
-#import "Tile.h";
+#import "Tile.h"
 
 @implementation ActionButton {
     
@@ -48,6 +48,11 @@
             case BUILDROAD:
             {
                 text = @"Build ROAD";
+                break;
+            }
+            case UPGRADEUNIT:
+            {
+                text = @"Upgrade Unit";
                 break;
             }
             default:

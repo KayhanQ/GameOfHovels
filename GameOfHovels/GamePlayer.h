@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 
 @interface GamePlayer : NSObject {
-    
+    enum PlayerColor {NOCOLOR = 0, RED, BLUE, ORANGE};
+
 }
 
-@property (nonatomic) int woodPile;
-@property (nonatomic) int goldPile;
+@property (nonatomic, readonly) enum PlayerColor pColor;
 
-@property (nonatomic) int color;
 
--(id)initWithString:(NSString*)name color:(int)color;
+
+-(id)initWithString:(NSString*)name color:(enum PlayerColor)pColor;
 
 
 

@@ -19,6 +19,7 @@
 #import "GHEvent.h"
 #import "ActionMenuEvent.h"
 #import "MessageLayer.h"
+#import "GlobalFlags.h"
 
 @implementation GameEngine
 {
@@ -32,11 +33,6 @@
     SPSprite* _popupMenuSprite;
     
     Tile* _selectedTile;
-    BOOL _unitActionIntent;
-    
-    GamePlayer* _mePlayer;
-    GamePlayer* _currentPlayer;
-    
     
     NSMutableArray* _players;
     SPJuggler* _animationJuggler;
@@ -63,17 +59,20 @@
     //init Players
     
     //Create the Message Layer
+    _messageLayer = [MessageLayer sharedMessageLayer];
     
-    //this will actually happen outside Game Engine
-    GamePlayer* player1 = [[GamePlayer alloc] initWithString:@"player1" color:0xfa3211];
-    GamePlayer* player2 = [[GamePlayer alloc] initWithString:@"player2" color:0x2101f8];
+    //we check if we are using GC networking
+    //if not we can manually create our own setup
+    if ([GlobalFlags isGameWithGC]) {
+        
+    }
+    else {
+        [_messageLayer makePlayers];
+        _currentPlayer = [_messageLayer getCurrentPlayer];
+        _mePlayer = _currentPlayer;
+    }
+    
 
-    _players = [NSMutableArray array];
-    [_players addObject:player1];
-    [_players addObject:player2];
-
-    _currentPlayer = player1;
-    _mePlayer = player1;
 
     _contents = [SPSprite sprite];
     [self addChild:_contents];
@@ -81,7 +80,7 @@
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
-    _hud = [[Hud alloc] initWithPlayer:_currentPlayer];
+    _hud = [[Hud alloc] initWithPlayer:_mePlayer];
     [_contents addChild:_hud];
     
     
@@ -92,18 +91,12 @@
     [_world addChild:q];
     
     
-    _map = [[Map alloc] initWithRandomMap:_players hud:_hud];
-    _map.mePlayer = _mePlayer;
+    _map = [[Map alloc] initWithRandomMap:_hud];
+	_map.gameEngine = self;
     [_world addChild:_map];
     
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
-    
-    
-
-    
-    
-    
     
     //event Listeners
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
@@ -117,7 +110,6 @@
     _animationJuggler = [SPJuggler juggler];
     [self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
     
-    _unitActionIntent = false;
     _touching = NO;
     _lastScrollDist = 0;
     _scrollVector = [SPPoint pointWithX:0 y:0];
@@ -130,38 +122,52 @@
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
     [self beginTurnWithPlayer:_currentPlayer];
-    
-    
+	[MessageLayer sharedMessageLayer].gameEngine = self;
 }
 
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
-    _currentPlayer = player;
-    [_map updateHud];
-    _map.currentPlayer = _currentPlayer;
-    [_map treeGrowthPhase];
-    
+    [_map beginTurnPhases];
     //player can now make inputs again
     _map.touchable = true;
     
 }
 
+//This method is important. Change stuff in it depending on what you want to do
 - (void)endTurn:(GHEvent*)event
 {
     _map.touchable = false;
     _selectedTile = nil;
     [_map endTurnUpdates];
+    [self beginTurnWithPlayer:_currentPlayer];
     
+    /*
+	if(_currentPlayer == [_players objectAtIndex:0]){
+		_currentPlayer = [_players objectAtIndex:1];
+	}
+	else{
+		_currentPlayer = [_players objectAtIndex:0];
+	}
+	
     //relay turn has ended
     //Begin Turn will get called again
     //Now we just simulate it by giving our player another turn
-    [self beginTurnWithPlayer:_currentPlayer];
+	if(_currentPlayer == _mePlayer){
+		[self beginTurnWithPlayer:_currentPlayer];
+	}
+     */
 }
 
 //here we play the opponents move
-- (void)playOtherPlayersMove:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile
+- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex
 {
+	Tile *tile = (Tile*)[_map.tilesSprite childAtIndex:tileIndex];
+	Tile *destTile;
+	if (destTileIndex != -1){
+		destTile = (Tile*)[_map.tilesSprite childAtIndex:destTileIndex];
+	}
+	
     switch (aType) {
         case UPGRADEVILLAGE:
         {
@@ -170,7 +176,7 @@
         }
         case BUYUNIT:
         {
-            [_map buyUnitFromTile:_selectedTile tile:destTile];
+            [_map buyUnitFromTile:tile tile:destTile];
             break;
         }
         case BUILDMEADOW:
@@ -180,12 +186,25 @@
         }
         case MOVEUNIT:
         {
-            [_map moveUnitWithTile:_selectedTile tile:destTile];
+            [_map moveUnitWithTile:tile tile:destTile];
             break;
         }
         default:
             break;
     }
+}
+
+- (void)showActionMenu:(TileTouchedEvent*) event
+{
+    Tile* tile = event.tile;
+    
+    if (tile.village.player != _currentPlayer) return;
+    
+    [self removeTileListener];
+    [self selectTile:tile];
+    
+    _actionMenu = [[ActionMenu alloc] initWithTile:tile];
+    [_popupMenuSprite addChild:_actionMenu];
 }
 
 - (void)actionMenuAction:(ActionMenuEvent*) event
@@ -213,8 +232,12 @@
         }
         case BUILDROAD:
         {
-            
+            [_map buildRoad:tile];
             break;
+        }
+        case UPGRADEUNIT:
+        {
+            [_map upgradeUnitWithTile:tile];
         }
         default:
             break;
@@ -261,27 +284,10 @@
     }
 }
 
-- (void)showActionMenu:(TileTouchedEvent*) event
-{
-    Tile* tile = event.tile;
-
-    if (tile.village.player != _currentPlayer) {
-        return;
-    }
-    
-    [self removeTileListener];
-    [self selectTile:tile];
-    
-    NSLog(@"action menu from GE");
-    
-    _actionMenu = [[ActionMenu alloc] initWithTile:tile];
-    [_popupMenuSprite addChild:_actionMenu];
-    
-}
-
 - (void)selectTile:(Tile*)tile
 {
     _selectedTile = tile;
+    [_hud update:tile];
     [tile selectTile];
 }
 
@@ -311,9 +317,12 @@
 - (void)addTileListener
 {
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
-
 }
 
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data
+   fromPlayer:(NSString *)playerID{
+	
+}
 
 
 

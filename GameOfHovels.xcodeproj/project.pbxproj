@@ -60,15 +60,12 @@
 		F380666F1A966DE4009D3C56 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380666E1A966DE4009D3C56 /* GameKit.framework */; };
 		F38066721A967C8F009D3C56 /* GHEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066711A967C8F009D3C56 /* GHEvent.m */; };
 		F38066751A96836B009D3C56 /* Grass.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066741A96836B009D3C56 /* Grass.m */; };
-<<<<<<< HEAD
 		F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */; };
 		F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71E21A99303F00E40479 /* ActionButton.m */; };
-=======
 		FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = FC120EDE1AAD06540071D47A /* MessageLayer.m */; };
 		FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC1E8331AACE51E009A42DC /* GameNavigationController.m */; };
 		FCC1E9E71AACE5D5009A42DC /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCC1E9131AACE5B1009A42DC /* Sparrow.framework */; };
 		FCCA7BA61A97B28B0019E192 /* GCViewcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */; };
->>>>>>> networking
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,12 +211,10 @@
 		F38066711A967C8F009D3C56 /* GHEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHEvent.m; sourceTree = "<group>"; };
 		F38066731A968361009D3C56 /* Grass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Grass.h; sourceTree = "<group>"; };
 		F38066741A96836B009D3C56 /* Grass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grass.m; sourceTree = "<group>"; };
-<<<<<<< HEAD
 		F3CC71DE1A992CB300E40479 /* ActionMenuEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionMenuEvent.h; sourceTree = "<group>"; };
 		F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionMenuEvent.m; sourceTree = "<group>"; };
 		F3CC71E11A992FF800E40479 /* ActionButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionButton.h; sourceTree = "<group>"; };
 		F3CC71E21A99303F00E40479 /* ActionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionButton.m; sourceTree = "<group>"; };
-=======
 		FC120EDD1AAD06540071D47A /* MessageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageLayer.h; sourceTree = "<group>"; };
 		FC120EDE1AAD06540071D47A /* MessageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageLayer.m; sourceTree = "<group>"; };
 		FCC1E8321AACE51E009A42DC /* GameNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameNavigationController.h; sourceTree = "<group>"; };
@@ -573,7 +568,6 @@
 		FCCA7B9B1A97AC540019E192 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = ../../../../Desktop/Sparrow.framework; sourceTree = "<group>"; };
 		FCCA7BA41A97B28B0019E192 /* GCViewcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCViewcontroller.h; sourceTree = "<group>"; };
 		FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCViewcontroller.m; sourceTree = "<group>"; };
->>>>>>> networking
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

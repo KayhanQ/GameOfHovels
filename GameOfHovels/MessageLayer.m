@@ -11,11 +11,13 @@
 #import "Tile.h"
 #define playerIdKey @"PlayerId"
 #define randomNumberKey @"randomNumber"
+#import "GameEngine.h"
+#import "GamePlayer.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
-
+@synthesize gameEngine = _gameEngine;
 
 // on "init" you need to initialize your instance
 -(id) init
@@ -38,6 +40,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		self.ourRandom = arc4random();
 		NSLog(@"OurRandom=%d", self.ourRandom);
 		[self setGameState:kGameStateWaitingForMatch];
+        
+        _players = [NSMutableArray array];
+        
 		self.orderOfPlayers = [NSMutableArray array];
 		[self authenticateLocalPlayer];
 	}
@@ -105,6 +110,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	if ([dictionary[playerIdKey]
 		 isEqualToString:[GKLocalPlayer localPlayer].playerID]) {
 		NSLog(@"I'm player 1");
+
 		return YES;
 	}
 	return NO;
@@ -133,15 +139,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	MessageGameBegin message;
 	message.message.messageType = kMessageTypeGameBegin;
 	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
-	[self sendData:data];
-	
-}
-
-- (void)sendMove {
-	
-	MessageMove message;
-	message.message.messageType = kMessageTypeMove;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageMove)];
 	[self sendData:data];
 	
 }
@@ -270,13 +267,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	} else if (message->messageType == kMessageTypeMove) {
 		NSLog(@"Received move");
 		
-		/*apply the move*/
-		if (self.isPlayer1) {
 			//[player2 moveForward];
-		} else {
-			//[player1 moveForward];
-		}
-		
+			MessageMove * messageMove = (MessageMove *) [data bytes];
+			[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
 	} else if (message->messageType == kMessageTypeGameOver) {
 		MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
 		NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
@@ -396,18 +389,30 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 //We receive which move occured and encode and send it to all players
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile *)tile destTile:(Tile *)destTile
 {
-    int tileIndex = -1;
-    int destTileIndex = -1;
-    
-    tileIndex = [tile childIndex:tile];
-    if (destTile!=nil) destTileIndex = [destTile childIndex:destTile];
-    
-    
-    //No we send a message with three ints
-    //the actionType, tile, and destTile
-    
+	MessageMove message;
+	message.message.messageType = kMessageTypeMove;
+	message.aType=aType;
+	message.tileIndex=[tile.parent childIndex:tile];
+	message.destTileIndex=-1;
+	if (destTile!=nil) message.destTileIndex = [destTile.parent childIndex:destTile];
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageMove)];
+	[self sendData:data];
 }
 
+//code Kayhan has implemented
+- (void)makePlayers
+{
+    GamePlayer* p1 = [[GamePlayer alloc] initWithString:@"Player 1" color:RED];
+    [_players addObject:p1];
+    
+    GamePlayer* p2 = [[GamePlayer alloc] initWithString:@"Player 2" color:BLUE];
+    [_players addObject:p2];
+}
 
+//TODO
+- (GamePlayer*)getCurrentPlayer
+{
+    return [_players objectAtIndex:0];
+}
 
 @end

@@ -10,6 +10,9 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "ActionMenu.h"
+@class GameEngine;
+@class GamePlayer;
+
 extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
 
@@ -37,6 +40,9 @@ typedef struct {
 
 typedef struct {
 	Message message;
+	int aType;
+	int tileIndex;
+	int destTileIndex;
 } MessageMove;
 
 typedef struct {
@@ -60,10 +66,7 @@ typedef enum {
 
 
 /*@protocol MessageLayerDelegate
-- (void)matchStarted;
-- (void)matchEnded;
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data
-   fromPlayer:(NSString *)playerID;
+- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 @end*/
 
 @interface MessageLayer : NSObject<GKMatchmakerViewControllerDelegate, GKMatchDelegate>
@@ -75,8 +78,13 @@ typedef enum {
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController;
 - (BOOL)allRandomNumbersAreReceived;
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile;
+- (void)makePlayers;
+- (GamePlayer*)getCurrentPlayer;
 
+@property GameEngine* gameEngine;
 @property NSMutableArray *orderOfPlayers;
+@property NSMutableArray *players;
+
 @property BOOL isPlayer1, receivedAllRandomNumbers;
 @property BOOL receivedRandom;
 @property GameState gameState;

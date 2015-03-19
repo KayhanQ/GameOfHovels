@@ -12,24 +12,26 @@
 @class GamePlayer;
 @class Hud;
 @class MessageLayer;
-
+@class GameEngine;
 @interface Map : BasicSprite {
     
     
 }
 
+@property GameEngine* gameEngine;
 @property (nonatomic) MessageLayer* messageLayer;
-
-@property (nonatomic) GamePlayer* mePlayer;
-@property (nonatomic) GamePlayer* currentPlayer;
+@property (nonatomic) SPSprite* tilesSprite;
 @property (nonatomic, readonly) Hud* hud;
 
 
-- (id)initWithRandomMap:(NSMutableArray*)players hud:(Hud*)hud;
+- (id)initWithRandomMap:(Hud*)hud;
+- (void)beginTurnPhases;
+
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 
 - (void)upgradeVillageWithTile:(Tile*)tile;
+- (void)upgradeUnitWithTile:(Tile*)tile;
 
 - (void)showPlayersTeritory;
 
@@ -40,8 +42,6 @@
 
 - (void)chopTree:(Tile*)tile;
 - (void)buildMeadow:(Tile*)tile;
-
-- (void)updateHud;
-
+- (void)buildRoad:(Tile*)tile;
 
 @end

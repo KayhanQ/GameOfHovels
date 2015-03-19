@@ -7,6 +7,8 @@
 //
 
 #import "Grass.h"
+#import "GamePlayer.h"
+#import "Tile.h"
 #import "SparrowHelper.h"
 #import "Media.h"
 
@@ -20,8 +22,28 @@
     if (self=[super initWithStructureType:GRASS]) {
         //custom code here
     
+        enum PlayerColor pColor = tile.pColor;
         
-        SPTexture* tileTexture = [Media atlasTexture:@"tileGrass_tile.png"];
+        SPTexture* tileTexture;
+        switch (pColor) {
+            case RED:
+            {
+                tileTexture = [Media atlasTexture:@"tileLava_tile.png"];
+                break;
+            }
+            case BLUE:
+            {
+                tileTexture = [Media atlasTexture:@"tileMagic_tile.png"];
+                break;
+            }
+            default:
+            {
+                tileTexture = [Media atlasTexture:@"tileGrass_tile.png"];
+                break;
+            }
+        }
+        
+        
         SPImage* image = [SPImage imageWithTexture:tileTexture];
         [self addChild:image];
 

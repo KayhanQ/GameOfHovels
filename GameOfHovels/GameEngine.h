@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIDevice.h>
+#import "MessageLayer.h"
 
 @class Map;
 @class GamePlayer;
@@ -20,7 +21,10 @@
     SPSprite* _world;
 }
 
-- (void)beginTurnWithPlayer:(GamePlayer*)player;
+@property GamePlayer* mePlayer;
+@property GamePlayer* currentPlayer;
 
+- (void)beginTurnWithPlayer:(GamePlayer*)player;
+- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 
 @end
