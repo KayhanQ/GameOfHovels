@@ -23,8 +23,6 @@
 #import "GameEngine.h"
 
 @implementation Map {
-    NSMutableArray* _villagesTileArray;
-
     MessageLayer* _messageLayer;
     
     float _gridWidth;
@@ -58,9 +56,6 @@
         
         _tilesSprite = [SPSprite sprite];
         [self addChild:_tilesSprite];
-        
-        _villagesTileArray = [NSMutableArray array];
-        
         
         [self makeBasicMap];
         [self setNeighbours];
@@ -124,7 +119,6 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player1;
-            [_villagesTileArray addObject:villageTile];
         }
         
         if (j>9 && j<13) {
@@ -151,7 +145,6 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player1;
-            [_villagesTileArray addObject:villageTile];
         }
         
         if (j>9 && j<13) {
@@ -182,7 +175,6 @@
             [t addVillage:HOVEL];
             villageTile = t;
             t.village.player = player2;
-            [_villagesTileArray addObject:villageTile];
         }
         
         if (j>3 && j<7) {
@@ -286,17 +278,6 @@
 
 }
 
-- (NSMutableArray*)getTilesforVillage:(Tile*)tile
-{
-    NSMutableArray* tiles = [NSMutableArray array];
-    Village* v = tile.village;
-    
-    for (Tile*t in _tilesSprite) {
-        if (t.village == v) [tiles addObject:t];
-    }
-    
-    return tiles;
-}
 
 
 - (void)showPlayersTeritory
@@ -462,9 +443,24 @@
     }
 }
 
+- (void)tombstonePhase
+{
+    
+}
+
+- (void)incomePhase
+{
+    
+}
+
+- (void)paymentPhase
+{
+    
+}
+
 - (void)buildPhase
 {
-    for (Tile* vTile in _villagesTileArray) {
+    for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile]) {
             if (t.unit!=nil) {
                 if (t.unit.workstateCompleted) {
@@ -500,7 +496,7 @@
     }
     
     //We go through ever single tile we own and do all updates
-    for (Tile* vTile in _villagesTileArray) {
+    for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile]) {
             if (t.unit!=nil) {
                 [t.unit incrementWorkstate];
@@ -508,6 +504,30 @@
         }
     }
 }
+
+- (NSMutableArray*)getTilesWithMyVillages
+{
+    NSMutableArray* tiles = [NSMutableArray array];
+    for (Tile* t in _tilesSprite) {
+        if ([t isVillage] && t.village.player == [_messageLayer getCurrentPlayer]) {
+            [tiles addObject:t];
+        }
+    }
+    return tiles;
+}
+
+- (NSMutableArray*)getTilesforVillage:(Tile*)tile
+{
+    NSMutableArray* tiles = [NSMutableArray array];
+    Village* v = tile.village;
+    
+    for (Tile*t in _tilesSprite) {
+        if (t.village == v) [tiles addObject:t];
+    }
+    
+    return tiles;
+}
+
 
 - (BOOL)isMyTurn
 {
