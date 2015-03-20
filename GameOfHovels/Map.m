@@ -275,12 +275,10 @@
 - (void)upgradeUnitWithTile:(Tile *)tile
 {
     [tile upgradeUnit:SOLDIER];
-
 }
 
 
-
-- (void)showPlayersTeritory //players have their own colours. pColor is player colour
+- (void)showPlayersTeritory
 {
     //tiles have the player colour. Grass is neutral.
     
@@ -289,7 +287,7 @@
     //throw it 
     
     for (Tile* t in _tilesSprite) {
-        if (t.village!=nil) {
+        if ([t hasVillage]) {
             [t setPColor:t.village.player.pColor];
         }
     }
@@ -421,6 +419,7 @@
     
 }
 
+//call your phases
 - (void)beginTurnPhases
 {
     [self treeGrowthPhase];
@@ -459,6 +458,7 @@
     
 }
 
+//also known as upkeep phase
 - (void)paymentPhase
 {
     
@@ -468,7 +468,7 @@
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile]) {
-            if (t.unit!=nil) {
+            if ([t hasUnit]) {
                 if (t.unit.workstateCompleted) {
                     switch (t.unit.workState) {
                         case BUILDINGMEADOW:
@@ -504,13 +504,19 @@
     //We go through ever single tile we own and do all updates
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile]) {
-            if (t.unit!=nil) {
+            if ([t hasUnit]) {
                 [t.unit incrementWorkstate];
             }
         }
     }
 }
 
+
+//--------------------------
+//  Helper Functions
+//--------------------------
+
+//How is current player represented
 - (NSMutableArray*)getTilesWithMyVillages
 {
     NSMutableArray* tiles = [NSMutableArray array];

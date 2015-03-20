@@ -140,6 +140,8 @@
     _map.touchable = false;
     _selectedTile = nil;
     [_map endTurnUpdates];
+    
+    //We rebegin our turn
     [self beginTurnWithPlayer:_currentPlayer];
     
     /*

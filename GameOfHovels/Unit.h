@@ -17,7 +17,6 @@
 }
 
 
-//@property (nonatomic, weak) Tile* tile;
 @property (nonatomic, readonly) int health;
 @property (nonatomic, readonly) int buyCost;
 @property (nonatomic, readonly) int upkeepCost;
