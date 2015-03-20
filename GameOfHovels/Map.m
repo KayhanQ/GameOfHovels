@@ -280,8 +280,14 @@
 
 
 
-- (void)showPlayersTeritory
+- (void)showPlayersTeritory //players have their own colours. pColor is player colour
 {
+    //tiles have the player colour. Grass is neutral.
+    
+    //use sharedMessage LAyer to access certain things
+    
+    //throw it 
+    
     for (Tile* t in _tilesSprite) {
         if (t.village!=nil) {
             [t setPColor:t.village.player.pColor];

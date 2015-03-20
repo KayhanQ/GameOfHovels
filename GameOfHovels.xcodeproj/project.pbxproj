@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
+		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -71,7 +73,6 @@
 		F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D8ADF81ABB072E00920E99 /* tombstone.png */; };
 		FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = FC120EDE1AAD06540071D47A /* MessageLayer.m */; };
 		FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC1E8331AACE51E009A42DC /* GameNavigationController.m */; };
-		FCC1E9E71AACE5D5009A42DC /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCC1E9131AACE5B1009A42DC /* Sparrow.framework */; };
 		FCCA7BA61A97B28B0019E192 /* GCViewcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */; };
 /* End PBXBuildFile section */
 
@@ -135,6 +136,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
+		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
+		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -584,7 +588,7 @@
 		FCC1E9CE1AACE5B1009A42DC /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		FCC1E9D01AACE5B1009A42DC /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		FCC1E9D11AACE5B1009A42DC /* scale_textures.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = scale_textures.rb; sourceTree = "<group>"; };
-		FCCA7B9B1A97AC540019E192 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = ../../../../Desktop/Sparrow.framework; sourceTree = "<group>"; };
+		FCCA7B9B1A97AC540019E192 /* .. */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ..; sourceTree = SPARROW_SRC; };
 		FCCA7BA41A97B28B0019E192 /* GCViewcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCViewcontroller.h; sourceTree = "<group>"; };
 		FCCA7BA51A97B28B0019E192 /* GCViewcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCViewcontroller.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -594,10 +598,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */,
 				F380666F1A966DE4009D3C56 /* GameKit.framework in Frameworks */,
 				F38065F21A9644E9009D3C56 /* libz.dylib in Frameworks */,
 				F38065F01A9644D9009D3C56 /* QuartzCore.framework in Frameworks */,
-				FCC1E9E71AACE5D5009A42DC /* Sparrow.framework in Frameworks */,
 				F38065EE1A9644D3009D3C56 /* OpenGLES.framework in Frameworks */,
 				F38065EC1A9644CD009D3C56 /* OpenAL.framework in Frameworks */,
 				F38065EA1A9644C4009D3C56 /* GLKit.framework in Frameworks */,
@@ -690,6 +694,7 @@
 		F38065F31A964535009D3C56 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C6527ED11ABB551A0057F994 /* Sparrow.framework */,
 				FCC1E8381AACE5B1009A42DC /* Sparrow-Framework-v2.1 */,
 				F380666E1A966DE4009D3C56 /* GameKit.framework */,
 				F38065F11A9644E9009D3C56 /* libz.dylib */,
@@ -699,7 +704,7 @@
 				F38065E91A9644C4009D3C56 /* GLKit.framework */,
 				F38065E71A9644BC009D3C56 /* AVFoundation.framework */,
 				F38065E51A9644B5009D3C56 /* AudioToolbox.framework */,
-				FCCA7B9B1A97AC540019E192 /* Sparrow.framework */,
+				FCCA7B9B1A97AC540019E192 /* .. */,
 			);
 			name = Frameworks;
 			path = GameOfHovels;
@@ -776,6 +781,8 @@
 				F3D8ADF11ABB06C100920E99 /* Tombstone.m */,
 				F38066221A964C7E009D3C56 /* Meadow.h */,
 				F38066231A964C7E009D3C56 /* Meadow.m */,
+				C69BA93B1ABB720600F33BFC /* Sea.h */,
+				C69BA93C1ABB721300F33BFC /* Sea.m */,
 			);
 			name = Structures;
 			sourceTree = "<group>";
@@ -1972,6 +1979,7 @@
 				F38066751A96836B009D3C56 /* Grass.m in Sources */,
 				F38066001A964C1A009D3C56 /* BasicSprite.m in Sources */,
 				F38065FA1A9649CA009D3C56 /* GameEngine.m in Sources */,
+				C69BA93D1ABB721300F33BFC /* Sea.m in Sources */,
 				F38066241A964C7E009D3C56 /* Structure.m in Sources */,
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,
@@ -2111,10 +2119,11 @@
 					"/Users/Kayhan/Filing-2015/Programming/Frameworks/Sparrow-Framework-v2.1/sparrow/bin",
 					/Users/martinweiss/Desktop,
 					"/Users/martinweiss/Desktop/Sparrow-Framework-v2.1/sparrow/bin",
+					"/Users/brendan/Downloads/Sparrow-Framework-v2.1/sparrow/bin",
 				);
 				GCC_PREFIX_HEADER = "GameOfHovels/GameOfHovels-Prefix.pch";
 				INFOPLIST_FILE = GameOfHovels/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2133,10 +2142,11 @@
 					"/Users/Kayhan/Filing-2015/Programming/Frameworks/Sparrow-Framework-v2.1/sparrow/bin",
 					/Users/martinweiss/Desktop,
 					"/Users/martinweiss/Desktop/Sparrow-Framework-v2.1/sparrow/bin",
+					"/Users/brendan/Downloads/Sparrow-Framework-v2.1/sparrow/bin",
 				);
 				GCC_PREFIX_HEADER = "GameOfHovels/GameOfHovels-Prefix.pch";
 				INFOPLIST_FILE = GameOfHovels/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
