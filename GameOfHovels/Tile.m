@@ -357,7 +357,10 @@
 {
     _pColor = pColor;
     [_structuresSprite removeChildAtIndex:0];
+    
     Grass* g = [[Grass alloc] initWithTile:self];
+    //Structure *g [[Structure alloc] initWithTile:self];
+    
     [_structuresSprite addChild:g atIndex:0];
 }
 

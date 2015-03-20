@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 CivetAtelier. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+
 @class Structure;
 #import "Structure.h"
 

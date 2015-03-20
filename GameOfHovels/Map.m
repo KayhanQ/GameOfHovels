@@ -59,12 +59,12 @@
         
         [self makeBasicMap];
         [self setNeighbours];
-        [self makePlayer1Tiles: _messageLayer.players[0]];
-        [self makePlayer2Tiles: _messageLayer.players[1]];
+        //[self makePlayer1Tiles: _messageLayer.players[0]];
+        //[self makePlayer2Tiles: _messageLayer.players[1]];
 
-        //[self addTrees];
-        //[self addMeadows];
-        [self makeTreesAndMeadows];
+        [self addTrees];
+        [self addMeadows];
+   //     [self makeTreesAndMeadows];
 		
         [self showPlayersTeritory];
         
@@ -78,8 +78,24 @@
         for (int i  = 0 ; i<_gridHeight; i++) {
             int xOffset = j%2 * _tileWidth/2;
             SPPoint *p = [SPPoint pointWithX:i*_tileWidth+xOffset y:j*_offsetHeight];
-            Tile *t = [[Tile alloc] initWithPosition:p structure:GRASS];
-            [_tilesSprite addChild:t];
+            
+            
+            if( ((j > 0) && (j < _gridWidth-1)) && ((i > 0) && (i <_gridHeight-1)) ){
+                Tile* t = [[Tile alloc] initWithPosition:p structure:GRASS];
+                [_tilesSprite addChild:t];
+            }
+            
+            
+            else{
+                Tile *r = [[Tile alloc] initWithPosition:p structure:ROAD]; // Currently doesn't work
+                [_tilesSprite addChild:r];
+            }
+            
+            /*
+             'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 4294967295 beyond bounds for empty array
+             */
+        
+
         }
     }
 }

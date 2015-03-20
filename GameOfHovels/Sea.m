@@ -6,8 +6,11 @@
 //  Copyright (c) 2015 CivetAtelier. All rights reserved.
 //
 
+
+#import <Foundation/Foundation.h>
 #import "Sea.h"
 #import "SparrowHelper.h"
+#import "Tile.h"
 #import "Media.h"
 
 @implementation Sea {
