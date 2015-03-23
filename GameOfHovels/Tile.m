@@ -43,13 +43,8 @@
     SPImage* _tileLayer;
     SPImage* _selectionLayer;
     
-    
     NSMutableArray* _neighboursArray;
-    //NSMutableArray* _structuresArray;
-
     NSTimer* _timer;
-    
-
 }
 
 @synthesize baseImage = _baseImage;
@@ -145,23 +140,23 @@
     _unit = nil;
 }
 
-//currently this just upgrades to the next level
+//upgrades to whatever uType is
 - (void)upgradeUnit:(enum UnitType)uType
 {
     Unit* newUnit;
     
-    switch (_unit.uType) {
-        case PEASANT:
+    switch (uType) {
+        case INFANTRY:
         {
             newUnit = [[Infantry alloc] initWithTile:self];
             break;
         }
-        case INFANTRY:
+        case SOLDIER:
         {
             newUnit = [[Soldier alloc] initWithTile:self];
             break;
         }
-        case SOLDIER:
+        case RITTER:
         {
             newUnit = [[Ritter alloc] initWithTile:self];
             break;

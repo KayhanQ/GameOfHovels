@@ -243,7 +243,7 @@
         }
         case UPGRADEUNIT:
         {
-            [_map upgradeUnitWithTile:tile];
+            [_map upgradeUnitWithTile:tile unitType:tile.unit.uType+1];
         }
         default:
             break;

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "Map.h"
 #import "Tile.h"
-#import "Unit.h"
 #import "Peasant.h"
 #import "Infantry.h"
 #import "Soldier.h"
@@ -31,6 +30,7 @@
     float _tileWidth;
     float _tileHeight;
     float _offsetHeight;
+
 }
 @synthesize tilesSprite = _tilesSprite;
 @synthesize messageLayer = _messageLayer;
@@ -44,7 +44,7 @@
 		
 		_messageLayer = [MessageLayer sharedMessageLayer];
         _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
-                
+        
         _gridWidth = 20;
         _gridHeight = 20;
         _tileWidth = 54;
@@ -272,9 +272,9 @@
     }
 }
 
-- (void)upgradeUnitWithTile:(Tile *)tile
+- (void)upgradeUnitWithTile:(Tile *)tile unitType:(enum UnitType)uType
 {
-    [tile upgradeUnit:SOLDIER];
+    [tile upgradeUnit:uType];
 }
 
 
@@ -283,8 +283,6 @@
     //tiles have the player colour. Grass is neutral.
     
     //use sharedMessage LAyer to access certain things
-    
-    //throw it 
     
     for (Tile* t in _tilesSprite) {
         if ([t hasVillage]) {
@@ -314,48 +312,119 @@
     }
 }
 
+- (BOOL)isMovePossible:(Tile*)unitTile tile:(Tile*)destTile moveTypes:(NSMutableArray*)moveTypes
+{
+    Unit* unit = unitTile.unit;
+
+    BOOL movePossible = true;
+    
+    //Basic checks for game logic
+    if (![self isMyTurn]) return false;
+    if (!unit.movable) movePossible = false;
+    if ([unitTile neighboursContainTile:destTile] == false) movePossible = false;
+    if (unit.distTravelled == unit.stamina) movePossible = false;
+
+    for (NSNumber* n in moveTypes) {
+        enum MovesType mType = [n intValue];
+        switch (mType) {
+            case TOOWNVILLAGE:
+            {
+                movePossible = false;
+                break;
+            }
+            case TOOWNUNIT:
+            {
+                if (unit.uType + destTile.unit.uType > 4) movePossible = false;
+                break;
+            }
+            case TOBAUM:
+            {
+                if (unit.uType == RITTER) movePossible = false;
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    
+    return movePossible;
+}
+
+- (NSMutableArray*)getMoveTypesForMove:(Tile*)unitTile tile:(Tile*)destTile
+{
+    NSMutableArray* moveTypes = [NSMutableArray array];
+
+    if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
+    if (destTile.village == unitTile.village) {
+        [moveTypes addObject: [NSNumber numberWithInt:TOOWNTILE]];
+        if (destTile.isVillage) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
+    }
+    else {
+        if ([destTile hasVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOENEMYTILE]];
+        else [moveTypes addObject: [NSNumber numberWithInt:TONEUTRALTILE]];
+    }
+    if (destTile.village.player == unitTile.village.player && [destTile hasUnit]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNUNIT]];
+
+    
+    return moveTypes;
+}
+
 //completes the move to new tile
 - (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile
 {
     Unit* unit = unitTile.unit;
+    NSMutableArray*moveTypes = [self getMoveTypesForMove:unitTile tile:destTile];
     
-    BOOL movePossible = true;
-    if ([self isMyTurn]) {
-        if (!unit.movable) {
-            movePossible = false;
-        }
-        if ([unitTile neighboursContainTile:destTile] == false) {
-            movePossible = false;
-        }
-        if (destTile.getStructureType == BAUM && unit.uType == RITTER) movePossible = false;
-        if (destTile.isVillage) movePossible = false;
-        if (unit.distTravelled == unit.stamina) {
-            movePossible = false;
-        }
-        
-        if (unitTile.village != destTile.village) {
-            [self takeOverTile:unitTile tile:destTile];
-            //movePossible = false;
-        }
-    }
-    
-    if (!movePossible) {
+    if ([self isMyTurn] && ![self isMovePossible:unitTile tile:destTile moveTypes:moveTypes]) {
         NSLog(@"move impossible");
         [Media playSound:@"sound.caf"];
         return;
     }
     
     //if the move is possible we continue here
-    
-    if (destTile.getStructureType == BAUM) {
-        [self chopTree:destTile];
-    }
+    BOOL mergingUnits = false;
 
+    for (NSNumber* n in moveTypes) {
+        enum MovesType mType = [n intValue];
+        switch (mType) {
+            case TOBAUM:
+            {
+                [self chopTree:destTile];
+                break;
+            }
+            case TONEUTRALTILE:
+            {
+                [self takeOverTile:unitTile tile:destTile];
+                break;
+            }
+            case TOENEMYTILE:
+            {
+                [self takeOverTile:unitTile tile:destTile];
+                break;
+            }
+            case TOOWNUNIT:
+            {
+                [self upgradeUnitWithTile:destTile unitType: unit.uType + destTile.unit.uType];
+                mergingUnits = true;
+                break;
+            }
+            default:
+                break;
+        }
+        
+    }
     
-    //the last thing we do is actually move the units on the tile
-    [unitTile removeUnit];
-    [destTile addUnit:unit];
-    unit.distTravelled++;
+    //depending on whether we are merging units or not we take different acation
+    if (mergingUnits) {
+        [unitTile removeUnit];
+        destTile.unit.distTravelled = destTile.unit.distTravelled + unit.distTravelled;
+    }
+    else {
+        //the last thing we do is actually move the units on the tile
+        [unitTile removeUnit];
+        [destTile addUnit:unit];
+        unit.distTravelled++;
+    }
     
     //need to refresh the colour, where should this actually be done?
     [self showPlayersTeritory];
