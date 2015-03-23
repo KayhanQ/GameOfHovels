@@ -19,6 +19,7 @@
 
 }
 
+@property (nonatomic) BOOL visited;
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
 @property (nonatomic) Village* village;
@@ -30,6 +31,11 @@
 - (NSMutableArray*)getNeighbours;
 
 - (void)setPColor:(enum PlayerColor)pColor;
+- (int)getPColor;
+
+-(BOOL)getVisited;
+-(void)setVisited:(BOOL)initialized;
+
 
 - (void)addStructure:(enum StructureType)sType;
 

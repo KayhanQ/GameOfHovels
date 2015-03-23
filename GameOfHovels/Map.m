@@ -21,6 +21,7 @@
 #import "Media.h"
 #import "MessageLayer.h"
 #import "GameEngine.h"
+#import "DKStack.h"
 
 @implementation Map {
     MessageLayer* _messageLayer;
@@ -58,7 +59,13 @@
         [self addChild:_tilesSprite];
         
         [self makeBasicMap];
+        
+        [self createRandomMap: _messageLayer.players];
+        
         [self setNeighbours];
+        
+        [self initializePlayerLocations];
+        
         //[self makePlayer1Tiles: _messageLayer.players[0]];
         //[self makePlayer2Tiles: _messageLayer.players[1]];
 
@@ -80,16 +87,22 @@
             SPPoint *p = [SPPoint pointWithX:i*_tileWidth+xOffset y:j*_offsetHeight];
             
             
-            if( ((j > 0) && (j < _gridWidth-1)) && ((i > 0) && (i <_gridHeight-1)) ){
+            //if( ((j > 0) && (j < _gridWidth-1)) && ((i > 0) && (i <_gridHeight-1)) ){
                 Tile* t = [[Tile alloc] initWithPosition:p structure:GRASS];
                 [_tilesSprite addChild:t];
-            }
+            //}
             
-            
+          
+            /* SEA TILES
             else{
                 Tile *r = [[Tile alloc] initWithPosition:p structure:ROAD]; // Currently doesn't work
                 [_tilesSprite addChild:r];
+
+                
+                
+                //[r setVisited:YES];
             }
+            */
             
             /*
              'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 4294967295 beyond bounds for empty array
@@ -100,7 +113,148 @@
     }
 }
 
-- (void)makeTreesAndMeadows
+- (void)createRandomMap:(NSMutableArray*)players
+{
+    
+    for (Tile* t in _tilesSprite) {
+        
+        int randomColor = arc4random_uniform([players count] + 1);
+        
+        if(t.getStructureType != ROAD){
+            switch (randomColor) {
+                case 0:
+                {
+                    //NSLog(@"Neutral Tile assigned a colour");
+                    [t setPColor:NOCOLOR]; //set it to player1s color
+                    break;
+                }
+                case 1:
+                {
+                    //NSLog(@"Player1 Tile assigned a colour");
+                    [t setPColor: BLUE];
+                    break;
+                }
+                case 2:
+                {
+                    // NSLog(@"Player2 Tile assigned a colour");
+                    [t setPColor: RED];
+                    break;
+                    
+                }
+                    
+                    //can accomodate more players if Needed
+                default:
+                    NSLog(@"More players than we can account for");
+                    break;
+            }
+        }
+    }
+}
+
+
+- (void)initializePlayerLocations //going to do a basic dfs on each of the tiles.
+{
+    Tile* currentTile;
+    DKStack* stack = [[DKStack alloc] init];
+    
+    //DKQueue* queue = [[DKQueue alloc] init];
+    
+    
+    int currentColor;// =0;
+    
+    NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
+    NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
+    
+    //compare against the size of the max. If the stack ever becomes smaller than the max, then add a village.
+    // if it is less than 2, then get rid of it all.
+    
+    for (Tile* t in _tilesSprite) {
+        
+        currentColor = [t getPColor];
+        [connectedTiles addObject:t];
+        
+        [stack push:t];
+        
+        while(![stack isEmpty]){
+            
+            // NSLog(@"%d", [stack size]);
+            
+            currentTile = [stack pop];
+            
+            if([t getVisited] != YES){
+                
+                [t setVisited:YES];
+                
+                tileNeighbours = [t getNeighbours];
+                
+                for(Tile* neighbour in tileNeighbours) {
+                    
+                    //[stack push:neighbour];
+                    
+                    if([neighbour getPColor] == [t getPColor]){
+                        [stack push:neighbour];
+                        [connectedTiles addObject:neighbour];
+                        
+                        //  NSLog(@"There are %d elements in the array", [connectedTiles count]);
+                        
+                    }
+                    
+                }
+                
+            }
+        }
+        
+    
+        if([connectedTiles count] < 3 && currentColor != NOCOLOR){
+            
+            for(Tile* tile in connectedTiles){
+                [tile setPColor:NOCOLOR];
+                
+            }
+            
+        }
+        //else if(currentColor != NEUTRAL){
+        //[[connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))] addVillage:HOVEL];
+        //}
+        
+        else {
+            for(Tile* tile in connectedTiles){
+                
+                [tile setPColor: currentColor];
+                
+                
+            }
+            
+            if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
+                
+                Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
+                
+                [s addVillage:HOVEL];
+                
+                Tile* villageTile = s;
+                s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
+                
+                [s setPColor: currentColor];
+                
+                
+                s.village = villageTile.village;
+                [s setPColor: villageTile.village.player.pColor];
+                
+               
+            }
+            
+            
+        }
+         [connectedTiles removeAllObjects];
+        
+    
+    }
+    
+    NSLog(@"There are %d connected componentst", [connectedTiles count]);
+}
+
+
+- (void)makeTreesAndMeadows //What the hell is this???
 {
 	NSInteger treesData[80] = {1, 2, 19, 26, 33, 35, 37, 50, 51, 57, 63, 72, 74, 78, 83, 84, 92, 99, 105, 110, 116, 119, 120, 142, 143, 146, 148, 149, 164, 186, 191, 193, 196, 201, 207, 208, 211, 213, 216, 222, 225, 228, 234, 238, 240, 252, 257, 265, 274, 280, 281, 283, 289, 294, 298, 322, 326, 333, 334, 335, 336, 338, 340, 348, 350, 358, 359, 366, 375, 377, 380, 383, 394, 395, 396};
 	NSInteger meadowsData[40] = {8, 14, 25, 36, 65, 69, 79, 96, 103, 109, 144, 145, 155, 176, 182, 192, 195, 206, 219, 220, 229, 248, 271, 287, 304, 324, 325, 327, 361, 363, 371, 393, 397};
@@ -238,7 +392,10 @@
 
 -(void)addTrees
 {
-    for (int j  = 1 ; j<80; j++) {
+    float treePercentage = 0.2f;
+    int numTrees = treePercentage*(_gridWidth * _gridHeight);
+    
+    for (int j  = 1 ; j<numTrees; j++) {
         int index = arc4random() % [_tilesSprite numChildren];
         Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
         if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
@@ -249,7 +406,11 @@
 
 -(void)addMeadows
 {
-    for (int j  = 1 ; j<40; j++) {
+    
+    float meadowPercentage = 0.1f;
+    int numMeadows = meadowPercentage*(_gridWidth * _gridHeight);
+    
+    for (int j  = 1 ; j<numMeadows; j++) {
         int index = arc4random() % [_tilesSprite numChildren];
         Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
         if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {

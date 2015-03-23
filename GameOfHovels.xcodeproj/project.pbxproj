@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
 		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
+		C6A11F1D1ABE269500A8334E /* DKQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A11F191ABE269500A8334E /* DKQueue.m */; };
+		C6A11F1E1ABE269500A8334E /* DKStack.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A11F1B1ABE269500A8334E /* DKStack.m */; };
+		C6A11F1F1ABE269500A8334E /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C6A11F1C1ABE269500A8334E /* README.md */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -139,6 +142,11 @@
 		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
 		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
 		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
+		C6A11F181ABE269500A8334E /* DKQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKQueue.h; sourceTree = "<group>"; };
+		C6A11F191ABE269500A8334E /* DKQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKQueue.m; sourceTree = "<group>"; };
+		C6A11F1A1ABE269500A8334E /* DKStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKStack.h; sourceTree = "<group>"; };
+		C6A11F1B1ABE269500A8334E /* DKStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKStack.m; sourceTree = "<group>"; };
+		C6A11F1C1ABE269500A8334E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -620,6 +628,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C6A11F171ABE269500A8334E /* Objective-C-Stack---Queue-master */ = {
+			isa = PBXGroup;
+			children = (
+				C6A11F181ABE269500A8334E /* DKQueue.h */,
+				C6A11F191ABE269500A8334E /* DKQueue.m */,
+				C6A11F1A1ABE269500A8334E /* DKStack.h */,
+				C6A11F1B1ABE269500A8334E /* DKStack.m */,
+				C6A11F1C1ABE269500A8334E /* README.md */,
+			);
+			name = "Objective-C-Stack---Queue-master";
+			path = "../../../../Downloads/Objective-C-Stack---Queue-master";
+			sourceTree = "<group>";
+		};
 		F38065B11A96441B009D3C56 = {
 			isa = PBXGroup;
 			children = (
@@ -960,6 +981,7 @@
 		F38066651A96515E009D3C56 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				C6A11F171ABE269500A8334E /* Objective-C-Stack---Queue-master */,
 				F3D8ADF41ABB06D800920E99 /* GlobalFlags.h */,
 				F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */,
 				F38065FC1A964C1A009D3C56 /* BasicSprite.h */,
@@ -1974,6 +1996,7 @@
 				F3D8ADF21ABB06C100920E99 /* Road.m in Sources */,
 				F3D8ADEC1ABB06B400920E99 /* Infantry.m in Sources */,
 				F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */,
+				C6A11F1F1ABE269500A8334E /* README.md in Sources */,
 				F38066261A964C7E009D3C56 /* Meadow.m in Sources */,
 				F380662F1A964CFA009D3C56 /* ActionMenu.m in Sources */,
 				F38066751A96836B009D3C56 /* Grass.m in Sources */,
@@ -1982,8 +2005,10 @@
 				C69BA93D1ABB721300F33BFC /* Sea.m in Sources */,
 				F38066241A964C7E009D3C56 /* Structure.m in Sources */,
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
+				C6A11F1E1ABE269500A8334E /* DKStack.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,
 				F380662B1A964CD7009D3C56 /* SparrowHelper.m in Sources */,
+				C6A11F1D1ABE269500A8334E /* DKQueue.m in Sources */,
 				F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */,
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,

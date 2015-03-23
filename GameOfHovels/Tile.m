@@ -52,6 +52,8 @@
 
 }
 
+
+@synthesize visited = _visited;
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
 @synthesize village = _village;
@@ -268,6 +270,17 @@
     [self dispatchEvent:event];
 }
 
+- (void)setVisited:(BOOL)visited
+{
+    _visited = visited;
+}
+
+- (BOOL)getVisited
+{
+     return _visited;
+}
+
+
 //------------------------------
 //  NEIGHBOUR FUNCTIONS
 //------------------------------
@@ -362,6 +375,13 @@
     //Structure *g [[Structure alloc] initWithTile:self];
     
     [_structuresSprite addChild:g atIndex:0];
+}
+
+
+- (int)getPColor
+{
+   return _pColor;
+   
 }
 
 - (void)selectTile
