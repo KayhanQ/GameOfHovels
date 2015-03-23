@@ -19,6 +19,7 @@
 #import "GHEvent.h"
 #import "ActionMenuEvent.h"
 #import "MessageLayer.h"
+#import "SparrowHelper.h"
 #import "GlobalFlags.h"
 
 @implementation GameEngine
@@ -35,7 +36,7 @@
     Tile* _selectedTile;
     
     NSMutableArray* _players;
-    SPJuggler* _animationJuggler;
+    SPJuggler* _gameJuggler;
 }
 
 - (id)init
@@ -56,7 +57,23 @@
 
 - (void)setup
 {
-    //init Players
+    
+    _touching = NO;
+    _lastScrollDist = 0;
+    _scrollVector = [SPPoint pointWithX:0 y:0];
+    
+    
+    //if you want access ot the global game juggler here is how
+    _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
+    //game engine handles animating it and pausing etc
+    [self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
+    
+    
+    [SPAudioEngine start];  // starts up the sound engine
+    [Media initAtlas];      // loads your texture atlas -> see Media.h/Media.m
+    [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
+    [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
+    
     
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
@@ -71,9 +88,8 @@
         _currentPlayer = [_messageLayer getCurrentPlayer];
         _mePlayer = _currentPlayer;
     }
+
     
-
-
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
@@ -107,19 +123,7 @@
     [self enableScroll];
 
     
-    _animationJuggler = [SPJuggler juggler];
-    [self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
-    
-    _touching = NO;
-    _lastScrollDist = 0;
-    _scrollVector = [SPPoint pointWithX:0 y:0];
-    
-    
 
-    [SPAudioEngine start];  // starts up the sound engine
-    [Media initAtlas];      // loads your texture atlas -> see Media.h/Media.m
-    [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
-    [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
     [self beginTurnWithPlayer:_currentPlayer];
 	[MessageLayer sharedMessageLayer].gameEngine = self;
@@ -338,7 +342,7 @@
 - (void)animateJugglers:(SPEnterFrameEvent *)event
 {
     double passedTime = event.passedTime;
-    [_animationJuggler advanceTime:passedTime];
+    [_gameJuggler advanceTime:passedTime];
 }
 
 @end

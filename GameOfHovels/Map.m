@@ -21,10 +21,11 @@
 #import "Media.h"
 #import "MessageLayer.h"
 #import "GameEngine.h"
+#import "SparrowHelper.h"
 
 @implementation Map {
     MessageLayer* _messageLayer;
-    
+    SPJuggler* _gameJuggler;
     float _gridWidth;
     float _gridHeight;
     float _tileWidth;
@@ -42,9 +43,8 @@
     if (self=[super init]) {
 		
 		_messageLayer = [MessageLayer sharedMessageLayer];
-        
-        //currently we are not using the array players and game Engine is updating us with the current player
-        
+        _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
+                
         _gridWidth = 20;
         _gridHeight = 20;
         _tileWidth = 54;

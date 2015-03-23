@@ -8,9 +8,13 @@
 
 
 @interface SparrowHelper : NSObject
+{
+}
 
+@property (nonatomic, readonly) SPJuggler* gameJuggler;
 
-+(void)centerPivot:(SPDisplayObject*)displayObject;
++ (instancetype)sharedSparrowHelper;
++ (void)centerPivot:(SPDisplayObject*)displayObject;
 
 
 

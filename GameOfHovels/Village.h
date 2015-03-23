@@ -17,6 +17,7 @@
     
 }
 
+//Village should have the player ID not the object 
 @property (nonatomic) GamePlayer* player;
 @property (nonatomic, readonly) enum VillageType vType;
 @property (nonatomic) int woodPile;
