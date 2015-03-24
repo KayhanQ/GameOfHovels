@@ -119,4 +119,9 @@
     }
 }
 
+- (void)transferPropertiesFrom:(Unit*)u
+{
+    _distTravelled += u.distTravelled;
+}
+
 @end

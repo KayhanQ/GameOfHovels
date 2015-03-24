@@ -390,10 +390,8 @@
             }
             case TOMEADOW:
             {
-                if (unit.uType == RITTER) {
-                    if (![destTile hasRoad]) {
-                        [destTile removeStructure];
-                    }
+                if (unit.uType == SOLDIER || unit.uType == RITTER) {
+                    if (![destTile hasRoad]) [destTile removeStructure];
                 }
                 break;
             }
@@ -426,6 +424,7 @@
     
     //depending on whether we are merging units or not we take different action
     if (mergingUnits) {
+        [destTile.unit transferPropertiesFrom:unitTile.unit];
         [unitTile removeUnit];
         destTile.unit.distTravelled = destTile.unit.distTravelled + unit.distTravelled;
     }

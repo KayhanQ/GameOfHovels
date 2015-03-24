@@ -166,6 +166,7 @@
     }
     
     [_unitSprite removeAllChildren];
+    [newUnit transferPropertiesFrom:_unit];
     _unit = newUnit;
     [_unitSprite addChild:_unit];
 }

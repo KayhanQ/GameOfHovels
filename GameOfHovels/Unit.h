@@ -34,7 +34,7 @@
 -(id)initWithUnitType: (enum UnitType) uType;
 -(void)incrementWorkstate;
 -(void)setWorkState:(enum WorkState)workState;
-
+- (void)transferPropertiesFrom:(Unit*)u;
 
 
 @end
