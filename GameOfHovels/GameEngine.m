@@ -177,7 +177,7 @@
     switch (aType) {
         case UPGRADEVILLAGE:
         {
-            [_map upgradeVillageWithTile:tile];
+            [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }
         case BUYUNIT:
@@ -222,7 +222,7 @@
     switch (event.aType) {
         case UPGRADEVILLAGE:
         {
-            [_map upgradeVillageWithTile:tile];
+            [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }
         case BUYUNIT:

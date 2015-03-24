@@ -213,11 +213,9 @@
                 if (j%2 == 1 && k!=1 && k!=4) nIndex++;
                 
                 [t setNeighbour:k tile:(Tile*)[_tilesSprite childAtIndex:nIndex]];
-
             }
         }
     }
-    
 }
 
 -(void)addTrees
@@ -244,7 +242,7 @@
 
 
 
-- (void)upgradeVillageWithTile:(Tile*)tile
+- (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
     BOOL actionPossible = true;
     
@@ -259,8 +257,8 @@
     }
     
     //get the tiles of the old village and set the village to the new one after upgrading
-    NSMutableArray* tiles = [self getTilesforVillage:tile];
-    [tile upgradeVillage];
+    NSMutableArray* tiles = [self getTilesforVillage:tile.village];
+    [tile upgradeVillage: vType];
     for (Tile* t in tiles) {
         t.village = tileVillage;
     }
@@ -281,9 +279,6 @@
 - (void)showPlayersTeritory
 {
     //tiles have the player colour. Grass is neutral.
-    
-    //use sharedMessage LAyer to access certain things
-    
     for (Tile* t in _tilesSprite) {
         if ([t hasVillage]) {
             [t setPColor:t.village.player.pColor];
@@ -354,7 +349,6 @@
 {
     NSMutableArray* moveTypes = [NSMutableArray array];
 
-    if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
     if (destTile.village == unitTile.village) {
         [moveTypes addObject: [NSNumber numberWithInt:TOOWNTILE]];
         if (destTile.isVillage) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
@@ -364,8 +358,9 @@
         else [moveTypes addObject: [NSNumber numberWithInt:TONEUTRALTILE]];
     }
     if (destTile.village.player == unitTile.village.player && [destTile hasUnit]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNUNIT]];
+    if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
+    if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
 
-    
     return moveTypes;
 }
 
@@ -408,13 +403,18 @@
                 mergingUnits = true;
                 break;
             }
+            case MERGEVILLAGES:
+            {
+                [self mergeVillages:unitTile tile:destTile];
+                break;
+            }
             default:
                 break;
         }
         
     }
     
-    //depending on whether we are merging units or not we take different acation
+    //depending on whether we are merging units or not we take different action
     if (mergingUnits) {
         [unitTile removeUnit];
         destTile.unit.distTravelled = destTile.unit.distTravelled + unit.distTravelled;
@@ -432,6 +432,56 @@
     if ([self isMyTurn]) {
         [_messageLayer sendMoveWithType:MOVEUNIT tile:unitTile destTile:destTile];
     }
+}
+
+- (void)mergeVillages:(Tile*)unitTile tile:(Tile*)destTile
+{
+    NSMutableArray* mergeTiles = [self getTilesToMergeWith:unitTile tile:destTile];
+    for (Tile* mTile in mergeTiles) {
+        Village* uVillage = unitTile.village;
+        Village* mVillage = mTile.village;
+
+        Tile* unitVillageTile = [self getVillageTile:uVillage];
+        Tile* mVillageTile = [self getVillageTile:mVillage];
+
+        [unitVillageTile mergeVillageBySwallowing:mVillage];
+        [mVillageTile removeVillage];
+        
+        Village* newUVillage = unitVillageTile.village;
+        mVillageTile.village = newUVillage;
+        
+        for (Tile* t in [self getTilesforVillage:uVillage]) {
+            t.village = newUVillage;
+        }
+        for (Tile* t in [self getTilesforVillage:mVillage]) {
+            t.village = newUVillage;
+        }
+    }
+}
+
+- (BOOL)hasVillageMergingPotential:(Tile*)unitTile tile:(Tile*)destTile
+{
+    Village* uVillage = unitTile.village;
+    for (Tile* nTile in [destTile getNeighbours]) {
+        if (nTile.village.player != uVillage.player) continue;
+        if (nTile.village != uVillage) return true;
+    }
+    return false;
+}
+
+- (NSMutableArray*)getTilesToMergeWith:(Tile*)unitTile tile:(Tile*)destTile
+{
+    NSMutableArray* mergeTiles = [NSMutableArray array];
+    Village* uVillage = unitTile.village;
+    for (Tile* nTile in [destTile getNeighbours]) {
+        if (nTile.village.player != uVillage.player) continue;
+        BOOL tileForVillageHasBeenAdded = false;
+        for (Tile* addedTile in mergeTiles) {
+            if (addedTile.village == nTile.village) tileForVillageHasBeenAdded = true;
+        }
+        if (nTile.village != uVillage && !tileForVillageHasBeenAdded) [mergeTiles addObject:nTile];
+    }
+    return mergeTiles;
 }
 
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
@@ -461,7 +511,6 @@
             [u setWorkState:NOWORKSTATE];
         }
     }
-    
 }
 
 - (void)buildRoad:(Tile *)tile
@@ -536,7 +585,7 @@
 - (void)buildPhase
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
-        for (Tile* t in [self getTilesforVillage:vTile]) {
+        for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasUnit]) {
                 if (t.unit.workstateCompleted) {
                     switch (t.unit.workState) {
@@ -572,7 +621,7 @@
     
     //We go through ever single tile we own and do all updates
     for (Tile* vTile in [self getTilesWithMyVillages]) {
-        for (Tile* t in [self getTilesforVillage:vTile]) {
+        for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasUnit]) {
                 [t.unit incrementWorkstate];
             }
@@ -597,18 +646,22 @@
     return tiles;
 }
 
-- (NSMutableArray*)getTilesforVillage:(Tile*)tile
+- (NSMutableArray*)getTilesforVillage:(Village*)v
 {
     NSMutableArray* tiles = [NSMutableArray array];
-    Village* v = tile.village;
-    
     for (Tile*t in _tilesSprite) {
         if (t.village == v) [tiles addObject:t];
     }
-    
     return tiles;
 }
 
+- (Tile*)getVillageTile:(Village*)v
+{
+    for (Tile* t in [self getTilesforVillage:v]) {
+        if ([t isVillage]) return t;
+    }
+    return nil;
+}
 
 - (BOOL)isMyTurn
 {

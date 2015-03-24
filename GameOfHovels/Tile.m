@@ -178,18 +178,22 @@
     _village = h;
 }
 
-- (void)upgradeVillage
+- (void)removeVillage
 {
-    Village* v = _village;
+    [_villageSprite removeAllChildren];
+    _village = nil;
+}
 
+- (void)upgradeVillage:(enum VillageType) vType
+{
     Village* newVillage;
-    switch (v.vType) {
-        case HOVEL:
+    switch (vType) {
+        case TOWN:
         {
             newVillage = [[Town alloc] initWithTile:self];
             break;
         }
-        case TOWN:
+        case FORT:
         {
             newVillage = [[Fort alloc] initWithTile:self];
             break;
@@ -201,8 +205,17 @@
     }
     [_villageSprite removeAllChildren];
     [_villageSprite addChild: newVillage];
-    newVillage.player = v.player;
+    newVillage.player = _village.player;
+    newVillage.woodPile = _village.woodPile;
+    newVillage.goldPile = _village.goldPile;
     _village = newVillage;
+}
+
+- (void)mergeVillageBySwallowing:(Village*)v
+{
+    _village.woodPile += v.woodPile;
+    _village.goldPile += v.goldPile;
+    [self upgradeVillage:_village.vType + v.vType];
 }
 
 -(void)addStructure:(enum StructureType)sType

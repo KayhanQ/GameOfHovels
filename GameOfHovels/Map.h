@@ -9,6 +9,7 @@
 #import "BasicSprite.h"
 
 #import "Unit.h"
+#import "Village.h"
 
 @class Tile;
 @class GamePlayer;
@@ -18,7 +19,7 @@
 
 @interface Map : BasicSprite {
 
-    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TONEUTRALTILE, TOENEMYTILE};
+    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TONEUTRALTILE, TOENEMYTILE, MERGEVILLAGES};
 
 }
 
@@ -34,7 +35,7 @@
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 
-- (void)upgradeVillageWithTile:(Tile*)tile;
+- (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType;
 - (void)upgradeUnitWithTile:(Tile *)tile unitType:(enum UnitType)uType;
 
 - (void)showPlayersTeritory;

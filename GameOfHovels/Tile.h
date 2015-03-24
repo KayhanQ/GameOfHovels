@@ -39,7 +39,9 @@
 - (enum StructureType)getStructureType;
 - (BOOL)isTraversableForUnitType: (int)unitType;
 - (void)addVillage:(enum VillageType) vType;
-- (void)upgradeVillage;
+- (void)removeVillage;
+- (void)upgradeVillage:(enum VillageType) vType;
+- (void)mergeVillageBySwallowing:(Village*)v;
 - (BOOL)hasVillage;
 - (BOOL)isVillage;
 

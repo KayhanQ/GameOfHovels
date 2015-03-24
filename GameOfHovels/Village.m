@@ -54,5 +54,11 @@
     return self;
 }
 
+- (BOOL)isHigherThan:(Village *)v
+{
+    if (_vType >= v.vType) return true;
+    return false;
+}
+
 @end
 

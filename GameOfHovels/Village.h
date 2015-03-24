@@ -13,7 +13,7 @@
 
 @interface Village : BasicSprite {
     
-    enum VillageType {HOVEL = 0, TOWN, FORT};
+    enum VillageType {HOVEL = 1, TOWN, FORT};
     
 }
 
@@ -24,7 +24,7 @@
 @property (nonatomic) int goldPile;
 @property (nonatomic) int cost;
 
--(id)initWithStructureType:(enum VillageType)vType;
-
+- (id)initWithStructureType:(enum VillageType)vType;
+- (BOOL)isHigherThan:(Village*)v;
 
 @end
