@@ -341,8 +341,9 @@
 
 - (BOOL)canHaveUnit
 {
-    if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {
-        return true;
+    if (![self hasUnit] && ![self isVillage]) {
+        enum StructureType sType = [self getStructureType];
+        if (sType == GRASS || sType == MEADOW || sType == ROAD) return true;
     }
     return false;
 }
