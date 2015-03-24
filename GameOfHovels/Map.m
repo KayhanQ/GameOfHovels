@@ -360,6 +360,7 @@
     if (destTile.village.player == unitTile.village.player && [destTile hasUnit]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNUNIT]];
     if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
     if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
+    if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
 
     return moveTypes;
 }
@@ -385,6 +386,15 @@
             case TOBAUM:
             {
                 [self chopTree:destTile];
+                break;
+            }
+            case TOMEADOW:
+            {
+                if (unit.uType == RITTER) {
+                    if (![destTile hasRoad]) {
+                        [destTile removeStructure];
+                    }
+                }
                 break;
             }
             case TONEUTRALTILE:

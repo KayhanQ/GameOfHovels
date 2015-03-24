@@ -238,7 +238,7 @@
         }
         case ROAD: {
             Road* r = [[Road alloc] initWithTile:self];
-            [_structuresSprite addChild:r];
+            [_structuresSprite addChild:r atIndex:1];
             break;
         }
         default:
@@ -350,6 +350,14 @@
 {
     if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {
         return true;
+    }
+    return false;
+}
+
+- (BOOL)hasRoad
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == ROAD) return true;
     }
     return false;
 }

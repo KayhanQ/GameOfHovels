@@ -57,6 +57,8 @@
 - (BOOL)canHaveTree;
 - (BOOL)canHaveUnit;
 
+- (BOOL)hasRoad;
+
 - (Structure*)getStructure;
 
 
