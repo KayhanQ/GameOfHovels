@@ -504,8 +504,10 @@
 
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
 {
+    if ([destTile hasUnit]) {
+        [destTile removeUnit];
+    }
     destTile.village = unitTile.village;
-    
 }
 
 - (void)chopTree:(Tile*)tile
