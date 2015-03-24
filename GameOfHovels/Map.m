@@ -181,8 +181,8 @@
             if (i<10 && i>4) {
                 t.village = villageTile.village;
                 [t setPColor:villageTile.village.player.pColor];
-                if (j == 12 && i == 10) {
-                    [t addUnitWithType:PEASANT];
+                if (j == 6 && i == 9) {
+                    [t addUnitWithType:INFANTRY];
                 }
             }
         }
@@ -332,6 +332,14 @@
                 if (unit.uType + destTile.unit.uType > 4) movePossible = false;
                 break;
             }
+            case TOENEMYTILE:
+            {
+                if (unit.uType == PEASANT) movePossible = false;
+                for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
+                    if (eTile.unit.uType >= unit.uType) movePossible = false;
+                }
+                break;
+            }
             case TOBAUM:
             {
                 if (unit.uType == RITTER) movePossible = false;
@@ -377,6 +385,7 @@
         return;
     }
     
+    //We now have the assurance that simply making the move will not violate any rules.
     //if the move is possible we continue here
     BOOL mergingUnits = false;
 
@@ -435,7 +444,7 @@
         unit.distTravelled++;
     }
     
-    //need to refresh the colour, where should this actually be done?
+    //need to refresh the colour
     [self showPlayersTeritory];
     
     if ([self isMyTurn]) {
@@ -670,6 +679,21 @@
         if ([t isVillage]) return t;
     }
     return nil;
+}
+
+//Right now we just check 1 hex distance, we will have to change this for cannons!
+- (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile
+{
+    NSMutableArray* eUnitTiles = [NSMutableArray array];
+    GamePlayer* ePlayer = tile.village.player;
+    for (Tile* nTile in [tile getNeighbours]) {
+        if (nTile.village.player == ePlayer) {
+            if ([nTile hasUnit]) {
+                [eUnitTiles addObject:nTile];
+            }
+        }
+    }
+    return eUnitTiles;
 }
 
 - (BOOL)isMyTurn
