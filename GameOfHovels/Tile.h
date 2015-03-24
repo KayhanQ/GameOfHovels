@@ -19,6 +19,11 @@
 
 }
 
+@property (nonatomic) int connected; // test
+
+@property (nonatomic) BOOL coloured;
+
+
 @property (nonatomic) BOOL visited;
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
@@ -34,7 +39,15 @@
 - (int)getPColor;
 
 -(BOOL)getVisited;
--(void)setVisited:(BOOL)initialized;
+-(void)setVisited:(BOOL)visited;
+
+-(BOOL)getColoured;
+-(void)setColoured:(BOOL)coloured;
+
+
+-(int)getConnected; // for testing connected tiles
+-(void)setConnected:(int)connected:(int)connected;
+
 
 
 - (void)addStructure:(enum StructureType)sType;
@@ -62,6 +75,8 @@
 - (BOOL)canHaveUnit;
 
 - (Structure*)getStructure;
+
+
 
 
 @end

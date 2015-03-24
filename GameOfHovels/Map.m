@@ -126,6 +126,7 @@
                 {
                     //NSLog(@"Neutral Tile assigned a colour");
                     [t setPColor:NOCOLOR]; //set it to player1s color
+                    [t setVisited:YES];
                     break;
                 }
                 case 1:
@@ -169,11 +170,15 @@
     // if it is less than 2, then get rid of it all.
     
     for (Tile* t in _tilesSprite) {
-        
+     
+        //if it is not neutral
         currentColor = [t getPColor];
         [connectedTiles addObject:t];
+        [t setColoured:YES];
         
         [stack push:t];
+        
+        if(currentColor != NOCOLOR){
         
         while(![stack isEmpty]){
             
@@ -181,68 +186,83 @@
             
             currentTile = [stack pop];
             
+            [connectedTiles addObject:currentTile];
+            
+            
             if([t getVisited] != YES){
                 
                 [t setVisited:YES];
                 
                 tileNeighbours = [t getNeighbours];
                 
-                for(Tile* neighbour in tileNeighbours) {
+                for(Tile* neighbour in tileNeighbours) { //need a way to makr things as visited, but can still be in the loop.
+                                //Another property to dirty it?
                     
                     //[stack push:neighbour];
                     
-                    if([neighbour getPColor] == [t getPColor]){
+                    if([neighbour getPColor] == [t getPColor] && [neighbour getColoured] != YES ){
                         [stack push:neighbour];
-                        [connectedTiles addObject:neighbour];
+                        
+                       // [neighbour setColoured:YES];
+                        
+                        
+                        
+                        //[neighbour setVisited:YES];
+                        
+                        //[connectedTiles addObject:neighbour]; I THINK THIS NEEDS TO STAY OUT.
                         
                         //  NSLog(@"There are %d elements in the array", [connectedTiles count]);
                         
                     }
                     
+                    
                 }
                 
             }
         }
+        }
         
+        [t setConnected:[connectedTiles count]];
     
-        if([connectedTiles count] < 3 && currentColor != NOCOLOR){
+        if([connectedTiles count] < 3){
             
             for(Tile* tile in connectedTiles){
                 [tile setPColor:NOCOLOR];
+
                 
             }
+                            [connectedTiles removeAllObjects];
             
         }
-        //else if(currentColor != NEUTRAL){
-        //[[connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))] addVillage:HOVEL];
-        //}
         
         else {
-            for(Tile* tile in connectedTiles){
+            //for(Tile* tile in connectedTiles){
                 
-                [tile setPColor: currentColor];
+              //  [tile setPColor: currentColor];
                 
                 
-            }
+            //}
+            
+            /*
             
             if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
                 
                 Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
-                
                 [s addVillage:HOVEL];
                 
                 Tile* villageTile = s;
+                
+                
                 s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
-                
                 [s setPColor: currentColor];
-                
                 
                 s.village = villageTile.village;
                 [s setPColor: villageTile.village.player.pColor];
                 
+              
                
             }
-            
+            */
             
         }
          [connectedTiles removeAllObjects];

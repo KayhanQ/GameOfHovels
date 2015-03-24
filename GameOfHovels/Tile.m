@@ -52,7 +52,9 @@
 
 }
 
+@synthesize connected = _connected;
 
+@synthesize coloured = _coloured;
 @synthesize visited = _visited;
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
@@ -69,6 +71,8 @@
         _unit = nil;
         _village = nil;
         _pColor = NOCOLOR;
+        
+        _coloured = NO;
 
         _structuresSprite = [SPSprite sprite];
         _structuresSprite.x = self.width/2;
@@ -280,6 +284,15 @@
      return _visited;
 }
 
+- (void)setColoured:(BOOL)coloured
+{
+    _coloured = coloured;
+}
+
+- (BOOL)getColoured
+{
+    return _coloured;
+}
 
 //------------------------------
 //  NEIGHBOUR FUNCTIONS
@@ -422,5 +435,19 @@
         [self invalidateTimer];
     }
 }
+
+
+//for connectedTile Testing
+- (void)setConnected:(int)connected
+{
+    _connected = connected;
+}
+
+- (int)getConnected
+{
+    return _connected;
+}
+
+
 
 @end
