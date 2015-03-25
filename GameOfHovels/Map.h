@@ -32,7 +32,7 @@
 - (id)initWithRandomMap:(Hud*)hud;
 - (void)beginTurnPhases;
 - (void)buildPhase;
-- (void)incomePhase;
+
 
 
 

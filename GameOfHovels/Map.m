@@ -599,13 +599,37 @@
             }
         }
     
+    }
 }
 
-- (void)incomePhase // : Money is added to each village of the player based on the number of tiles in the region (+2 foreach meadow, +1 for each empty tile, 0 for each tree).
+
+
+- (void)incomePhase
 {
-    
-    
-    
+    for (Tile* vTile in [self getTilesWithMyVillages]) {
+        for (Tile* t in [self getTilesforVillage:vTile.village]) {
+            
+            switch([t getStructureType]){
+                    
+                case MEADOW:
+                    vTile.village.goldPile += 2;
+                    break;
+                    
+                case NONE:
+                    vTile.village.goldPile += 1;
+                    
+                    break;
+                    
+                    default:
+                    break;
+      
+                    
+            }
+            
+            
+        }
+    }
+
 }
 
 //also known as upkeep phase
