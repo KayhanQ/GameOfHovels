@@ -587,19 +587,31 @@
     }
 }
 
-- (void)tombstonePhase
+- (void)tombstonePhase //Any tombstones on tiles owned by the player are replaced by trees
 {
+    for (Tile* vTile in [self getTilesWithMyVillages]) {
+        for (Tile* t in [self getTilesforVillage:vTile.village]) {
+            if ([t hasTombstone]) {
+                
+                [t removeStructure];
+                [t addStructure:BAUM];
+                
+            }
+        }
     
 }
 
-- (void)incomePhase
+- (void)incomePhase // : Money is added to each village of the player based on the number of tiles in the region (+2 foreach meadow, +1 for each empty tile, 0 for each tree).
 {
+    
+    
     
 }
 
 //also known as upkeep phase
-- (void)paymentPhase
+- (void)paymentPhase // Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
 {
+    
     
 }
 
@@ -704,6 +716,4 @@
     return _gameEngine.currentPlayer == _gameEngine.mePlayer;
 }
 
-
-
-@end
+    @end

@@ -58,6 +58,7 @@
 - (BOOL)canHaveUnit;
 
 - (BOOL)hasRoad;
+- (BOOL)hasTombstone;
 
 - (Structure*)getStructure;
 

@@ -364,6 +364,14 @@
     return false;
 }
 
+- (BOOL)hasTombstone
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == TOMBSTONE) return true;
+    }
+    return false;
+}
+
 - (BOOL)canBeSelected
 {
     if ([self hasUnit] && _unit.movable) return true;
