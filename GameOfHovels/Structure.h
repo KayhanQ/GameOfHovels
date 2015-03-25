@@ -18,7 +18,7 @@
 }
 
 
--(id)initWithStructureType:(enum StructureType)sType;
+- (id)initWithStructureType:(enum StructureType)sType;
 @property (nonatomic, readonly) enum StructureType sType;
 
 
