@@ -51,6 +51,7 @@
 @synthesize unit = _unit;
 @synthesize village = _village;
 @synthesize pColor = _pColor;
+@synthesize visitedBySearch = _visitedBySearch;
 
 -(id)initWithPosition:(SPPoint *)position structure:(enum StructureType)sType
 {
@@ -62,7 +63,8 @@
         _unit = nil;
         _village = nil;
         _pColor = NOCOLOR;
-
+        _visitedBySearch = false;
+        
         _structuresSprite = [SPSprite sprite];
         _structuresSprite.x = self.width/2;
         _structuresSprite.y = self.height/2;
@@ -295,6 +297,15 @@
 - (NSMutableArray*)getNeighbours
 {
     return _neighboursArray;
+}
+
+- (NSMutableArray*)getNeighboursOfSameRegion
+{
+    NSMutableArray* nTiles = [NSMutableArray array];
+    for (Tile* nT in _neighboursArray) {
+        if (_village.player == nT.village.player) [nTiles addObject:nT];
+    }
+    return nTiles;
 }
 
 - (BOOL)neighboursContainTile:(Tile*)tile

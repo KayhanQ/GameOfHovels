@@ -505,11 +505,68 @@
 
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
 {
-    if ([destTile hasUnit]) {
-        [destTile removeUnit];
-    }
+    BOOL takingOverEnemyTile = [destTile hasVillage];
+    
+    NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
+
     destTile.village = unitTile.village;
+
+    //We are taking over an enemyTile
+    if (takingOverEnemyTile) {
+        if ([destTile hasUnit]) [destTile removeUnit];
+        
+        if ([self tileWithNeighboursSplitsRegion:nTiles]) {
+            NSLog(@"TILE SPLITS REGION");
+        }
+    }
+    
+
+    
 }
+
+- (BOOL)tileWithNeighboursSplitsRegion:(NSMutableArray*)nTiles
+{
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) return true;
+        }
+    }
+    
+    return false;
+}
+
+- (BOOL)areConnectedByRegion:(Tile*)t1 t2:(Tile*)t2
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:t1];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            if (nTile == t2) {
+                [self resetVisitedBySearchFlags];
+                return true;
+            }
+            [searchTiles addObject:nTile];
+        }
+    }
+    NSLog(@"not connected");
+    
+    [self resetVisitedBySearchFlags];
+    return false;
+}
+
+- (void)resetVisitedBySearchFlags
+{
+    for (Tile* t in _tilesSprite)
+    {
+        t.visitedBySearch = false;
+    }
+}
+
 
 - (void)chopTree:(Tile*)tile
 {

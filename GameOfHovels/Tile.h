@@ -23,11 +23,13 @@
 @property (nonatomic) Unit* unit;
 @property (nonatomic) Village* village;
 @property (nonatomic) enum PlayerColor pColor;
+@property (nonatomic) BOOL visitedBySearch;
 
 - (id)initWithPosition: (SPPoint*)position structure: (enum StructureType)sType;
 - (void)setNeighbour:(enum TileNeighbours)tileNeighbour tile: (Tile*)tile;
 - (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
+- (NSMutableArray*)getNeighboursOfSameRegion;
 
 - (void)setPColor:(enum PlayerColor)pColor;
 
