@@ -142,6 +142,19 @@
     _unit = nil;
 }
 
+
+- (Unit*)getUnit
+{
+    return _unit;
+}
+
+- (enum UnitType)getUnitType
+{
+    Unit* u = [self getUnit];
+    return u.uType;
+}
+
+
 //upgrades to whatever uType is
 - (void)upgradeUnit:(enum UnitType)uType
 {
@@ -371,6 +384,14 @@
 {
     for (Structure* s in _structuresSprite) {
         if (s.sType == ROAD) return true;
+    }
+    return false;
+}
+
+- (BOOL)hasTombstone
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == TOMBSTONE) return true;
     }
     return false;
 }

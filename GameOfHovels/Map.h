@@ -31,12 +31,26 @@
 
 - (id)initWithRandomMap:(Hud*)hud;
 - (void)beginTurnPhases;
+- (void)buildPhase;
+
+
+
+
+-(BOOL)isMyTurn;
 
 - (void)treeGrowthPhase;
 - (void)endTurnUpdates;
 
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType;
 - (void)upgradeUnitWithTile:(Tile *)tile unitType:(enum UnitType)uType;
+-(Tile*)getVillageTile:(Village*)v;
+
+- (NSMutableArray*)getTilesforVillage:(Village*)v;
+- (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile;
+- (NSMutableArray*)getTilesWithMyVillages;
+
+
+
 
 - (void)showPlayersTeritory;
 
