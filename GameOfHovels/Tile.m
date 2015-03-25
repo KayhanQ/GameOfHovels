@@ -140,6 +140,19 @@
     _unit = nil;
 }
 
+
+- (Unit*)getUnit
+{
+    return _unit;
+}
+
+- (enum UnitType)getUnitType
+{
+    Unit* u = [self getUnit];
+    return u.uType;
+}
+
+
 //upgrades to whatever uType is
 - (void)upgradeUnit:(enum UnitType)uType
 {

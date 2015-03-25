@@ -30,7 +30,7 @@
 @synthesize workState = _workState;
 @synthesize workstateCompleted = _workstateCompleted;
 @synthesize upgradeCost = _upgradeCost;
-
+@synthesize upkeepCost = _upkeepCost;
 
 -(id)initWithUnitType:(enum UnitType)uType
 {

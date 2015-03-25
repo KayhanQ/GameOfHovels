@@ -45,11 +45,15 @@
 - (BOOL)hasVillage;
 - (BOOL)isVillage;
 
+-(void)killAllVillagers;//:(Tile*)village;
+
 - (void)addUnitWithType:(enum UnitType)uType;
 - (void)addUnit:(Unit*)unit;
 - (void)removeUnit;
 - (BOOL)hasUnit;
+- (Unit*)getUnit;
 - (void)upgradeUnit:(enum UnitType)uType;
+- (enum UnitType)getUnitType;
 
 - (void)selectTile;
 - (void)deselectTile;
