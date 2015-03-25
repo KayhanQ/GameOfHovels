@@ -32,6 +32,7 @@
     float _offsetHeight;
 
 }
+
 @synthesize tilesSprite = _tilesSprite;
 @synthesize messageLayer = _messageLayer;
 @synthesize hud = _hud;

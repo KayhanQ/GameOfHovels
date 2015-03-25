@@ -21,6 +21,8 @@
 #import "MessageLayer.h"
 #import "SparrowHelper.h"
 #import "GlobalFlags.h"
+#import "CurrentPlayerAction.h"
+
 
 @implementation GameEngine
 {
@@ -33,10 +35,10 @@
     
     SPSprite* _popupMenuSprite;
     
-    Tile* _selectedTile;
-    
     NSMutableArray* _players;
     SPJuggler* _gameJuggler;
+    
+    CurrentPlayerAction* _currentPlayerAction;
 }
 
 - (id)init
@@ -62,6 +64,7 @@
     _lastScrollDist = 0;
     _scrollVector = [SPPoint pointWithX:0 y:0];
     
+    _currentPlayerAction = [[CurrentPlayerAction alloc] init];
     
     //if you want access ot the global game juggler here is how
     _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
@@ -142,7 +145,7 @@
 - (void)endTurn:(GHEvent*)event
 {
     _map.touchable = false;
-    _selectedTile = nil;
+    _currentPlayerAction.selectedTile = nil;
     [_map endTurnUpdates];
     
     //We rebegin our turn
@@ -205,6 +208,7 @@
     Tile* tile = event.tile;
     
     if (tile.village.player != _currentPlayer) return;
+    if (![tile canBeSelected]) return;
     
     [self removeTileListener];
     [self selectTile:tile];
@@ -228,6 +232,7 @@
         case BUYUNIT:
         {
             [self selectTile:tile];
+            _currentPlayerAction.action = BUYUNIT;
             actionCompleted = false;
             break;
         }
@@ -252,54 +257,57 @@
     [_actionMenu removeFromParent];
     [self addTileListener];
     if (actionCompleted) {
-        [self deselectTile:_selectedTile];
+        [self deselectTile:_currentPlayerAction.selectedTile];
     }
 }
 
 - (void)tileTouched:(TileTouchedEvent*) event
 {
-    Tile* tile = event.tile;
-    
-    if (_mePlayer != _currentPlayer && _selectedTile == nil) {
+    //return if it's not your turn
+    if (_mePlayer != _currentPlayer) {
         return;
     }
-    
     NSLog(@"Tile touched");
-
-    if (_selectedTile == nil && [tile canBeSelected]) {
-        [self selectTile:tile];
-    }
-    else {
-        Tile* destTile = tile;
-        Unit* unit = _selectedTile.unit;
-
-        //perform Unit actions
-        if (unit != nil) {
-            NSLog(@"Perform Unit action");
-            if (tile != _selectedTile) {
-                [_map moveUnitWithTile:_selectedTile tile:destTile];
+    Tile* tile = event.tile;
+    Tile* selectedTile = _currentPlayerAction.selectedTile;
+    [selectedTile deselectTile];
+    
+    switch (_currentPlayerAction.action) {
+        case AWAITINGCOMMAND:
+        {
+            if ([tile canBeSelected]) {
+                [self selectTile:tile];
+                if ([tile hasUnit]) _currentPlayerAction.action = MOVEUNIT;
             }
+            break;
         }
-        else if (_selectedTile.isVillage) {
-            NSLog(@"Village Action");
-
-            [_map buyUnitFromTile:_selectedTile tile:destTile];
+        case MOVEUNIT:
+        {
+            [_map moveUnitWithTile:_currentPlayerAction.selectedTile tile:tile];
+            [self deselectTile:selectedTile];
+            break;
         }
-
-        [self deselectTile:_selectedTile];
+        case BUYUNIT:
+        {
+            [_map buyUnitFromTile:_currentPlayerAction.selectedTile tile:tile];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        default:
+            break;
     }
 }
 
 - (void)selectTile:(Tile*)tile
 {
-    _selectedTile = tile;
+    _currentPlayerAction.selectedTile = tile;
     [_hud update:tile];
     [tile selectTile];
 }
 
 - (void)deselectTile:(Tile*)tile
 {
-    _selectedTile = nil;
+    [_currentPlayerAction setAwaitingCommand];
     [tile deselectTile];
 }
 

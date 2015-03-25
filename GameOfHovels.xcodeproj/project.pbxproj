@@ -62,6 +62,9 @@
 		F380666F1A966DE4009D3C56 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380666E1A966DE4009D3C56 /* GameKit.framework */; };
 		F38066721A967C8F009D3C56 /* GHEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066711A967C8F009D3C56 /* GHEvent.m */; };
 		F38066751A96836B009D3C56 /* Grass.m in Sources */ = {isa = PBXBuildFile; fileRef = F38066741A96836B009D3C56 /* Grass.m */; };
+		F3A283501AC218E300AE8BB5 /* CurrentPlayerAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A2834F1AC218E300AE8BB5 /* CurrentPlayerAction.m */; };
+		F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */ = {isa = PBXBuildFile; fileRef = F3A2835D1AC2261A00AE8BB5 /* archer.png */; };
+		F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */ = {isa = PBXBuildFile; fileRef = F3A2835E1AC2261A00AE8BB5 /* archer.xml */; };
 		F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */; };
 		F3CC71E31A99303F00E40479 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3CC71E21A99303F00E40479 /* ActionButton.m */; };
 		F3D8ADEC1ABB06B400920E99 /* Infantry.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D8ADE91ABB06B400920E99 /* Infantry.m */; };
@@ -222,6 +225,10 @@
 		F38066711A967C8F009D3C56 /* GHEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHEvent.m; sourceTree = "<group>"; };
 		F38066731A968361009D3C56 /* Grass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Grass.h; sourceTree = "<group>"; };
 		F38066741A96836B009D3C56 /* Grass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grass.m; sourceTree = "<group>"; };
+		F3A2834E1AC218D800AE8BB5 /* CurrentPlayerAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurrentPlayerAction.h; sourceTree = "<group>"; };
+		F3A2834F1AC218E300AE8BB5 /* CurrentPlayerAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlayerAction.m; sourceTree = "<group>"; };
+		F3A2835D1AC2261A00AE8BB5 /* archer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = archer.png; sourceTree = "<group>"; };
+		F3A2835E1AC2261A00AE8BB5 /* archer.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = archer.xml; sourceTree = "<group>"; };
 		F3CC71DE1A992CB300E40479 /* ActionMenuEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionMenuEvent.h; sourceTree = "<group>"; };
 		F3CC71DF1A992CC200E40479 /* ActionMenuEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionMenuEvent.m; sourceTree = "<group>"; };
 		F3CC71E11A992FF800E40479 /* ActionButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionButton.h; sourceTree = "<group>"; };
@@ -861,6 +868,8 @@
 		F38066421A964F3B009D3C56 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				F3A2835D1AC2261A00AE8BB5 /* archer.png */,
+				F3A2835E1AC2261A00AE8BB5 /* archer.xml */,
 				F38066661A9657DB009D3C56 /* tileset.png */,
 				F38066671A9657DB009D3C56 /* tileset.xml */,
 				F380665B1A964F7A009D3C56 /* atlas.png */,
@@ -964,6 +973,8 @@
 				F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */,
 				F38065FC1A964C1A009D3C56 /* BasicSprite.h */,
 				F38065FD1A964C1A009D3C56 /* BasicSprite.m */,
+				F3A2834E1AC218D800AE8BB5 /* CurrentPlayerAction.h */,
+				F3A2834F1AC218E300AE8BB5 /* CurrentPlayerAction.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1925,9 +1936,11 @@
 				F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */,
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
+				F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
+				F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */,
 				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
@@ -1953,6 +1966,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCCA7BA61A97B28B0019E192 /* GCViewcontroller.m in Sources */,
+				F3A283501AC218E300AE8BB5 /* CurrentPlayerAction.m in Sources */,
 				F380661B1A964C69009D3C56 /* Town.m in Sources */,
 				F380661A1A964C69009D3C56 /* Hovel.m in Sources */,
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
