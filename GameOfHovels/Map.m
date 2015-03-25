@@ -22,6 +22,7 @@
 #import "MessageLayer.h"
 #import "GameEngine.h"
 #import "DKStack.h"
+#import "DKQueue.h"
 
 @implementation Map {
     MessageLayer* _messageLayer;
@@ -154,124 +155,145 @@
 
 
 - (void)initializePlayerLocations //going to do a basic dfs on each of the tiles.
-{
+{ // I NEED BREADTH FIRST SEARCH. A DOY!
+    /*
+     1  procedure BFS(G,v) is
+     2      let Q be a queue
+     3      Q.push(v)
+     4      label v as discovered
+     5      while Q is not empty
+     6         v ← Q.pop()
+     7         for all edges from v to w in G.adjacentEdges(v) do
+     8             if w is not labeled as discovered
+     9                 Q.push(w)
+     10                label w as discovered
+     */
+    
+    
     Tile* currentTile;
-    DKStack* stack = [[DKStack alloc] init];
-    
-    //DKQueue* queue = [[DKQueue alloc] init];
-    
-    
+    DKQueue* queue = [[DKQueue alloc] init];
     int currentColor;// =0;
-    
     NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
     NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
     
-    //compare against the size of the max. If the stack ever becomes smaller than the max, then add a village.
-    // if it is less than 2, then get rid of it all.
     
-    for (Tile* t in _tilesSprite) {
-     
-        //if it is not neutral
-        currentColor = [t getPColor];
-        [connectedTiles addObject:t];
-        [t setColoured:YES];
+    for (__strong Tile* t in _tilesSprite) {
+    
+        currentTile = t;
+        currentColor = [currentTile getPColor];
         
-        [stack push:t];
+        //[queue enqueue:t];
+        [queue enqueue:currentTile];
         
-        if(currentColor != NOCOLOR){
+        [currentTile setVisited: YES];
+        [connectedTiles addObject:currentTile];
         
-        while(![stack isEmpty]){
+        while(![queue isEmpty]){
             
-            // NSLog(@"%d", [stack size]);
-            
-            currentTile = [stack pop];
-            
-            [connectedTiles addObject:currentTile];
+            currentTile = [queue dequeue];
+           
+            //[connectedTiles addObject:currentTile ];
             
             
-            if([t getVisited] != YES){
+            tileNeighbours = [currentTile getNeighbours];
+            
+            for(Tile *neighbour in tileNeighbours){
                 
-                [t setVisited:YES];
-                
-                tileNeighbours = [t getNeighbours];
-                
-                for(Tile* neighbour in tileNeighbours) { //need a way to makr things as visited, but can still be in the loop.
-                                //Another property to dirty it?
+                if([neighbour getVisited] != YES && [neighbour pColor] == currentColor ){
                     
-                    //[stack push:neighbour];
+                    //[connectedTiles addObject:currentTile ];
                     
-                    if([neighbour getPColor] == [t getPColor] && [neighbour getColoured] != YES ){
-                        [stack push:neighbour];
-                        
-                       // [neighbour setColoured:YES];
-                        
-                        
-                        
-                        //[neighbour setVisited:YES];
-                        
-                        //[connectedTiles addObject:neighbour]; I THINK THIS NEEDS TO STAY OUT.
-                        
-                        //  NSLog(@"There are %d elements in the array", [connectedTiles count]);
-                        
-                    }
+                    [queue enqueue: neighbour];
+                    [neighbour setVisited:YES];
+                    [connectedTiles addObject:neighbour];
                     
                     
                 }
                 
             }
-        }
+            
+            
+            
         }
         
-        [t setConnected:[connectedTiles count]];
-    
+        //adding hovels goes here I think.
+       
+       
+        for(Tile* tile in connectedTiles){
+            // [tile setPColor:NOCOLOR];
+            //[tile setPColor: currentColor];
+            [tile setConnectedArray:connectedTiles];
+            
+            //[tile setVisited: YES]
+        }
+        
+        
+        [currentTile setConnected:[connectedTiles count]];
+        
         if([connectedTiles count] < 3){
             
             for(Tile* tile in connectedTiles){
-                [tile setPColor:NOCOLOR];
-
-                
+                       // [tile setPColor:NOCOLOR];
+                //[tile setVisited: YES]
             }
-                            [connectedTiles removeAllObjects];
+            
+            //   [connectedTiles removeAllObjects];
             
         }
         
         else {
+            for(Tile* tile in connectedTiles){
+                // [tile setPColor:NOCOLOR];
+                [tile setPColor: currentColor];
+                [tile setConnectedArray:connectedTiles];
+                
+                //[tile setVisited: YES]
+            }
+
+            
+            
             //for(Tile* tile in connectedTiles){
-                
-              //  [tile setPColor: currentColor];
-                
-                
+            
+            //  [tile setPColor: currentColor];
+            
+            //[tile setVisited: YES];
+            
             //}
             
             /*
-            
-            if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
-                
-                Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
-                [s addVillage:HOVEL];
-                
-                Tile* villageTile = s;
-                
-                
-                s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
-                [s setPColor: currentColor];
-                
-                s.village = villageTile.village;
-                [s setPColor: villageTile.village.player.pColor];
-                
-              
-               
-            }
-            */
+             
+             if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
+             
+             Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
+             [s addVillage:HOVEL];
+             
+             Tile* villageTile = s;
+             
+             
+             s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
+             [s setPColor: currentColor];
+             
+             s.village = villageTile.village;
+             [s setPColor: villageTile.village.player.pColor];
+             
+             
+             
+             }
+             */
             
         }
-         [connectedTiles removeAllObjects];
+        [connectedTiles removeAllObjects];
+
         
-    
+        
     }
     
-    NSLog(@"There are %d connected componentst", [connectedTiles count]);
+    
+    
+    
 }
+
+
 
 
 - (void)makeTreesAndMeadows //What the hell is this???

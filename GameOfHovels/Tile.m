@@ -46,6 +46,8 @@
     
     NSMutableArray* _neighboursArray;
     //NSMutableArray* _structuresArray;
+    NSMutableArray* _connectedArray;
+
 
     NSTimer* _timer;
     
@@ -313,6 +315,18 @@
 {
     return _neighboursArray;
 }
+
+- (NSMutableArray*)getConnectedArray
+{
+    return _connectedArray;
+}
+
+- (void)setConnectedArray:(NSMutableArray*)connectedArray
+{
+    _connectedArray = connectedArray;
+}
+
+
 
 - (BOOL)neighboursContainTile:(Tile*)tile
 {

@@ -49,6 +49,11 @@
 -(void)setConnected:(int)connected:(int)connected;
 
 
+-(NSMutableArray*)getConnectedArray; // for testing connected tiles
+-(void)setConnectedArray:(NSMutableArray*)connectedArray;
+
+
+
 
 - (void)addStructure:(enum StructureType)sType;
 

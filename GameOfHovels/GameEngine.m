@@ -260,7 +260,7 @@
         return;
     }
     
-    NSLog(@"Tile at position %f, %f touched and has %d connected tiles of the same color", tile.x/54, tile.y/40, [tile getConnected]);
+    NSLog(@"Tile at position %f, %f touched and has %d connected tiles of the same color according to property. %d According to method . Has it been visited? %d", tile.x/54, tile.y/40, [tile getConnected],  [[tile getConnectedArray] count], [tile getVisited]);
 
     if (_selectedTile == nil && [tile canBeSelected]) {
         [self selectTile:tile];
