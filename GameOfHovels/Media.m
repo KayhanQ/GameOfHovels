@@ -9,6 +9,8 @@
 @implementation Media
 
 static SPTextureAtlas *atlas = NULL;
+static SPTextureAtlas *archerAtlas = NULL;
+
 static NSMutableDictionary *sounds = NULL;
 
 #pragma mark Texture Atlas
@@ -17,11 +19,15 @@ static NSMutableDictionary *sounds = NULL;
 {
     if (!atlas)
         atlas = [[SPTextureAtlas alloc] initWithContentsOfFile:@"tileset.xml"];
+    
+    if (!archerAtlas)
+        archerAtlas = [[SPTextureAtlas alloc] initWithContentsOfFile:@"archer.xml"];
 }
 
 + (void)releaseAtlas
 {
     atlas = nil;
+    archerAtlas = nil;
 }
 
 + (SPTexture *)atlasTexture:(NSString *)name
@@ -29,6 +35,13 @@ static NSMutableDictionary *sounds = NULL;
     if (!atlas) [self initAtlas];
     return [atlas textureByName:name];
 }
+
++ (SPTexture *)archerTexture:(NSString *)name
+{
+    if (!archerAtlas) [self initAtlas];
+    return [archerAtlas textureByName:name];
+}
+
 
 + (NSArray *)atlasTexturesWithPrefix:(NSString *)prefix
 {
