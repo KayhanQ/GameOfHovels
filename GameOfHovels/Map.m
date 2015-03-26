@@ -508,15 +508,33 @@
     BOOL takingOverEnemyTile = [destTile hasVillage];
     
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
-
+    Village* enemyPlayersVillage = destTile.village;
     destTile.village = unitTile.village;
 
     //We are taking over an enemyTile
     if (takingOverEnemyTile) {
         if ([destTile hasUnit]) [destTile removeUnit];
-        
         if ([self tileWithNeighboursSplitsRegion:nTiles]) {
             NSLog(@"TILE SPLITS REGION");
+            NSMutableArray* regions = [self getSplitRegions:nTiles];
+            NSLog(@"Regions count: %d",regions.count);
+            for (NSMutableArray* region in regions) {
+                NSLog(@"Tiles count: %d",region.count);
+
+                if ([self regionHasVillage:region]) continue;
+                if (region.count >= 4) {
+                    //make new hovel on a random Tile
+                    Tile* hovelTile = [region objectAtIndex: arc4random() % region.count];
+                    [hovelTile removeUnit];
+                    [hovelTile removeAllStructures];
+                    [hovelTile addVillage:HOVEL];
+                    hovelTile.village.player = enemyPlayersVillage.player;
+                    for (Tile* rT in region) rT.village = hovelTile.village;
+                }
+                else {
+                    [self makeRegionNeutral:region];
+                }
+            }
         }
     }
     
@@ -524,6 +542,8 @@
     
 }
 
+//We have already set the village of the tile we are splitting on as the new village
+//so we have to send in his neighbours instead of him
 - (BOOL)tileWithNeighboursSplitsRegion:(NSMutableArray*)nTiles
 {
     for (Tile* nT1 in nTiles) {
@@ -532,7 +552,6 @@
             if (![self areConnectedByRegion:nT1 t2:nT2]) return true;
         }
     }
-    
     return false;
 }
 
@@ -553,11 +572,71 @@
             [searchTiles addObject:nTile];
         }
     }
-    NSLog(@"not connected");
-    
     [self resetVisitedBySearchFlags];
     return false;
 }
+
+- (NSMutableArray*)getSplitRegions:(NSMutableArray*)nTiles
+{
+    NSMutableArray* disconnectedNeighbours = [NSMutableArray array];
+    
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) {
+                if (![disconnectedNeighbours containsObject:nT1]) [disconnectedNeighbours addObject:nT1];
+                if (![disconnectedNeighbours containsObject:nT2]) [disconnectedNeighbours addObject:nT2];
+            }
+        }
+    }
+    
+    //remove any tiles that are connected to each other
+    for (int i = 0; i < disconnectedNeighbours.count; i++) {
+        Tile* t1 = [disconnectedNeighbours objectAtIndex:i];
+        for (int j = 0; j < disconnectedNeighbours.count; j++) {
+            Tile* t2 = [disconnectedNeighbours objectAtIndex:j];
+            if (t1 == t2) continue;
+            if ([self areConnectedByRegion:t1 t2:t2]) {
+                [disconnectedNeighbours removeObject:t2];
+                continue;
+            }
+        }
+    }
+    
+    NSMutableArray* regions = [NSMutableArray array];
+    for (Tile* dN in disconnectedNeighbours) {
+        [regions addObject:[self getConnectedTiles:dN]];
+    }
+    
+    return regions;
+}
+
+- (NSMutableArray*)getConnectedTiles:(Tile*)tile
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:tile];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            nTile.visitedBySearch = true;
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return searchTiles;
+}
+
+- (BOOL)regionHasVillage:(NSMutableArray*)region
+{
+    for (Tile* t in region) {
+        if ([t isVillage]) return true;
+    }
+    return false;
+}
+
 
 - (void)resetVisitedBySearchFlags
 {
@@ -567,6 +646,11 @@
     }
 }
 
+//makes a region neutral by removing units and village pointers
+- (void)makeRegionNeutral:(NSMutableArray*)region
+{
+    for (Tile* t in region) [t makeNeutral];
+}
 
 - (void)chopTree:(Tile*)tile
 {
@@ -778,6 +862,7 @@
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasUnit]) {
                 [t.unit incrementWorkstate];
+                t.unit.distTravelled = 0;
             }
         }
     }

@@ -30,12 +30,14 @@
 - (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
 - (NSMutableArray*)getNeighboursOfSameRegion;
+- (void)makeNeutral;
 
 - (void)setPColor:(enum PlayerColor)pColor;
 
 - (void)addStructure:(enum StructureType)sType;
 
 - (void)removeStructure;
+- (void)removeAllStructures;
 
 - (BOOL)neighboursContainTile:(Tile*) tile;
 - (enum StructureType)getStructureType;

@@ -15,6 +15,7 @@
 #import "Baum.h"
 #import "Meadow.h"
 #import "Road.h"
+#import "Tombstone.h"
 
 #import "Hovel.h"
 #import "Town.h"
@@ -257,6 +258,11 @@
             [_structuresSprite addChild:r atIndex:1];
             break;
         }
+        case TOMBSTONE: {
+            Tombstone* r = [[Tombstone alloc] initWithTile:self];
+            [_structuresSprite addChild:r atIndex:1];
+            break;
+        }
         default:
             break;
     }
@@ -266,6 +272,14 @@
 {
     Structure* s = [self getStructure];
     [s removeFromParent];
+}
+
+- (void)removeAllStructures
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == GRASS) continue;
+        else [s removeFromParent];
+    }
 }
 
 - (Structure*)getStructure
@@ -279,6 +293,15 @@
     return s.sType;
 }
 
+- (void)makeNeutral
+{
+    [self setPColor:NOCOLOR];
+    [self removeVillage];
+    if ([self hasUnit]) {
+        [self removeUnit];
+        [self addStructure:TOMBSTONE];
+    }
+}
 //cancels timer
 - (void)invalidateTimer
 {
