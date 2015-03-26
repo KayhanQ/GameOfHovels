@@ -15,6 +15,7 @@
 #import "Baum.h"
 #import "Meadow.h"
 #import "Road.h"
+#import "Tombstone.h"
 
 #import "Hovel.h"
 #import "Town.h"
@@ -24,6 +25,7 @@
 #import "Soldier.h"
 #import "Infantry.h"
 #import "Ritter.h"
+#import "Cannon.h"
 
 #import "Media.h"
 #import "GamePlayer.h"
@@ -51,6 +53,7 @@
 @synthesize unit = _unit;
 @synthesize village = _village;
 @synthesize pColor = _pColor;
+@synthesize visitedBySearch = _visitedBySearch;
 
 -(id)initWithPosition:(SPPoint *)position structure:(enum StructureType)sType
 {
@@ -62,7 +65,8 @@
         _unit = nil;
         _village = nil;
         _pColor = NOCOLOR;
-
+        _visitedBySearch = false;
+        
         _structuresSprite = [SPSprite sprite];
         _structuresSprite.x = self.width/2;
         _structuresSprite.y = self.height/2;
@@ -174,6 +178,11 @@
             newUnit = [[Ritter alloc] initWithTile:self];
             break;
         }
+        case CANNON:
+        {
+            newUnit = [[Cannon alloc] initWithTile:self];
+            break;
+        }
         default:
             break;
     }
@@ -198,7 +207,7 @@
     _village = nil;
 }
 
-- (void)upgradeVillage:(enum VillageType) vType
+- (void)upgradeVillageTo:(enum VillageType)vType
 {
     Village* newVillage;
     switch (vType) {
@@ -218,18 +227,16 @@
         }
     }
     [_villageSprite removeAllChildren];
-    [_villageSprite addChild: newVillage];
+    [newVillage transferSuppliesFrom:_village];
     newVillage.player = _village.player;
-    newVillage.woodPile = _village.woodPile;
-    newVillage.goldPile = _village.goldPile;
     _village = newVillage;
+    [_villageSprite addChild: newVillage];
 }
 
 - (void)mergeVillageBySwallowing:(Village*)v
 {
-    _village.woodPile += v.woodPile;
-    _village.goldPile += v.goldPile;
-    [self upgradeVillage:_village.vType + v.vType];
+    [_village transferSuppliesFrom:v];
+    [self upgradeVillageTo:_village.vType + v.vType];
 }
 
 -(void)addStructure:(enum StructureType)sType
@@ -255,6 +262,12 @@
             [_structuresSprite addChild:r atIndex:1];
             break;
         }
+        case TOMBSTONE: {
+            [self removeAllStructures];
+            Tombstone* r = [[Tombstone alloc] initWithTile:self];
+            [_structuresSprite addChild:r];
+            break;
+        }
         default:
             break;
     }
@@ -262,8 +275,18 @@
 
 - (void)removeStructure
 {
+    //safety against removing base structure, really this should never happen
+    if (_structuresSprite.numChildren==1) return;
     Structure* s = [self getStructure];
     [s removeFromParent];
+}
+
+- (void)removeAllStructures
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == GRASS) continue;
+        else [s removeFromParent];
+    }
 }
 
 - (Structure*)getStructure
@@ -277,6 +300,15 @@
     return s.sType;
 }
 
+- (void)makeNeutral
+{
+    [self setPColor:NOCOLOR];
+    [self removeVillage];
+    if ([self hasUnit]) {
+        [self removeUnit];
+        [self addStructure:TOMBSTONE];
+    }
+}
 //cancels timer
 - (void)invalidateTimer
 {
@@ -288,6 +320,12 @@
 {
     TileTouchedEvent *event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_SHOW_ACTION_MENU tile:self];
     [self dispatchEvent:event];
+}
+
+- (void)endTurnUpdates
+{
+    if ([self hasUnit]) [_unit endTurnUpdates];
+
 }
 
 //------------------------------
@@ -308,6 +346,15 @@
 - (NSMutableArray*)getNeighbours
 {
     return _neighboursArray;
+}
+
+- (NSMutableArray*)getNeighboursOfSameRegion
+{
+    NSMutableArray* nTiles = [NSMutableArray array];
+    for (Tile* nT in _neighboursArray) {
+        if (_village.player == nT.village.player) [nTiles addObject:nT];
+    }
+    return nTiles;
 }
 
 - (BOOL)neighboursContainTile:(Tile*)tile
@@ -390,6 +437,11 @@
     if ([self hasUnit] && _unit.movable) return true;
     if ([self isVillage]) return true;
     return false;
+}
+
+- (BOOL)isNeutral
+{
+    return _village == nil;
 }
 
 - (void)setPColor:(enum PlayerColor)pColor

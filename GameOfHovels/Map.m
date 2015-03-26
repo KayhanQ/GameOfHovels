@@ -67,7 +67,7 @@
         //[self addMeadows];
         [self makeTreesAndMeadows];
 		
-        [self showPlayersTeritory];
+        [self refreshTeritory];
         
     }
     return self;
@@ -247,25 +247,22 @@
 {
     BOOL actionPossible = true;
     
-    Village* tileVillage = tile.village;
     
     if ([self isMyTurn]) {
-        if (tileVillage.woodPile<8) actionPossible = false;
+        //if (tileVillage.woodPile<8) actionPossible = false;
     }
     
     if (actionPossible == false) {
         return;
     }
-    
+    NSLog(@"updating village");
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
-    [tile upgradeVillage: vType];
-    for (Tile* t in tiles) {
-        t.village = tileVillage;
-    }
+    [tile upgradeVillageTo: vType];
+    for (Tile* t in tiles) t.village = tile.village;
     
     if ([self isMyTurn]) {
-        tileVillage.woodPile -= 8;
+        tile.village.woodPile -= 8;
         [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
@@ -277,7 +274,7 @@
 }
 
 
-- (void)showPlayersTeritory
+- (void)refreshTeritory
 {
     //tiles have the player colour. Grass is neutral.
     for (Tile* t in _tilesSprite) {
@@ -330,20 +327,26 @@
             }
             case TOOWNUNIT:
             {
-                if (unit.uType + destTile.unit.uType > 4) movePossible = false;
+                if (unit.uType + destTile.unit.uType > 5) movePossible = false;
                 break;
             }
             case TOENEMYTILE:
             {
-                if (unit.uType == PEASANT) movePossible = false;
+                movePossible = [unit canMoveToEnemyTile];
                 for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
                     if (eTile.unit.uType >= unit.uType) movePossible = false;
                 }
+                if ([destTile isVillage]) movePossible = [destTile.village canBeConqueredByUnit:unit];
                 break;
             }
             case TOBAUM:
             {
-                if (unit.uType == RITTER) movePossible = false;
+                movePossible = [unit canChopTree];
+                break;
+            }
+            case TOTOMBSTONE:
+            {
+                movePossible = [unit canClearTombstone];
                 break;
             }
             default:
@@ -370,6 +373,7 @@
     if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
     if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
     if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
+    if ([destTile getStructureType] == TOMBSTONE ) [moveTypes addObject: [NSNumber numberWithInt:TOTOMBSTONE]];
 
     return moveTypes;
 }
@@ -400,9 +404,14 @@
             }
             case TOMEADOW:
             {
-                if (unit.uType == SOLDIER || unit.uType == RITTER) {
+                if ([unit tramplesMeadow]) {
                     if (![destTile hasRoad]) [destTile removeStructure];
                 }
+                break;
+            }
+            case TOTOMBSTONE:
+            {
+                [destTile removeStructure];
                 break;
             }
             case TONEUTRALTILE:
@@ -432,6 +441,7 @@
         
     }
     
+    unit.distTravelled++;
     //depending on whether we are merging units or not we take different action
     if (mergingUnits) {
         [destTile.unit transferPropertiesFrom:unitTile.unit];
@@ -442,11 +452,10 @@
         //the last thing we do is actually move the units on the tile
         [unitTile removeUnit];
         [destTile addUnit:unit];
-        unit.distTravelled++;
     }
     
     //need to refresh the colour
-    [self showPlayersTeritory];
+    [self refreshTeritory];
     
     if ([self isMyTurn]) {
         [_messageLayer sendMoveWithType:MOVEUNIT tile:unitTile destTile:destTile];
@@ -503,12 +512,173 @@
     return mergeTiles;
 }
 
+//This method is very precise. Especially the timing of switching the villages
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
 {
-    if ([destTile hasUnit]) {
-        [destTile removeUnit];
+    BOOL takingOverEnemyTile = [destTile hasVillage];
+    BOOL takingOverEnemyVillage = [destTile isVillage];
+    
+    NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
+    Village* enemyPlayersVillage = destTile.village;
+    
+    //if we are taking over a village we have to transfer the supplies and remove it
+    if (takingOverEnemyVillage) {
+        [unitTile.village transferSuppliesFrom:enemyPlayersVillage];
+        [destTile removeVillage];
     }
     destTile.village = unitTile.village;
+
+    //We are taking over an enemyTile
+    if (takingOverEnemyTile) {
+        if ([destTile hasUnit]) [destTile removeUnit];
+        if ([self tileWithNeighboursSplitsRegion:nTiles]) {
+            NSLog(@"TILE SPLITS REGION");
+            NSMutableArray* regions = [self getSplitRegions:nTiles];
+            NSLog(@"Regions count: %d",regions.count);
+            for (NSMutableArray* region in regions) {
+                NSLog(@"Tiles count: %d",region.count);
+                if ([self regionHasVillage:region]) continue;
+                [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
+            }
+        }
+        else {
+            //if we didn't split the region but we did take over a village Tile
+            if (takingOverEnemyVillage) {
+                for (Tile* nT in nTiles) {
+                    NSMutableArray* region = [self getConnectedTiles:nT];
+                    [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
+                    break;
+                }
+            }
+        }
+    }
+}
+
+- (void)convertRegionAfterTileTakenFrom:(Village*)enemyPlayersVillage region:(NSMutableArray*)region
+{
+    if (region.count >= 4) {
+        //make new hovel on a random Tile
+        Tile* hovelTile = [region objectAtIndex: arc4random() % region.count];
+        [hovelTile removeUnit];
+        [hovelTile removeAllStructures];
+        [hovelTile addVillage:HOVEL];
+        hovelTile.village.player = enemyPlayersVillage.player;
+        for (Tile* rT in region) rT.village = hovelTile.village;
+    }
+    else {
+        [self makeRegionNeutral:region];
+    }
+}
+
+//We have already set the village of the tile we are splitting on as the new village
+//so we have to send in his neighbours instead of him
+- (BOOL)tileWithNeighboursSplitsRegion:(NSMutableArray*)nTiles
+{
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) return true;
+        }
+    }
+    return false;
+}
+
+- (BOOL)areConnectedByRegion:(Tile*)t1 t2:(Tile*)t2
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:t1];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            if (nTile == t2) {
+                [self resetVisitedBySearchFlags];
+                return true;
+            }
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return false;
+}
+
+- (NSMutableArray*)getSplitRegions:(NSMutableArray*)nTiles
+{
+    NSMutableArray* disconnectedNeighbours = [NSMutableArray array];
+    
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) {
+                if (![disconnectedNeighbours containsObject:nT1]) [disconnectedNeighbours addObject:nT1];
+                if (![disconnectedNeighbours containsObject:nT2]) [disconnectedNeighbours addObject:nT2];
+            }
+        }
+    }
+    
+    //remove any tiles that are connected to each other
+    for (int i = 0; i < disconnectedNeighbours.count; i++) {
+        Tile* t1 = [disconnectedNeighbours objectAtIndex:i];
+        for (int j = 0; j < disconnectedNeighbours.count; j++) {
+            Tile* t2 = [disconnectedNeighbours objectAtIndex:j];
+            if (t1 == t2) continue;
+            if ([self areConnectedByRegion:t1 t2:t2]) {
+                [disconnectedNeighbours removeObject:t2];
+                continue;
+            }
+        }
+    }
+    
+    NSMutableArray* regions = [NSMutableArray array];
+    for (Tile* dN in disconnectedNeighbours) {
+        [regions addObject:[self getConnectedTiles:dN]];
+    }
+    
+    return regions;
+}
+
+//returns list of all connected tiles in same region
+- (NSMutableArray*)getConnectedTiles:(Tile*)tile
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:tile];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            nTile.visitedBySearch = true;
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return searchTiles;
+}
+
+- (BOOL)regionHasVillage:(NSMutableArray*)region
+{
+    for (Tile* t in region) {
+        if ([t isVillage]) return true;
+    }
+    return false;
+}
+
+
+- (void)resetVisitedBySearchFlags
+{
+    for (Tile* t in _tilesSprite)
+    {
+        t.visitedBySearch = false;
+    }
+}
+
+//makes a region neutral by removing units and village pointers
+- (void)makeRegionNeutral:(NSMutableArray*)region
+{
+    for (Tile* t in region) [t makeNeutral];
 }
 
 - (void)chopTree:(Tile*)tile
@@ -635,9 +805,8 @@
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         
         if(vTile.village.goldPile < 0){
-            [vTile killAllVillagers];
+            [self killAllVillagers:vTile];
             break;
-            
         }
         
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
@@ -711,9 +880,7 @@
     //We go through ever single tile we own and do all updates
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
-            if ([t hasUnit]) {
-                [t.unit incrementWorkstate];
-            }
+            [t endTurnUpdates];
         }
     }
 }

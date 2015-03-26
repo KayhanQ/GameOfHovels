@@ -19,7 +19,7 @@
 
 @interface Map : BasicSprite {
 
-    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TONEUTRALTILE, TOENEMYTILE, MERGEVILLAGES};
+    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TOTOMBSTONE, TONEUTRALTILE, TOENEMYTILE, MERGEVILLAGES};
 
 }
 
@@ -48,7 +48,7 @@
 - (NSMutableArray*)getTilesforVillage:(Village*)v;
 - (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile;
 - (NSMutableArray*)getTilesWithMyVillages;
-
+-(void)killAllVillagers:(Tile*)village;
 
 
 

@@ -23,7 +23,6 @@
     if (self=[super initWithStructureType:TOWN]) {
         //custom code here
         
-        
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"town.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
         baseImage.scale = 0.22;

@@ -10,6 +10,7 @@
 #import "BasicSprite.h"
 
 @class GamePlayer;
+@class Unit;
 
 @interface Village : BasicSprite {
     
@@ -25,6 +26,10 @@
 @property (nonatomic) int cost;
 
 - (id)initWithStructureType:(enum VillageType)vType;
+- (BOOL)isSameAs:(Village*)v;
 - (BOOL)isHigherThan:(Village*)v;
+- (void)transferSuppliesFrom:(Village*)village;
+- (BOOL)canSupportUnit:(Unit*)unit;
+- (BOOL)canBeConqueredByUnit:(Unit*)unit;
 
 @end
