@@ -25,6 +25,7 @@
 #import "Soldier.h"
 #import "Infantry.h"
 #import "Ritter.h"
+#import "Cannon.h"
 
 #import "Media.h"
 #import "GamePlayer.h"
@@ -177,6 +178,11 @@
             newUnit = [[Ritter alloc] initWithTile:self];
             break;
         }
+        case CANNON:
+        {
+            newUnit = [[Cannon alloc] initWithTile:self];
+            break;
+        }
         default:
             break;
     }
@@ -192,13 +198,13 @@
 {
     BOOL movePossible = true;
     
-    if (![destTile isNeutral]) {
-        if (_unit.uType == PEASANT) movePossible = false;
-    }
-    if (![_village isSameAs:destTile.village]) {
+    //we are invading an enemy tile
+    if (![_village isSameAs:destTile.village] && ![destTile isNeutral]) {
+        //rework who can eat what village type
         if ([self isVillage]) {
             if (_unit.uType <= 1) movePossible = false;
         }
+        movePossible = [_unit canMoveToEnemyTile];
     }
     
     return movePossible;

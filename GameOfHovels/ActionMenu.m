@@ -44,7 +44,7 @@
         if (tile.unit != nil) {
             if (tile.unit.uType == PEASANT) [self makeButton:BUILDMEADOW];
             if (tile.unit.uType == PEASANT) [self makeButton:BUILDROAD];
-            if (tile.unit.uType != RITTER) [self makeButton:UPGRADEUNIT];
+            if (tile.unit.uType != CANNON) [self makeButton:UPGRADEUNIT];
 
         }
 

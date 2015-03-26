@@ -1,17 +1,16 @@
 //
-//  Soldier.h
+//  Canon.h
 //  GameOfHovels
 //
-//  Created by Aleksandra Lata on 3/17/15.
+//  Created by Kayhan Feroze Qaiser on 26/03/2015.
 //  Copyright (c) 2015 CivetAtelier. All rights reserved.
 //
-
 
 @class Tile;
 
 #import "Unit.h"
 
-@interface Soldier : Unit {
+@interface Cannon : Unit {
     
 }
 

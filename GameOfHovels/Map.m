@@ -330,7 +330,7 @@
             }
             case TOOWNUNIT:
             {
-                if (unit.uType + destTile.unit.uType > 4) movePossible = false;
+                if (unit.uType + destTile.unit.uType > 5) movePossible = false;
                 break;
             }
             case TOENEMYTILE:
@@ -801,7 +801,7 @@
         
         if(vTile.village.goldPile < 0){
             
-            [vTile killAllVillagers];
+            //[vTile killAllVillagers];
             break;
             
         }

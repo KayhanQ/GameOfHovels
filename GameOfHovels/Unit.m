@@ -22,7 +22,9 @@
 }
 
 //@synthesize tile = _tile;
-@synthesize buyCost = _buyCost;
+@synthesize buyCostWood = _buyCostWood;
+@synthesize buyCostGold = _buyCostGold;
+@synthesize strength = _strength;
 @synthesize uType = _uType;
 @synthesize movable = _movable;
 @synthesize stamina = _stamina;
@@ -41,11 +43,14 @@
         _movable = true;
         _workstateCompleted = false;
         _upgradeCost = 10;
+        _buyCostWood = 0;
+        _buyCostGold = 0;
         
         switch (uType) {
             case PEASANT:
             {
-                _buyCost = 10;
+                _strength = 1;
+                _buyCostGold = 10;
                 _upkeepCost = 2;
                 _stamina = 10;
                 break;
@@ -53,23 +58,35 @@
             }
             case INFANTRY:
             {
-                _buyCost = 20;
+                _strength = 2;
+                _buyCostGold = 20;
                 _upkeepCost = 6;
                 _stamina = 10;
                 
             }
             case SOLDIER:
             {
-                _buyCost = 30;
+                _strength = 3;
+                _buyCostGold = 30;
                 _upkeepCost = 18;
                 _stamina = 10;
                 
             }
             case RITTER:
             {
-                _buyCost = 40;
+                _strength = 4;
+                _buyCostGold = 40;
                 _upkeepCost = 54;
                 _stamina = 10;
+                
+            }
+            case CANNON:
+            {
+                _strength = 5;
+                _buyCostWood = 12;
+                _buyCostGold = 35;
+                _upkeepCost = 5;
+                _stamina = 1;
                 
             }
             default:
@@ -117,6 +134,26 @@
         _movable = true;
         _turnsInWS = 0;
     }
+}
+
+- (BOOL)canMoveToEnemyTile
+{
+    BOOL movePossible = true;
+    switch (_uType) {
+        case PEASANT:
+        {
+            movePossible = false;
+            break;
+        }
+        case CANNON:
+        {
+            movePossible = false;
+            break;
+        }
+        default:
+            break;
+    }
+    return movePossible;
 }
 
 - (void)transferPropertiesFrom:(Unit*)u
