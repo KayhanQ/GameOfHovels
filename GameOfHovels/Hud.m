@@ -90,6 +90,8 @@
     NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
     _goldField.text = goldString;
     
+    //who is the unit and all its stats, workstate
+    //if you click a village then put up how many tiles the village has
 }
 
 - (void)endTurnTouched:(SPTouchEvent*) event

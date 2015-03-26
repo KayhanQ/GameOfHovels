@@ -246,8 +246,7 @@
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
     BOOL actionPossible = true;
-    
-    
+
     if ([self isMyTurn]) {
         //if (tileVillage.woodPile<8) actionPossible = false;
     }
@@ -255,7 +254,7 @@
     if (actionPossible == false) {
         return;
     }
-    NSLog(@"updating village");
+
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
@@ -472,11 +471,20 @@
         Tile* unitVillageTile = [self getVillageTile:uVillage];
         Tile* mVillageTile = [self getVillageTile:mVillage];
 
-        [unitVillageTile mergeVillageBySwallowing:mVillage];
-        [mVillageTile removeVillage];
         
-        Village* newUVillage = unitVillageTile.village;
-        mVillageTile.village = newUVillage;
+        Village* newUVillage;
+        if ([uVillage isHigherThan:mVillage]) {
+            [unitVillageTile mergeVillageBySwallowing:mVillage];
+            [mVillageTile removeVillage];
+            newUVillage = unitVillageTile.village;
+            mVillageTile.village = newUVillage;
+        }
+        else {
+            [mVillageTile mergeVillageBySwallowing:uVillage];
+            [unitVillageTile removeVillage];
+            newUVillage = mVillageTile.village;
+            unitVillageTile.village = newUVillage;
+        }
         
         for (Tile* t in [self getTilesforVillage:uVillage]) {
             t.village = newUVillage;

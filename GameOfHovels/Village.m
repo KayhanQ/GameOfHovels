@@ -125,7 +125,7 @@
 
 - (BOOL)isHigherThan:(Village *)v
 {
-    if (_vType >= v.vType) return true;
+    if (_vType > v.vType) return true;
     return false;
 }
 

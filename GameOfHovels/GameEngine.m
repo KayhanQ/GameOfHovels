@@ -226,7 +226,6 @@
     switch (event.aType) {
         case UPGRADEVILLAGE:
         {
-            int vKind = tile.village.vType + 1;
             [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }
