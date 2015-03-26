@@ -51,13 +51,6 @@
                 break;
                 
             }
-            case RITTER:
-            {
-                _buyCost = 40;
-                _upkeepCost = 54;
-                _stamina = 10;
-                
-            }
             case INFANTRY:
             {
                 _buyCost = 20;
@@ -69,6 +62,13 @@
             {
                 _buyCost = 30;
                 _upkeepCost = 18;
+                _stamina = 10;
+                
+            }
+            case RITTER:
+            {
+                _buyCost = 40;
+                _upkeepCost = 54;
                 _stamina = 10;
                 
             }
@@ -123,6 +123,7 @@
 {
     _distTravelled += u.distTravelled;
 }
+
 - (void)endTurnUpdates
 {
     [self incrementWorkstate];

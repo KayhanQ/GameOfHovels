@@ -49,7 +49,6 @@
 - (BOOL)hasVillage;
 - (BOOL)isVillage;
 
--(void)killAllVillagers;//:(Tile*)village;
 
 - (void)addUnitWithType:(enum UnitType)uType;
 - (void)addUnit:(Unit*)unit;
