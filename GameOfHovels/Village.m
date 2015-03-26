@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Village.h"
+#import "Unit.h"
 
 @implementation Village
 {
@@ -25,10 +26,8 @@
     if (self=[super init]) {
         //custom code here
         _vType = vType;
-        _woodPile = 40;
-        _goldPile = 36;
-        
-        switch (vType) {
+
+        switch (_vType) {
             case HOVEL:
             {
                 _cost = 0;
@@ -52,6 +51,62 @@
         self.touchable = false;
     }
     return self;
+}
+
+- (BOOL)canSupportUnit:(Unit*)unit
+{
+    enum UnitType uType = unit.uType;
+    BOOL canSupport = false;
+    
+    switch (_vType) {
+        case HOVEL:
+        {
+            if (uType <= 2) canSupport = true;
+            break;
+        }
+        case TOWN:
+        {
+            if (uType <= 3) canSupport = true;
+            break;
+        }
+        case FORT:
+        {
+            if (uType <= 4) canSupport = true;
+            break;
+        }
+        default:
+            break;
+    }
+    
+    return canSupport;
+}
+
+- (BOOL)canBeConqueredByUnit:(Unit*)unit;
+{
+    enum UnitType uType = unit.uType;
+    BOOL canBeConquered = false;
+    
+    switch (_vType) {
+        case HOVEL:
+        {
+            if (uType >= 3) canBeConquered = true;
+            break;
+        }
+        case TOWN:
+        {
+            if (uType >= 3) canBeConquered = true;
+            break;
+        }
+        case FORT:
+        {
+            if (uType >= 4) canBeConquered = true;
+            break;
+        }
+        default:
+            break;
+    }
+    
+    return canBeConquered;
 }
 
 - (void)transferSuppliesFrom:(Village*)village

@@ -170,6 +170,13 @@
     return possible;
 }
 
+- (BOOL)tramplesMeadow
+{
+    BOOL tramples = false;
+    if (_uType == SOLDIER || _uType == RITTER || _uType == CANNON) tramples = true;
+    return tramples;
+}
+
 - (void)transferPropertiesFrom:(Unit*)u
 {
     _distTravelled += u.distTravelled;

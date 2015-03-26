@@ -207,7 +207,7 @@
 {
     Tile* tile = event.tile;
     
-    if (tile.village.player != _currentPlayer) return;
+    //if (tile.village.player != _currentPlayer) return;
     if (![tile canBeSelected]) return;
     
     [self removeTileListener];
@@ -226,6 +226,7 @@
     switch (event.aType) {
         case UPGRADEVILLAGE:
         {
+            int vKind = tile.village.vType + 1;
             [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }

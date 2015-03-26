@@ -39,6 +39,7 @@
 - (BOOL)canMoveToEnemyTile;
 - (BOOL)canChopTree;
 - (BOOL)canClearTombstone;
+- (BOOL)tramplesMeadow;
 - (void)transferPropertiesFrom:(Unit*)u;
 - (void)endTurnUpdates;
 

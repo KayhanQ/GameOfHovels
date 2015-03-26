@@ -67,7 +67,7 @@
         //[self addMeadows];
         [self makeTreesAndMeadows];
 		
-        [self showPlayersTeritory];
+        [self refreshTeritory];
         
     }
     return self;
@@ -247,25 +247,22 @@
 {
     BOOL actionPossible = true;
     
-    Village* tileVillage = tile.village;
     
     if ([self isMyTurn]) {
-        if (tileVillage.woodPile<8) actionPossible = false;
+        //if (tileVillage.woodPile<8) actionPossible = false;
     }
     
     if (actionPossible == false) {
         return;
     }
-    
+    NSLog(@"updating village");
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
-    [tile upgradeVillage: vType];
-    for (Tile* t in tiles) {
-        t.village = tileVillage;
-    }
+    [tile upgradeVillageTo: vType];
+    for (Tile* t in tiles) t.village = tile.village;
     
     if ([self isMyTurn]) {
-        tileVillage.woodPile -= 8;
+        tile.village.woodPile -= 8;
         [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
@@ -277,7 +274,7 @@
 }
 
 
-- (void)showPlayersTeritory
+- (void)refreshTeritory
 {
     //tiles have the player colour. Grass is neutral.
     for (Tile* t in _tilesSprite) {
@@ -339,6 +336,7 @@
                 for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
                     if (eTile.unit.uType >= unit.uType) movePossible = false;
                 }
+                if ([destTile isVillage]) movePossible = [destTile.village canBeConqueredByUnit:unit];
                 break;
             }
             case TOBAUM:
@@ -406,7 +404,7 @@
             }
             case TOMEADOW:
             {
-                if (unit.uType == SOLDIER || unit.uType == RITTER) {
+                if ([unit tramplesMeadow]) {
                     if (![destTile hasRoad]) [destTile removeStructure];
                 }
                 break;
@@ -443,6 +441,7 @@
         
     }
     
+    unit.distTravelled++;
     //depending on whether we are merging units or not we take different action
     if (mergingUnits) {
         [destTile.unit transferPropertiesFrom:unitTile.unit];
@@ -453,11 +452,10 @@
         //the last thing we do is actually move the units on the tile
         [unitTile removeUnit];
         [destTile addUnit:unit];
-        unit.distTravelled++;
     }
     
     //need to refresh the colour
-    [self showPlayersTeritory];
+    [self refreshTeritory];
     
     if ([self isMyTurn]) {
         [_messageLayer sendMoveWithType:MOVEUNIT tile:unitTile destTile:destTile];
