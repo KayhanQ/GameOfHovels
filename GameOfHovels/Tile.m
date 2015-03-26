@@ -315,6 +315,12 @@
     [self dispatchEvent:event];
 }
 
+- (void)endTurnUpdates
+{
+    if ([self hasUnit]) [_unit endTurnUpdates];
+
+}
+
 //------------------------------
 //  NEIGHBOUR FUNCTIONS
 //------------------------------

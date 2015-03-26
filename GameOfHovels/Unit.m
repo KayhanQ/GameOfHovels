@@ -123,5 +123,10 @@
 {
     _distTravelled += u.distTravelled;
 }
+- (void)endTurnUpdates
+{
+    [self incrementWorkstate];
+    _distTravelled = 0;
+}
 
 @end

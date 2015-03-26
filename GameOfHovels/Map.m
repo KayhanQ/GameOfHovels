@@ -860,10 +860,7 @@
     //We go through ever single tile we own and do all updates
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
-            if ([t hasUnit]) {
-                [t.unit incrementWorkstate];
-                t.unit.distTravelled = 0;
-            }
+            [t endTurnUpdates];
         }
     }
 }

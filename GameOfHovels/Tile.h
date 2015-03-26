@@ -70,5 +70,6 @@
 
 - (Structure*)getStructure;
 
+- (void)endTurnUpdates;
 
 @end

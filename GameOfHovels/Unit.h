@@ -31,10 +31,11 @@
 @property (nonatomic) BOOL workstateCompleted;
 
 
--(id)initWithUnitType: (enum UnitType) uType;
--(void)incrementWorkstate;
--(void)setWorkState:(enum WorkState)workState;
+- (id)initWithUnitType: (enum UnitType) uType;
+- (void)incrementWorkstate;
+- (void)setWorkState:(enum WorkState)workState;
 - (void)transferPropertiesFrom:(Unit*)u;
+- (void)endTurnUpdates;
 
 
 @end
