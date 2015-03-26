@@ -21,12 +21,28 @@
     
     if (self=[super initWithUnitType:PEASANT]) {
         //custom code here
+        SPJuggler* juggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
         
+        
+        SPTextureAtlas *atlas = [SPTextureAtlas atlasWithContentsOfFile:@"peasant.xml"];
+        NSArray*textures = [atlas texturesStartingWith:@"felling tree e"];
+        
+        SPMovieClip* movie = [[SPMovieClip alloc] initWithFrames:textures fps:10];
+        
+        [SparrowHelper centerPivot:movie];
+        [self addChild:movie];
+        
+        [movie play];
+        
+        [juggler addObject:movie];
+        
+        /*
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"peasant.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
         baseImage.scale = 0.5;
         [self addChild:baseImage];
         [SparrowHelper centerPivot:self];
+         */
     }
     return self;
 }
