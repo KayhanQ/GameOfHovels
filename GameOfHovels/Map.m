@@ -617,16 +617,12 @@
                     
                 case NONE:
                     vTile.village.goldPile += 1;
-                    
                     break;
                     
                     default:
                     break;
-      
                     
             }
-            
-            
         }
     }
 
@@ -639,7 +635,6 @@
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         
         if(vTile.village.goldPile < 0){
-            
             [vTile killAllVillagers];
             break;
             
@@ -648,11 +643,8 @@
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             
             if([t hasUnit]){
-                
                 vTile.village.goldPile -= t.unit.upkeepCost;
-                
-              
-                
+            
             }
             
             
