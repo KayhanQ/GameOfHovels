@@ -187,6 +187,23 @@
     [_unitSprite addChild:_unit];
 }
 
+//makes no promises about global things like if its protected. That is handled in map.
+- (BOOL)unitCanMoveToTile:(Tile*)destTile
+{
+    BOOL movePossible = true;
+    
+    if (![destTile isNeutral]) {
+        if (_unit.uType == PEASANT) movePossible = false;
+    }
+    if (![_village isSameAs:destTile.village]) {
+        if ([self isVillage]) {
+            if (_unit.uType <= 1) movePossible = false;
+        }
+    }
+    
+    return movePossible;
+}
+
 //adds a physical village to the tile
 -(void)addVillage:(enum VillageType) vType
 {
@@ -430,6 +447,11 @@
     if ([self hasUnit] && _unit.movable) return true;
     if ([self isVillage]) return true;
     return false;
+}
+
+- (BOOL)isNeutral
+{
+    return _village == nil;
 }
 
 - (void)setPColor:(enum PlayerColor)pColor

@@ -335,7 +335,7 @@
             }
             case TOENEMYTILE:
             {
-                if (unit.uType == PEASANT) movePossible = false;
+                movePossible = [unitTile unitCanMoveToTile:destTile];
                 for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
                     if (eTile.unit.uType >= unit.uType) movePossible = false;
                 }
@@ -503,12 +503,20 @@
     return mergeTiles;
 }
 
+//This method is very precise. Especially the timing of switching the villages
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile
 {
     BOOL takingOverEnemyTile = [destTile hasVillage];
+    BOOL takingOverEnemyVillage = [destTile isVillage];
     
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
     Village* enemyPlayersVillage = destTile.village;
+    
+    //if we are taking over a village we have to transfer the supplies and remove it
+    if (takingOverEnemyVillage) {
+        [unitTile.village transferSuppliesFrom:enemyPlayersVillage];
+        [destTile removeVillage];
+    }
     destTile.village = unitTile.village;
 
     //We are taking over an enemyTile
@@ -520,26 +528,37 @@
             NSLog(@"Regions count: %d",regions.count);
             for (NSMutableArray* region in regions) {
                 NSLog(@"Tiles count: %d",region.count);
-
                 if ([self regionHasVillage:region]) continue;
-                if (region.count >= 4) {
-                    //make new hovel on a random Tile
-                    Tile* hovelTile = [region objectAtIndex: arc4random() % region.count];
-                    [hovelTile removeUnit];
-                    [hovelTile removeAllStructures];
-                    [hovelTile addVillage:HOVEL];
-                    hovelTile.village.player = enemyPlayersVillage.player;
-                    for (Tile* rT in region) rT.village = hovelTile.village;
-                }
-                else {
-                    [self makeRegionNeutral:region];
+                [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
+            }
+        }
+        else {
+            //if we didn't split the region but we did take over a village Tile
+            if (takingOverEnemyVillage) {
+                for (Tile* nT in nTiles) {
+                    NSMutableArray* region = [self getConnectedTiles:nT];
+                    [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
+                    break;
                 }
             }
         }
     }
-    
+}
 
-    
+- (void)convertRegionAfterTileTakenFrom:(Village*)enemyPlayersVillage region:(NSMutableArray*)region
+{
+    if (region.count >= 4) {
+        //make new hovel on a random Tile
+        Tile* hovelTile = [region objectAtIndex: arc4random() % region.count];
+        [hovelTile removeUnit];
+        [hovelTile removeAllStructures];
+        [hovelTile addVillage:HOVEL];
+        hovelTile.village.player = enemyPlayersVillage.player;
+        for (Tile* rT in region) rT.village = hovelTile.village;
+    }
+    else {
+        [self makeRegionNeutral:region];
+    }
 }
 
 //We have already set the village of the tile we are splitting on as the new village
@@ -611,6 +630,7 @@
     return regions;
 }
 
+//returns list of all connected tiles in same region
 - (NSMutableArray*)getConnectedTiles:(Tile*)tile
 {
     NSMutableArray* searchTiles = [NSMutableArray array];

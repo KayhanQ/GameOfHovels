@@ -25,6 +25,8 @@
 @property (nonatomic) int cost;
 
 - (id)initWithStructureType:(enum VillageType)vType;
+- (BOOL)isSameAs:(Village*)v;
 - (BOOL)isHigherThan:(Village*)v;
+- (void)transferSuppliesFrom:(Village*)village;
 
 @end

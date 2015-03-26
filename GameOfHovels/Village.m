@@ -54,6 +54,20 @@
     return self;
 }
 
+- (void)transferSuppliesFrom:(Village*)village
+{
+    _woodPile += village.woodPile;
+    _goldPile += village.goldPile;
+    village.woodPile = 0;
+    village.goldPile = 0;
+}
+
+- (BOOL)isSameAs:(Village*)v
+{
+    if (self == v) return true;
+    return false;
+}
+
 - (BOOL)isHigherThan:(Village *)v
 {
     if (_vType >= v.vType) return true;
