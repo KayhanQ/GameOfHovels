@@ -37,6 +37,8 @@
 - (void)incrementWorkstate;
 - (void)setWorkState:(enum WorkState)workState;
 - (BOOL)canMoveToEnemyTile;
+- (BOOL)canChopTree;
+- (BOOL)canClearTombstone;
 - (void)transferPropertiesFrom:(Unit*)u;
 - (void)endTurnUpdates;
 

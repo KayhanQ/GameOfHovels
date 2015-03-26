@@ -57,7 +57,6 @@
 - (Unit*)getUnit;
 - (void)upgradeUnit:(enum UnitType)uType;
 - (enum UnitType)getUnitType;
-- (BOOL)unitCanMoveToTile:(Tile*)destTile;
 
 - (void)selectTile;
 - (void)deselectTile;

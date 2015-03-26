@@ -335,7 +335,7 @@
             }
             case TOENEMYTILE:
             {
-                movePossible = [unitTile unitCanMoveToTile:destTile];
+                movePossible = [unit canMoveToEnemyTile];
                 for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
                     if (eTile.unit.uType >= unit.uType) movePossible = false;
                 }
@@ -343,7 +343,12 @@
             }
             case TOBAUM:
             {
-                if (unit.uType == RITTER) movePossible = false;
+                movePossible = [unit canChopTree];
+                break;
+            }
+            case TOTOMBSTONE:
+            {
+                movePossible = [unit canClearTombstone];
                 break;
             }
             default:
@@ -370,6 +375,7 @@
     if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
     if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
     if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
+    if ([destTile getStructureType] == TOMBSTONE ) [moveTypes addObject: [NSNumber numberWithInt:TOTOMBSTONE]];
 
     return moveTypes;
 }
@@ -403,6 +409,11 @@
                 if (unit.uType == SOLDIER || unit.uType == RITTER) {
                     if (![destTile hasRoad]) [destTile removeStructure];
                 }
+                break;
+            }
+            case TOTOMBSTONE:
+            {
+                [destTile removeStructure];
                 break;
             }
             case TONEUTRALTILE:

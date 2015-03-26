@@ -156,6 +156,20 @@
     return movePossible;
 }
 
+- (BOOL)canChopTree
+{
+    BOOL possible = false;
+    if (_uType == PEASANT || _uType == INFANTRY) possible = true;
+    return possible;
+}
+
+- (BOOL)canClearTombstone
+{
+    BOOL possible = false;
+    if (_uType == PEASANT || _uType == INFANTRY) possible = true;
+    return possible;
+}
+
 - (void)transferPropertiesFrom:(Unit*)u
 {
     _distTravelled += u.distTravelled;

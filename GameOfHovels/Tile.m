@@ -193,23 +193,6 @@
     [_unitSprite addChild:_unit];
 }
 
-//makes no promises about global things like if its protected. That is handled in map.
-- (BOOL)unitCanMoveToTile:(Tile*)destTile
-{
-    BOOL movePossible = true;
-    
-    //we are invading an enemy tile
-    if (![_village isSameAs:destTile.village] && ![destTile isNeutral]) {
-        //rework who can eat what village type
-        if ([self isVillage]) {
-            if (_unit.uType <= 1) movePossible = false;
-        }
-        movePossible = [_unit canMoveToEnemyTile];
-    }
-    
-    return movePossible;
-}
-
 //adds a physical village to the tile
 -(void)addVillage:(enum VillageType) vType
 {
@@ -282,8 +265,9 @@
             break;
         }
         case TOMBSTONE: {
+            [self removeAllStructures];
             Tombstone* r = [[Tombstone alloc] initWithTile:self];
-            [_structuresSprite addChild:r atIndex:1];
+            [_structuresSprite addChild:r];
             break;
         }
         default:
@@ -293,6 +277,8 @@
 
 - (void)removeStructure
 {
+    //safety against removing base structure, really this should never happen
+    if (_structuresSprite.numChildren==1) return;
     Structure* s = [self getStructure];
     [s removeFromParent];
 }
