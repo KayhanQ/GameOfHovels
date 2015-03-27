@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
 		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
+		C6B2CF871AC5AEE800F8D880 /* DKQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C6B2CF831AC5AEE800F8D880 /* DKQueue.m */; };
+		C6B2CF881AC5AEE800F8D880 /* DKStack.m in Sources */ = {isa = PBXBuildFile; fileRef = C6B2CF851AC5AEE800F8D880 /* DKStack.m */; };
+		C6B2CF891AC5AEE800F8D880 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C6B2CF861AC5AEE800F8D880 /* README.md */; };
 		C6B325C61AC33BA30049798F /* archer.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B325AA1AC33BA30049798F /* archer.png */; };
 		C6B325C71AC33BA30049798F /* archer.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B325AB1AC33BA30049798F /* archer.xml */; };
 		C6B325C81AC33BA30049798F /* atlas.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B325AC1AC33BA30049798F /* atlas.png */; };
@@ -160,9 +163,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
+		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = SPARROW_SRC; };
 		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
 		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
+		C6B2CF821AC5AEE800F8D880 /* DKQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKQueue.h; sourceTree = "<group>"; };
+		C6B2CF831AC5AEE800F8D880 /* DKQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKQueue.m; sourceTree = "<group>"; };
+		C6B2CF841AC5AEE800F8D880 /* DKStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKStack.h; sourceTree = "<group>"; };
+		C6B2CF851AC5AEE800F8D880 /* DKStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKStack.m; sourceTree = "<group>"; };
+		C6B2CF861AC5AEE800F8D880 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C6B325AA1AC33BA30049798F /* archer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = archer.png; sourceTree = "<group>"; };
 		C6B325AB1AC33BA30049798F /* archer.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = archer.xml; sourceTree = "<group>"; };
 		C6B325AC1AC33BA30049798F /* atlas.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = atlas.png; sourceTree = "<group>"; };
@@ -669,6 +677,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C6B2CF811AC5AEE800F8D880 /* Objective-C-Stack---Queue-master */ = {
+			isa = PBXGroup;
+			children = (
+				C6B2CF821AC5AEE800F8D880 /* DKQueue.h */,
+				C6B2CF831AC5AEE800F8D880 /* DKQueue.m */,
+				C6B2CF841AC5AEE800F8D880 /* DKStack.h */,
+				C6B2CF851AC5AEE800F8D880 /* DKStack.m */,
+				C6B2CF861AC5AEE800F8D880 /* README.md */,
+			);
+			name = "Objective-C-Stack---Queue-master";
+			path = "../../../../Downloads/Objective-C-Stack---Queue-master";
+			sourceTree = "<group>";
+		};
 		C6B325A91AC33BA30049798F /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -975,6 +996,7 @@
 		F380663A1A964D13009D3C56 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C6B2CF811AC5AEE800F8D880 /* Objective-C-Stack---Queue-master */,
 				F380663B1A964D21009D3C56 /* Media.h */,
 				F380663C1A964D21009D3C56 /* Media.m */,
 			);
@@ -2138,6 +2160,7 @@
 				F38066251A964C7E009D3C56 /* Baum.m in Sources */,
 				F38066091A964C53009D3C56 /* Map.m in Sources */,
 				F38065C31A96441B009D3C56 /* AppDelegate.m in Sources */,
+				C6B2CF881AC5AEE800F8D880 /* DKStack.m in Sources */,
 				F38066011A964C1A009D3C56 /* GamePlayer.m in Sources */,
 				F38065C01A96441B009D3C56 /* main.m in Sources */,
 				F3D8ADF31ABB06C100920E99 /* Tombstone.m in Sources */,
@@ -2157,7 +2180,9 @@
 				F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */,
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,
+				C6B2CF871AC5AEE800F8D880 /* DKQueue.m in Sources */,
 				FCC1E8341AACE51E009A42DC /* GameNavigationController.m in Sources */,
+				C6B2CF891AC5AEE800F8D880 /* README.md in Sources */,
 				FC120EDF1AAD06540071D47A /* MessageLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

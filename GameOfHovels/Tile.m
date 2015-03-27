@@ -47,8 +47,12 @@
     
     NSMutableArray* _neighboursArray;
     NSTimer* _timer;
+    
+    NSMutableArray* _connectedArray;
 }
 
+@synthesize connected = _connected;
+@synthesize visited = _visited;
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
 @synthesize village = _village;
@@ -61,6 +65,7 @@
         //custom code here
         
         _neighboursArray = [[NSMutableArray alloc] initWithCapacity:6];
+        _connectedArray = [[NSMutableArray alloc] init];
         
         _unit = nil;
         _village = nil;
@@ -327,6 +332,46 @@
     if ([self hasUnit]) [_unit endTurnUpdates];
 
 }
+
+//methods brendan added
+
+- (void)setVisited:(BOOL)visited
+{
+    _visited = visited;
+}
+
+- (BOOL)getVisited
+{
+    return _visited;
+}
+- (NSMutableArray*)getConnectedArray
+{
+    return _connectedArray;
+}
+
+- (void)addToConnectedArray:(Tile*)tile//(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
+{
+    [_connectedArray addObject:tile];
+}
+
+- (void)setConnectedArray:(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
+{
+    _connectedArray = connectedArray;
+}
+
+//for connectedTile Testing
+- (void)setConnected:(int)connected
+{
+    _connected = connected;
+}
+
+- (int)getConnected
+{
+    return _connected;
+}
+
+
+
 
 //------------------------------
 //  NEIGHBOUR FUNCTIONS
