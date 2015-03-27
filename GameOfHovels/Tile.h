@@ -61,6 +61,7 @@
 -(void)setConnectedArray:(NSMutableArray*)connectedArray;
 -(void)addToConnectedArray:(Tile*)tile;
 
+- (NSMutableArray*)getNeighboursOfSameColor;
 
 - (void)addUnitWithType:(enum UnitType)uType;
 - (void)addUnit:(Unit*)unit;

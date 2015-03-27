@@ -404,6 +404,15 @@
     return nTiles;
 }
 
+- (NSMutableArray*)getNeighboursOfSameColor
+{
+    NSMutableArray* nTiles = [NSMutableArray array];
+    for (Tile* nT in _neighboursArray) {
+        if (_pColor == nT.pColor) [nTiles addObject:nT];
+    }
+    return nTiles;
+}
+
 - (BOOL)neighboursContainTile:(Tile*)tile
 {
     for (Tile* nTile in _neighboursArray) {

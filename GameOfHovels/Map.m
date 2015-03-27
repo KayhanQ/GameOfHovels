@@ -63,7 +63,10 @@
         [self makeBasicMap];
         [self setNeighbours];
         [self createRandomMap: _messageLayer.players];
-        [self initializePlayerLocations];
+        //[self initializePlayerLocations];
+        
+        [self initializePlayerLocations2];
+        
         
         //[self makePlayer1Tiles: _messageLayer.players[0]];
         //[self makePlayer2Tiles: _messageLayer.players[1]];
@@ -208,6 +211,80 @@
         }
     }
 }
+
+//returns list of all connected tiles in same region
+- (NSMutableArray*)getConnectedTilesByColor:(Tile*)tile
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:tile];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameColor]) {
+            if (nTile.visitedBySearch) continue;
+            nTile.visitedBySearch = true;
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return searchTiles;
+}
+
+- (void)initializePlayerLocations2
+{
+    
+    Tile* currentTile;
+    DKQueue* queue = [[DKQueue alloc] init];
+    int currentColor;// =0;
+    int index;
+   
+    NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
+    NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
+    
+    for (__strong Tile* t in _tilesSprite) {
+     
+     
+        if (t.pColor == NOCOLOR) continue;
+        if([t hasVillage] != YES){
+        
+        currentColor = [t pColor];
+        GamePlayer* curPlayer = _messageLayer.players[currentColor-1];
+        connectedTiles= [self getConnectedTilesByColor: t];
+        
+        if([connectedTiles count] < 3 && t.pColor != NOCOLOR){
+            
+            for(Tile* tile in connectedTiles){
+                
+                [tile makeNeutral];
+                
+            }
+        }
+    
+        else {
+            
+            Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
+            [s addVillage:HOVEL];
+            Tile* villageTile = s;
+            s.village.player = curPlayer;
+            [s setPColor: currentColor];
+            s.village = villageTile.village;
+            [s setPColor: villageTile.village.player.pColor];
+            
+            for(Tile* tile in connectedTiles){
+                
+                tile.village = s.village;
+                
+            }
+
+            
+        }
+    }
+    }
+}
+
+
+
 
 
 - (void)makeTreesAndMeadows
