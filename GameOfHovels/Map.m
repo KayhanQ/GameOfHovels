@@ -183,7 +183,7 @@
         currentTile = t;
         currentColor = [currentTile getPColor];
         
-       
+        if(![currentTile getVisited]){
 
         [queue enqueue:currentTile];
         
@@ -192,9 +192,12 @@
         //[connectedTiles addObject:currentTile];
 
         while(![queue isEmpty]){
+            
             currentTile = [queue dequeue];
             
+            if(![connectedTiles containsObject:t]) {
             [t addToConnectedArray:currentTile];
+               }
             //[connectedTiles addObject:currentTile ];
             tileNeighbours = [currentTile getNeighbours];
             
@@ -211,23 +214,23 @@
         connectedTiles = [t getConnectedArray];
         numConnected = [connectedTiles count];
         
-        
-        //adding hovels goes here I think.
         for(Tile* tile in connectedTiles){ //set all the connected tiles to have the array of the connected
-            // [tile setPColor:NOCOLOR];
-            //[tile setPColor: currentColor];
-            
             [tile setConnectedArray:connectedTiles]; // DO I WANT TO GIVE EACH AN ARRAY OF WHAT IT IS CONNECTED TO
-            //[tile setVisited: YES]
             [tile setConnected:numConnected];
         }
         //[currentTile setConnected:[connectedTiles count]];
         
         if(numConnected < 3){
             for(Tile* tile in connectedTiles){
-                    [tile setPColor:NOCOLOR];
+                
+
+                [tile setPColor:NOCOLOR];
                     [tile setConnected: 0];
+                
+            
             }
+            [connectedTiles removeAllObjects];
+            
         }
         
         else {
@@ -236,7 +239,7 @@
             
               [tile setPColor: currentColor];
             
-              [tile setVisited: YES];
+            //  [tile setVisited: YES];
             
             }
             
@@ -257,9 +260,9 @@
              [s setPColor: villageTile.village.player.pColor];
             
              }
-             */
+            */
         }
-        //[connectedTiles removeAllObjects];
+    }
     }
 }
 
