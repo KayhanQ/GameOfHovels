@@ -25,8 +25,8 @@
         SPJuggler* juggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
 
         
-        SPTextureAtlas *atlas = [SPTextureAtlas atlasWithContentsOfFile:@"archer.xml"];
-        NSArray*textures = [atlas texturesStartingWith:@"talking"];
+        SPTextureAtlas *atlas = [SPTextureAtlas atlasWithContentsOfFile:@"knight.xml"];
+        NSArray*textures = [atlas texturesStartingWith:@"paused s"];
         
         SPMovieClip* movie = [[SPMovieClip alloc] initWithFrames:textures fps:10];
         
