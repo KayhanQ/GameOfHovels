@@ -18,8 +18,7 @@
     enum TileNeighbours {TopRight = 0, Right, BottomRight, BottomLeft, Left, TopLeft};
 
 }
-@property (nonatomic) int connected;
-@property (nonatomic) BOOL visited;
+
 @property (nonatomic, readonly) SPImage* baseImage;
 @property (nonatomic) Unit* unit;
 @property (nonatomic) Village* village;
@@ -50,18 +49,6 @@
 - (BOOL)hasVillage;
 - (BOOL)isVillage;
 
-//brendan added
-- (void)setPColor:(enum PlayerColor)pColor;
-- (int)getPColor;
--(BOOL)getVisited;
--(void)setVisited:(BOOL)visited;
--(int)getConnected; // for testing connected tiles
--(void)setConnected:(int)connected:(int)connected;
--(NSMutableArray*)getConnectedArray; // for testing connected tiles
--(void)setConnectedArray:(NSMutableArray*)connectedArray;
--(void)addToConnectedArray:(Tile*)tile;
-
-- (NSMutableArray*)getNeighboursOfSameColor;
 
 - (void)addUnitWithType:(enum UnitType)uType;
 - (void)addUnit:(Unit*)unit;

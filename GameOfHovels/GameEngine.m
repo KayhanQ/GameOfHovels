@@ -267,9 +267,8 @@
     if (_mePlayer != _currentPlayer) {
         return;
     }
-     Tile* tile = event.tile;
-      NSLog(@"Tile at position %f, %f touched and has %d connected tiles of the same color according to property. %d According to method . Has it been visited? %d", tile.x/54, tile.y/40, [tile getConnected],  [[tile getConnectedArray] count], [tile getVisited]);
-    
+    NSLog(@"Tile touched");
+    Tile* tile = event.tile;
     Tile* selectedTile = _currentPlayerAction.selectedTile;
     [selectedTile deselectTile];
     
