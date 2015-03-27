@@ -499,6 +499,11 @@
     [_structuresSprite addChild:g atIndex:0];
 }
 
+- (int)getPColor
+{
+    return _pColor;
+}
+
 - (void)selectTile
 {
     _selectionLayer.alpha = 0.5;
