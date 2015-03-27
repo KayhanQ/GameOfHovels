@@ -18,7 +18,6 @@
     
     int _turnsInWS;
     
-    
 }
 
 //@synthesize tile = _tile;
@@ -62,7 +61,7 @@
                 _buyCostGold = 20;
                 _upkeepCost = 6;
                 _stamina = 10;
-                
+                break;
             }
             case SOLDIER:
             {
@@ -70,7 +69,7 @@
                 _buyCostGold = 30;
                 _upkeepCost = 18;
                 _stamina = 10;
-                
+                break;
             }
             case RITTER:
             {
@@ -78,7 +77,7 @@
                 _buyCostGold = 40;
                 _upkeepCost = 54;
                 _stamina = 10;
-                
+                break;
             }
             case CANNON:
             {
@@ -87,7 +86,7 @@
                 _buyCostGold = 35;
                 _upkeepCost = 5;
                 _stamina = 1;
-                
+                break;
             }
             default:
                 break;
@@ -136,27 +135,17 @@
     }
 }
 
-- (BOOL)canMoveToEnemyTile
+- (BOOL)canMoveToEnemyTile:(Tile *)tile
 {
-    BOOL movePossible = true;
-    switch (_uType) {
-        case PEASANT:
-        {
-            movePossible = false;
-            break;
-        }
-        case CANNON:
-        {
-            movePossible = false;
-            break;
-        }
-        default:
-            break;
+    if (_uType == PEASANT || _uType == CANNON) return false;
+
+    if ([tile hasUnit]) {
+        if (tile.unit.strength >= self.strength) return false;
     }
-    return movePossible;
+    return true;
 }
 
-- (BOOL)canChopTree
+- (BOOL)canChopBaum
 {
     BOOL possible = false;
     if (_uType == PEASANT || _uType == INFANTRY) possible = true;

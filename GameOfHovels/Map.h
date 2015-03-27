@@ -59,7 +59,6 @@
 
 - (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile;
 
-- (void)chopTree:(Tile*)tile;
 - (void)buildMeadow:(Tile*)tile;
 - (void)buildRoad:(Tile*)tile;
 

@@ -246,8 +246,7 @@
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
     BOOL actionPossible = true;
-    
-    
+
     if ([self isMyTurn]) {
         //if (tileVillage.woodPile<8) actionPossible = false;
     }
@@ -255,7 +254,7 @@
     if (actionPossible == false) {
         return;
     }
-    NSLog(@"updating village");
+
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
@@ -308,45 +307,48 @@
 - (BOOL)isMovePossible:(Tile*)unitTile tile:(Tile*)destTile moveTypes:(NSMutableArray*)moveTypes
 {
     Unit* unit = unitTile.unit;
-
-    BOOL movePossible = true;
     
     //Basic checks for game logic
     if (![self isMyTurn]) return false;
-    if (!unit.movable) movePossible = false;
-    if ([unitTile neighboursContainTile:destTile] == false) movePossible = false;
-    if (unit.distTravelled == unit.stamina) movePossible = false;
+    if (!unit.movable) return false;
+    if ([unitTile neighboursContainTile:destTile] == false) return false;
+    if (unit.distTravelled == unit.stamina) return false;
 
     for (NSNumber* n in moveTypes) {
         enum MovesType mType = [n intValue];
         switch (mType) {
             case TOOWNVILLAGE:
             {
-                movePossible = false;
+                return false;
                 break;
             }
             case TOOWNUNIT:
             {
-                if (unit.uType + destTile.unit.uType > 5) movePossible = false;
+                if (unit.uType + destTile.unit.uType > 5) return false;
                 break;
             }
             case TOENEMYTILE:
             {
-                movePossible = [unit canMoveToEnemyTile];
+                
+                if (![unit canMoveToEnemyTile:destTile]) return false;
                 for (Tile* eTile in [self getTilesForEnemyUnitsProtectingTile:destTile]) {
-                    if (eTile.unit.uType >= unit.uType) movePossible = false;
+                    if (eTile.unit.strength >= unit.strength) return false;
                 }
-                if ([destTile isVillage]) movePossible = [destTile.village canBeConqueredByUnit:unit];
+                for (Tile* eTile in [self getTilesForVillagesProtectingTile:destTile]) {
+                    if (eTile.village.strength >= unit.strength) return false;
+                }
+                if ([destTile isVillage])
+                    if (![destTile.village canBeConqueredByUnit:unit]) return false;
                 break;
             }
             case TOBAUM:
             {
-                movePossible = [unit canChopTree];
+                if (![unit canChopBaum]) return false;
                 break;
             }
             case TOTOMBSTONE:
             {
-                movePossible = [unit canClearTombstone];
+                if (![unit canClearTombstone]) return false;
                 break;
             }
             default:
@@ -354,7 +356,7 @@
         }
     }
     
-    return movePossible;
+    return true;
 }
 
 - (NSMutableArray*)getMoveTypesForMove:(Tile*)unitTile tile:(Tile*)destTile
@@ -389,9 +391,8 @@
         [Media playSound:@"sound.caf"];
         return;
     }
-    
+
     //We now have the assurance that simply making the move will not violate any rules.
-    //if the move is possible we continue here
     BOOL mergingUnits = false;
 
     for (NSNumber* n in moveTypes) {
@@ -399,7 +400,7 @@
         switch (mType) {
             case TOBAUM:
             {
-                [self chopTree:destTile];
+                [self chopBaum:destTile];
                 break;
             }
             case TOMEADOW:
@@ -472,11 +473,20 @@
         Tile* unitVillageTile = [self getVillageTile:uVillage];
         Tile* mVillageTile = [self getVillageTile:mVillage];
 
-        [unitVillageTile mergeVillageBySwallowing:mVillage];
-        [mVillageTile removeVillage];
         
-        Village* newUVillage = unitVillageTile.village;
-        mVillageTile.village = newUVillage;
+        Village* newUVillage;
+        if ([uVillage isHigherThan:mVillage]) {
+            [unitVillageTile mergeVillageBySwallowing:mVillage];
+            [mVillageTile removeVillage];
+            newUVillage = unitVillageTile.village;
+            mVillageTile.village = newUVillage;
+        }
+        else {
+            [mVillageTile mergeVillageBySwallowing:uVillage];
+            [unitVillageTile removeVillage];
+            newUVillage = mVillageTile.village;
+            unitVillageTile.village = newUVillage;
+        }
         
         for (Tile* t in [self getTilesforVillage:uVillage]) {
             t.village = newUVillage;
@@ -525,6 +535,9 @@
     if (takingOverEnemyVillage) {
         [unitTile.village transferSuppliesFrom:enemyPlayersVillage];
         [destTile removeVillage];
+    }
+    if ([destTile hasUnit]) {
+        [destTile removeUnit];
     }
     destTile.village = unitTile.village;
 
@@ -681,7 +694,7 @@
     for (Tile* t in region) [t makeNeutral];
 }
 
-- (void)chopTree:(Tile*)tile
+- (void)chopBaum:(Tile*)tile
 {
     [tile removeStructure];
     if ([self isMyTurn]) {
@@ -932,6 +945,21 @@
         }
     }
     return eUnitTiles;
+}
+
+//returns the enemy Villages that protect a tile
+- (NSMutableArray*)getTilesForVillagesProtectingTile:(Tile*)tile
+{
+    NSMutableArray* vUnitTiles = [NSMutableArray array];
+    GamePlayer* ePlayer = tile.village.player;
+    for (Tile* nTile in [tile getNeighbours]) {
+        if (nTile.village.player == ePlayer) {
+            if ([nTile isVillage]) {
+                if ([nTile.village protectsRegion]) [vUnitTiles addObject:nTile];
+            }
+        }
+    }
+    return vUnitTiles;
 }
 
 - (BOOL)isMyTurn
