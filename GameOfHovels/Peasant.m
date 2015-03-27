@@ -25,23 +25,24 @@
         
         
         SPTextureAtlas *atlas = [SPTextureAtlas atlasWithContentsOfFile:@"peasant.xml"];
-        NSArray*textures = [atlas texturesStartingWith:@"felling tree e"];
         
-        SPMovieClip* movie = [[SPMovieClip alloc] initWithFrames:textures fps:10];
-        [SparrowHelper centerPivot:movie];
-        movie.scale = 0.65;
-        [self addChild:movie];
+        NSArray*idleTextures = [atlas texturesStartingWith:@"talking without axe"];
+        _idleMovie = [[SPMovieClip alloc] initWithFrames:idleTextures fps:10];
+        [SparrowHelper centerPivot:_idleMovie];
+        _idleMovie.scale = 0.65;
+        [self addChild:_idleMovie];
+        [_idleMovie play];
+        [juggler addObject:_idleMovie];
         
-        [movie play];
-        [juggler addObject:movie];
+        //repeat this block of code for all other animations
+        NSArray*walkTextures = [atlas texturesStartingWith:@"walking without axe"];
+        _walkMovie = [[SPMovieClip alloc] initWithFrames:walkTextures fps:10];
+        [SparrowHelper centerPivot:_walkMovie];
+        _walkMovie.scale = 0.65;
+        _walkMovie.visible = NO;
+        [self addChild:_walkMovie];
+
         
-        /*
-        SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"peasant.png"];
-        SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.5;
-        [self addChild:baseImage];
-        [SparrowHelper centerPivot:self];
-         */
     }
     return self;
 }

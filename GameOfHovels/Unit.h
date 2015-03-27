@@ -14,6 +14,13 @@
 @interface Unit : BasicSprite {
     enum UnitType {PEASANT = 1, INFANTRY, SOLDIER, RITTER, CANNON};
     enum WorkState {NOWORKSTATE = 0, BUILDINGMEADOW, BUILDINGROAD};
+    enum AnimationType {IDLE = 0, CHOPPINGBAUM, BUILDING, ATTACKING};
+    
+    SPMovieClip* _idleMovie;
+    SPMovieClip* _attackMovie;
+    SPMovieClip* _walkMovie;
+    SPMovieClip* _getHitMovie;
+
 }
 
 
@@ -36,8 +43,8 @@
 - (id)initWithUnitType: (enum UnitType) uType;
 - (void)incrementWorkstate;
 - (void)setWorkState:(enum WorkState)workState;
-- (BOOL)canMoveToEnemyTile;
-- (BOOL)canChopTree;
+- (BOOL)canMoveToEnemyTile:(Tile*)tile;
+- (BOOL)canChopBaum;
 - (BOOL)canClearTombstone;
 - (BOOL)tramplesMeadow;
 - (void)transferPropertiesFrom:(Unit*)u;

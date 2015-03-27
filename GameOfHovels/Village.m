@@ -20,6 +20,9 @@
 @synthesize woodPile = _woodPile;
 @synthesize goldPile = _goldPile;
 @synthesize cost = _cost;
+@synthesize upkeep = _upkeep;
+@synthesize health = _health;
+@synthesize strength = _strength;
 
 -(id)initWithStructureType:(enum VillageType)vType
 {
@@ -31,17 +34,32 @@
             case HOVEL:
             {
                 _cost = 0;
+                _upkeep = 0;
+                _health = 1;
                 break;
                 
             }
             case TOWN:
             {
                 _cost = 8;
+                _upkeep = 0;
+                _health = 2;
                 break;
             }
             case FORT:
             {
                 _cost = 8;
+                _upkeep = 0;
+                _health = 5;
+                _strength = 3;
+                break;
+            }
+            case CASTLE:
+            {
+                _cost = 12;
+                _upkeep = 80;
+                _health = 10;
+                _strength = 5;
                 break;
             }
             default:
@@ -113,13 +131,21 @@
 {
     _woodPile += village.woodPile;
     _goldPile += village.goldPile;
+    _health += village.health;
     village.woodPile = 0;
     village.goldPile = 0;
+    village.health = 0;
 }
 
 - (BOOL)isSameAs:(Village*)v
 {
     if (self == v) return true;
+    return false;
+}
+
+- (BOOL)protectsRegion
+{
+    if (_vType == FORT || _vType == CASTLE) return true;
     return false;
 }
 

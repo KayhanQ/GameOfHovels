@@ -14,7 +14,7 @@
 
 @interface Village : BasicSprite {
     
-    enum VillageType {HOVEL = 1, TOWN, FORT};
+    enum VillageType {HOVEL = 1, TOWN, FORT, CASTLE};
     
 }
 
@@ -24,6 +24,9 @@
 @property (nonatomic) int woodPile;
 @property (nonatomic) int goldPile;
 @property (nonatomic) int cost;
+@property (nonatomic) int health;
+@property (nonatomic, readonly) int upkeep;
+@property (nonatomic, readonly) int strength;
 
 - (id)initWithStructureType:(enum VillageType)vType;
 - (BOOL)isSameAs:(Village*)v;
@@ -31,5 +34,6 @@
 - (void)transferSuppliesFrom:(Village*)village;
 - (BOOL)canSupportUnit:(Unit*)unit;
 - (BOOL)canBeConqueredByUnit:(Unit*)unit;
+- (BOOL)protectsRegion;
 
 @end
