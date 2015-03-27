@@ -183,11 +183,13 @@
             newUnit = [[Ritter alloc] initWithTile:self];
             break;
         }
+        /*
         case CANNON:
         {
             newUnit = [[Cannon alloc] initWithTile:self];
             break;
         }
+         */
         default:
             break;
     }

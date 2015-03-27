@@ -79,6 +79,7 @@
                 _stamina = 10;
                 break;
             }
+           /*
             case CANNON:
             {
                 _strength = 5;
@@ -88,6 +89,7 @@
                 _stamina = 1;
                 break;
             }
+            */
             default:
                 break;
         }
@@ -137,7 +139,7 @@
 
 - (BOOL)canMoveToEnemyTile:(Tile *)tile
 {
-    if (_uType == PEASANT || _uType == CANNON) return false;
+    if (_uType == PEASANT) return false;// || _uType == CANNON) return false;
 
     if ([tile hasUnit]) {
         if (tile.unit.strength >= self.strength) return false;
@@ -162,7 +164,7 @@
 - (BOOL)tramplesMeadow
 {
     BOOL tramples = false;
-    if (_uType == SOLDIER || _uType == RITTER || _uType == CANNON) tramples = true;
+    if (_uType == SOLDIER || _uType == RITTER) tramples = true; //|| _uType == CANNON) tramples = true;
     return tramples;
 }
 
