@@ -243,7 +243,6 @@
             
             }
             
-            /*
              
              if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
              
@@ -260,7 +259,6 @@
              [s setPColor: villageTile.village.player.pColor];
             
              }
-            */
         }
     }
     }
