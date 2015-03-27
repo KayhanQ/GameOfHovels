@@ -70,6 +70,8 @@
         
         _neighboursArray = [[NSMutableArray alloc] initWithCapacity:6];
         
+        _connectedArray = [[NSMutableArray alloc] init];
+        
         _unit = nil;
         _village = nil;
         _pColor = NOCOLOR;
@@ -321,9 +323,17 @@
     return _connectedArray;
 }
 
-- (void)setConnectedArray:(NSMutableArray*)connectedArray
+- (void)addToConnectedArray:(Tile*)tile//(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
+{
+    
+    [_connectedArray addObject:tile];
+    
+}
+
+- (void)setConnectedArray:(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
 {
     _connectedArray = connectedArray;
+    
 }
 
 

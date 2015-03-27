@@ -65,11 +65,13 @@
         
         [self setNeighbours];
         
-        [self initializePlayerLocations];
         
         //[self makePlayer1Tiles: _messageLayer.players[0]];
         //[self makePlayer2Tiles: _messageLayer.players[1]];
 
+        
+        [self initializePlayerLocations];
+        
         [self addTrees];
         [self addMeadows];
    //     [self makeTreesAndMeadows];
@@ -173,85 +175,69 @@
     Tile* currentTile;
     DKQueue* queue = [[DKQueue alloc] init];
     int currentColor;// =0;
+    int numConnected;
     NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
     NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
     
-    
     for (__strong Tile* t in _tilesSprite) {
-    
         currentTile = t;
         currentColor = [currentTile getPColor];
         
-        //[queue enqueue:t];
+       
+
         [queue enqueue:currentTile];
         
         [currentTile setVisited: YES];
-        [connectedTiles addObject:currentTile];
         
+        //[connectedTiles addObject:currentTile];
+
         while(![queue isEmpty]){
-            
             currentTile = [queue dequeue];
-           
             //[connectedTiles addObject:currentTile ];
-            
-            
             tileNeighbours = [currentTile getNeighbours];
             
             for(Tile *neighbour in tileNeighbours){
-                
                 if([neighbour getVisited] != YES && [neighbour pColor] == currentColor ){
-                    
                     //[connectedTiles addObject:currentTile ];
-                    
-                    [queue enqueue: neighbour];
+                    [t addToConnectedArray:neighbour];
                     [neighbour setVisited:YES];
-                    [connectedTiles addObject:neighbour];
-                    
+                    [queue enqueue: neighbour];
                     
                 }
-                
             }
-            
-            
-            
         }
+        connectedTiles = [t getConnectedArray];
+        numConnected = [connectedTiles count];
+        
         
         //adding hovels goes here I think.
-       
-       
-        for(Tile* tile in connectedTiles){
+        for(Tile* tile in connectedTiles){ //set all the connected tiles to have the array of the connected
             // [tile setPColor:NOCOLOR];
             //[tile setPColor: currentColor];
-            [tile setConnectedArray:connectedTiles];
             
+            [tile setConnectedArray:connectedTiles]; // DO I WANT TO GIVE EACH AN ARRAY OF WHAT IT IS CONNECTED TO
             //[tile setVisited: YES]
+            [tile setConnected:numConnected];
         }
+        //[currentTile setConnected:[connectedTiles count]];
         
-        
-        [currentTile setConnected:[connectedTiles count]];
-        
-        if([connectedTiles count] < 3){
-            
+        if(numConnected < 3){
             for(Tile* tile in connectedTiles){
-                       // [tile setPColor:NOCOLOR];
-                //[tile setVisited: YES]
+                    [tile setPColor:NOCOLOR];
             }
-            
-            //   [connectedTiles removeAllObjects];
-            
         }
         
         else {
             for(Tile* tile in connectedTiles){
                 // [tile setPColor:NOCOLOR];
-                [tile setPColor: currentColor];
-                [tile setConnectedArray:connectedTiles];
+                //[tile setPColor: currentColor];
                 
+                // PROBLEM -- MAYBE ONCE WE CLEAR THE ARRAY OF OBJECTS, IT HAS PLENTY. THERE IT IS.
+//[tile setConnectedArray:connectedTiles];
+        
                 //[tile setVisited: YES]
             }
-
-            
-            
+     
             //for(Tile* tile in connectedTiles){
             
             //  [tile setPColor: currentColor];
@@ -275,22 +261,12 @@
              
              s.village = villageTile.village;
              [s setPColor: villageTile.village.player.pColor];
-             
-             
-             
+            
              }
              */
-            
         }
-        [connectedTiles removeAllObjects];
-
-        
-        
+        //[connectedTiles removeAllObjects];
     }
-    
-    
-    
-    
 }
 
 

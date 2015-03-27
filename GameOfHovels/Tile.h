@@ -51,6 +51,7 @@
 
 -(NSMutableArray*)getConnectedArray; // for testing connected tiles
 -(void)setConnectedArray:(NSMutableArray*)connectedArray;
+-(void)addToConnectedArray:(Tile*)tile;
 
 
 
