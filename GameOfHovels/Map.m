@@ -156,21 +156,8 @@
 }
 
 
-- (void)initializePlayerLocations //going to do a basic dfs on each of the tiles.
-{ // I NEED BREADTH FIRST SEARCH. A DOY!
-    /*
-     1  procedure BFS(G,v) is
-     2      let Q be a queue
-     3      Q.push(v)
-     4      label v as discovered
-     5      while Q is not empty
-     6         v ← Q.pop()
-     7         for all edges from v to w in G.adjacentEdges(v) do
-     8             if w is not labeled as discovered
-     9                 Q.push(w)
-     10                label w as discovered
-     */
-    
+- (void)initializePlayerLocations
+{
     
     Tile* currentTile;
     DKQueue* queue = [[DKQueue alloc] init];
@@ -186,10 +173,7 @@
         if(![currentTile getVisited]){
 
         [queue enqueue:currentTile];
-        
         [currentTile setVisited: YES];
-        
-        //[connectedTiles addObject:currentTile];
 
         while(![queue isEmpty]){
             
@@ -198,13 +182,12 @@
             if(![connectedTiles containsObject:t]) {
             [t addToConnectedArray:currentTile];
                }
-            //[connectedTiles addObject:currentTile ];
+            
             tileNeighbours = [currentTile getNeighbours];
             
             for(Tile *neighbour in tileNeighbours){
                 if([neighbour getVisited] != YES && [neighbour pColor] == currentColor ){
                     
-                    //[t addToConnectedArray:neighbour];
                     [neighbour setVisited:YES];
                     [queue enqueue: neighbour];
                     
@@ -218,44 +201,32 @@
             [tile setConnectedArray:connectedTiles]; // DO I WANT TO GIVE EACH AN ARRAY OF WHAT IT IS CONNECTED TO
             [tile setConnected:numConnected];
         }
-        //[currentTile setConnected:[connectedTiles count]];
         
         if(numConnected < 3){
             for(Tile* tile in connectedTiles){
                 
-
                 [tile setPColor:NOCOLOR];
                     [tile setConnected: 0];
-                
             
             }
             [connectedTiles removeAllObjects];
-            
         }
         
         else {
      
             for(Tile* tile in connectedTiles){
-            
-              [tile setPColor: currentColor];
-            
-            //  [tile setVisited: YES];
+                [tile setPColor: currentColor];
             
             }
-            
-             
+ 
              if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
              
              Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
              [s addVillage:HOVEL];
-             
              Tile* villageTile = s;
-             
-             
              s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
              [s setPColor: currentColor];
-             
-             s.village = villageTile.village;
+              s.village = villageTile.village;
              [s setPColor: villageTile.village.player.pColor];
             
              }
