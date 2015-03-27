@@ -193,13 +193,15 @@
 
         while(![queue isEmpty]){
             currentTile = [queue dequeue];
+            
+            [t addToConnectedArray:currentTile];
             //[connectedTiles addObject:currentTile ];
             tileNeighbours = [currentTile getNeighbours];
             
             for(Tile *neighbour in tileNeighbours){
                 if([neighbour getVisited] != YES && [neighbour pColor] == currentColor ){
-                    //[connectedTiles addObject:currentTile ];
-                    [t addToConnectedArray:neighbour];
+                    
+                    //[t addToConnectedArray:neighbour];
                     [neighbour setVisited:YES];
                     [queue enqueue: neighbour];
                     
@@ -224,27 +226,19 @@
         if(numConnected < 3){
             for(Tile* tile in connectedTiles){
                     [tile setPColor:NOCOLOR];
+                    [tile setConnected: 0];
             }
         }
         
         else {
-            for(Tile* tile in connectedTiles){
-                // [tile setPColor:NOCOLOR];
-                //[tile setPColor: currentColor];
-                
-                // PROBLEM -- MAYBE ONCE WE CLEAR THE ARRAY OF OBJECTS, IT HAS PLENTY. THERE IT IS.
-//[tile setConnectedArray:connectedTiles];
-        
-                //[tile setVisited: YES]
-            }
      
-            //for(Tile* tile in connectedTiles){
+            for(Tile* tile in connectedTiles){
             
-            //  [tile setPColor: currentColor];
+              [tile setPColor: currentColor];
             
-            //[tile setVisited: YES];
+              [tile setVisited: YES];
             
-            //}
+            }
             
             /*
              
