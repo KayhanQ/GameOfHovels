@@ -36,12 +36,13 @@
         _player = player;
         
         
-        _height = 380;
-        _width = 130;
+        _height = 385;
+        _width = 140;
 
         _yOffsetMinor = 3;
         
         
+<<<<<<< HEAD
         //SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
         //background.color = 0xcccccc;
         
@@ -49,6 +50,14 @@
         
         background.width = _width;
         background.height = _height + 4;
+=======
+       // SPQuad* background = [SPQuad quadWithWidth:_width height: _height]; //original
+        //background.color = 0xcccccc;
+             
+        SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
+        background.width = _width;
+        background.height = _height;
+>>>>>>> parent of 022fb7d... Revert "Merge remote-tracking branch 'origin/master'"
         
         [self addChild:background];
         
