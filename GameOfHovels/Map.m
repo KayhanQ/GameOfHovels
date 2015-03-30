@@ -746,7 +746,8 @@
 {
     [self treeGrowthPhase];
     [self buildPhase];
-    
+    [self incomePhase];
+    //[self paymentPhase];
     
 }
 
