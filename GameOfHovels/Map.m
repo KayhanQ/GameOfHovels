@@ -21,8 +21,6 @@
 #import "MessageLayer.h"
 #import "GameEngine.h"
 #import "SparrowHelper.h"
-#import "DKStack.h"
-#import "DKQueue.h"
 
 @implementation Map {
     MessageLayer* _messageLayer;
@@ -62,14 +60,8 @@
         
         [self makeBasicMap];
         [self setNeighbours];
-        [self createRandomMap: _messageLayer.players];
-        //[self initializePlayerLocations];
-        
-        [self initializePlayerLocations2];
-        
-        
-        //[self makePlayer1Tiles: _messageLayer.players[0]];
-        //[self makePlayer2Tiles: _messageLayer.players[1]];
+        [self makePlayer1Tiles: _messageLayer.players[0]];
+        [self makePlayer2Tiles: _messageLayer.players[1]];
 
         //[self addTrees];
         //[self addMeadows];
@@ -92,200 +84,6 @@
         }
     }
 }
-
-- (void)createRandomMap:(NSMutableArray*)players
-{
-    
-    for (Tile* t in _tilesSprite) {
-        
-        int randomColor = arc4random_uniform([players count] + 1);
-        
-        if(t.getStructureType != ROAD){
-            switch (randomColor) {
-                case 0:
-                {
-                    //NSLog(@"Neutral Tile assigned a colour");
-                    [t setPColor:NOCOLOR]; //set it to player1s color
-                    [t setVisited:YES];
-                    break;
-                }
-                case 1:
-                {
-                    //NSLog(@"Player1 Tile assigned a colour");
-                    [t setPColor: BLUE];
-                    break;
-                }
-                case 2:
-                {
-                    // NSLog(@"Player2 Tile assigned a colour");
-                    [t setPColor: RED];
-                    break;
-                    
-                }
-                    
-                    //can accomodate more players if Needed
-                default:
-                    NSLog(@"More players than we can account for");
-                    break;
-            }
-        }
-    }
-}
-
-
-- (void)initializePlayerLocations
-{
-    
-    Tile* currentTile;
-    DKQueue* queue = [[DKQueue alloc] init];
-    int currentColor;// =0;
-    int numConnected;
-    NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
-    NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
-    
-    for (__strong Tile* t in _tilesSprite) {
-        currentTile = t;
-        currentColor = [currentTile getPColor];
-        
-        if(![currentTile getVisited]){
-            
-            [queue enqueue:currentTile];
-            [currentTile setVisited: YES];
-            
-            while(![queue isEmpty]){
-                
-                currentTile = [queue dequeue];
-                
-                if(![connectedTiles containsObject:t]) {
-                    [t addToConnectedArray:currentTile];
-                }
-                
-                tileNeighbours = [currentTile getNeighbours];
-                
-                for(Tile *neighbour in tileNeighbours){
-                    if([neighbour getVisited] != YES && [neighbour pColor] == currentColor ){
-                        
-                        [neighbour setVisited:YES];
-                        [queue enqueue: neighbour];
-                        
-                    }
-                }
-            }
-            connectedTiles = [t getConnectedArray];
-            numConnected = [connectedTiles count];
-            
-            for(Tile* tile in connectedTiles){ //set all the connected tiles to have the array of the connected
-                [tile setConnectedArray:connectedTiles]; // DO I WANT TO GIVE EACH AN ARRAY OF WHAT IT IS CONNECTED TO
-                [tile setConnected:numConnected];
-            }
-            
-            if(numConnected < 3){
-                for(Tile* tile in connectedTiles){
-                    
-                    [tile setPColor:NOCOLOR];
-                    [tile setConnected: 0];
-                    
-                }
-                [connectedTiles removeAllObjects];
-            }
-            
-            else {
-                
-                for(Tile* tile in connectedTiles){
-                    [tile setPColor: currentColor];
-                    
-                }
-                
-                if(currentColor != NOCOLOR){ //problem is it does this for all. Get out of the loop.
-                    
-                    Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
-                    [s addVillage:HOVEL];
-                    Tile* villageTile = s;
-                    s.village.player = _messageLayer.players[currentColor-1]; //get player from colour
-                    [s setPColor: currentColor];
-                    s.village = villageTile.village;
-                    [s setPColor: villageTile.village.player.pColor];
-                    
-                }
-            }
-        }
-    }
-}
-
-//returns list of all connected tiles in same region
-- (NSMutableArray*)getConnectedTilesByColor:(Tile*)tile
-{
-    NSMutableArray* searchTiles = [NSMutableArray array];
-    [searchTiles addObject:tile];
-    
-    for (int i = 0; i < searchTiles.count; i++) {
-        Tile* sTile = [searchTiles objectAtIndex:i];
-        sTile.visitedBySearch = true;
-        for (Tile* nTile in [sTile getNeighboursOfSameColor]) {
-            if (nTile.visitedBySearch) continue;
-            nTile.visitedBySearch = true;
-            [searchTiles addObject:nTile];
-        }
-    }
-    [self resetVisitedBySearchFlags];
-    return searchTiles;
-}
-
-- (void)initializePlayerLocations2
-{
-    
-    Tile* currentTile;
-    DKQueue* queue = [[DKQueue alloc] init];
-    int currentColor;// =0;
-    int index;
-   
-    NSMutableArray* connectedTiles = [[NSMutableArray alloc] init];
-    NSMutableArray* tileNeighbours= [[NSMutableArray alloc] init];
-    
-    for (__strong Tile* t in _tilesSprite) {
-     
-     
-        if (t.pColor == NOCOLOR) continue;
-        if([t hasVillage] != YES){
-        
-        currentColor = [t pColor];
-        GamePlayer* curPlayer = _messageLayer.players[currentColor-1];
-        connectedTiles= [self getConnectedTilesByColor: t];
-        
-        if([connectedTiles count] < 3 && t.pColor != NOCOLOR){
-            
-            for(Tile* tile in connectedTiles){
-                
-                [tile makeNeutral];
-                
-            }
-        }
-    
-        else {
-            
-            Tile* s = [connectedTiles objectAtIndex:(arc4random_uniform([connectedTiles count]))];
-            [s addVillage:HOVEL];
-            Tile* villageTile = s;
-            s.village.player = curPlayer;
-            [s setPColor: currentColor];
-            s.village = villageTile.village;
-            [s setPColor: villageTile.village.player.pColor];
-            
-            for(Tile* tile in connectedTiles){
-                
-                tile.village = s.village;
-                
-            }
-
-            
-        }
-    }
-    }
-}
-
-
-
-
 
 - (void)makeTreesAndMeadows
 {
@@ -947,10 +745,9 @@
 - (void)beginTurnPhases
 {
     [self treeGrowthPhase];
-    [self tombstonePhase];
-    [self incomePhase];
-    [self paymentPhase];
     [self buildPhase];
+    
+    
 }
 
 - (void)treeGrowthPhase
@@ -973,16 +770,18 @@
     }
 }
 
-//Any tombstones on tiles owned by the player are replaced by trees
-- (void)tombstonePhase
+- (void)tombstonePhase //Any tombstones on tiles owned by the player are replaced by trees
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasTombstone]) {
+                
                 [t removeStructure];
                 [t addStructure:BAUM];
+                
             }
         }
+    
     }
 }
 
@@ -992,69 +791,75 @@
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
+            
             switch([t getStructureType]){
+                    
                 case MEADOW:
-                {
                     vTile.village.goldPile += 2;
                     break;
-                }
-                case GRASS:
-                {
+                    
+                case NONE:
                     vTile.village.goldPile += 1;
+                    
                     break;
-                }
+                    
                     default:
-                {
                     break;
-<<<<<<< HEAD
-                }
-=======
->>>>>>> parent of 022fb7d... Revert "Merge remote-tracking branch 'origin/master'"
+      
                     
             }
+            
+            
         }
     }
+
 }
 
 //also known as upkeep phase
-// Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
-- (void)paymentPhase
+- (void)paymentPhase // Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
 {
+    
     for (Tile* vTile in [self getTilesWithMyVillages]) {
-<<<<<<< HEAD
-        if(vTile.village.goldPile < 0) {
-            [self killAllVillagers: vTile];
-=======
         
         if(vTile.village.goldPile < 0){
-            [self killAllVillagers:vTile];
->>>>>>> parent of 022fb7d... Revert "Merge remote-tracking branch 'origin/master'"
+            
+            //[vTile killAllVillagers];
             break;
+            
         }
         
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
-<<<<<<< HEAD
-            if([t hasUnit]) {
-                vTile.village.goldPile -= t.unit.upkeepCost;
-=======
             
             if([t hasUnit]){
+                
                 vTile.village.goldPile -= t.unit.upkeepCost;
-            
->>>>>>> parent of 022fb7d... Revert "Merge remote-tracking branch 'origin/master'"
+                
+              
+                
             }
+            
+            
+            
         }
     }
+    
+    
 }
 
--(void)killAllVillagers:(Tile*)villageTile;
+-(void)killAllVillagers:(Tile*)village;
 {
-    for (Tile* t in [self getTilesforVillage:villageTile.village]){
-        if([t hasUnit]){
-            [t removeUnit];
-            [t addStructure:TOMBSTONE];
+ 
+        for (Tile* t in [self getTilesforVillage:village.village]){
+        
+            if([t hasUnit]){
+                [t removeUnit];
+                [t addStructure:TOMBSTONE];
+                
+            }
+            
         }
-    }
+            
+    
 }
 
 - (void)buildPhase

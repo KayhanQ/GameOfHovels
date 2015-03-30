@@ -36,55 +36,27 @@
         _player = player;
         
         
-        _height = 385;
-        _width = 140;
+        _height = 380;
+        _width = 130;
 
         _yOffsetMinor = 3;
         
         
-<<<<<<< HEAD
-        //SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
-        //background.color = 0xcccccc;
-        
-        SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
-        
-        background.width = _width;
-        background.height = _height + 4;
-=======
-       // SPQuad* background = [SPQuad quadWithWidth:_width height: _height]; //original
-        //background.color = 0xcccccc;
-             
-        SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
-        background.width = _width;
-        background.height = _height;
->>>>>>> parent of 022fb7d... Revert "Merge remote-tracking branch 'origin/master'"
-        
+        SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
+        background.color = 0xcccccc;
         [self addChild:background];
         
         _middleX = _width/2;
         
-       // SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
-        
+        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
         _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
-        
-        _endTurnButton.height = 40; //Just Some magic number
-        _endTurnButton.width = 100;
-        
-       // _endTurnButton.text = @"End Turn";
+        _endTurnButton.text = @"End Turn";
         [SparrowHelper centerPivot:_endTurnButton];
-        
         _endTurnButton.x = _middleX;
         _endTurnButton.y = _height - _endTurnButton.height;
-        
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
-        //Show unit or structure type
-        // upkeep
-        // name
-        // random name -- THAT WOULD BE HILARIOUS -> random village names, random person names
-        
         
         _woodField = [self newTextField];
         _woodField.text = @"Wood: ";
@@ -103,7 +75,7 @@
 {
     SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
     t.x = _middleX;
-    //t.border = true;
+    t.border = true;
     [SparrowHelper centerPivot:t];
     return t;
 }

@@ -47,12 +47,8 @@
     
     NSMutableArray* _neighboursArray;
     NSTimer* _timer;
-    
-    NSMutableArray* _connectedArray;
 }
 
-@synthesize connected = _connected;
-@synthesize visited = _visited;
 @synthesize baseImage = _baseImage;
 @synthesize unit = _unit;
 @synthesize village = _village;
@@ -65,7 +61,6 @@
         //custom code here
         
         _neighboursArray = [[NSMutableArray alloc] initWithCapacity:6];
-        _connectedArray = [[NSMutableArray alloc] init];
         
         _unit = nil;
         _village = nil;
@@ -183,13 +178,11 @@
             newUnit = [[Ritter alloc] initWithTile:self];
             break;
         }
-        /*
         case CANNON:
         {
             newUnit = [[Cannon alloc] initWithTile:self];
             break;
         }
-         */
         default:
             break;
     }
@@ -335,46 +328,6 @@
 
 }
 
-//methods brendan added
-
-- (void)setVisited:(BOOL)visited
-{
-    _visited = visited;
-}
-
-- (BOOL)getVisited
-{
-    return _visited;
-}
-- (NSMutableArray*)getConnectedArray
-{
-    return _connectedArray;
-}
-
-- (void)addToConnectedArray:(Tile*)tile//(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
-{
-    [_connectedArray addObject:tile];
-}
-
-- (void)setConnectedArray:(NSMutableArray*)connectedArray //DO IT LIKE SET NEIGHBOURS
-{
-    _connectedArray = connectedArray;
-}
-
-//for connectedTile Testing
-- (void)setConnected:(int)connected
-{
-    _connected = connected;
-}
-
-- (int)getConnected
-{
-    return _connected;
-}
-
-
-
-
 //------------------------------
 //  NEIGHBOUR FUNCTIONS
 //------------------------------
@@ -400,15 +353,6 @@
     NSMutableArray* nTiles = [NSMutableArray array];
     for (Tile* nT in _neighboursArray) {
         if (_village.player == nT.village.player) [nTiles addObject:nT];
-    }
-    return nTiles;
-}
-
-- (NSMutableArray*)getNeighboursOfSameColor
-{
-    NSMutableArray* nTiles = [NSMutableArray array];
-    for (Tile* nT in _neighboursArray) {
-        if (_pColor == nT.pColor) [nTiles addObject:nT];
     }
     return nTiles;
 }
@@ -506,11 +450,6 @@
     [_structuresSprite removeChildAtIndex:0];
     Grass* g = [[Grass alloc] initWithTile:self];
     [_structuresSprite addChild:g atIndex:0];
-}
-
-- (int)getPColor
-{
-    return _pColor;
 }
 
 - (void)selectTile

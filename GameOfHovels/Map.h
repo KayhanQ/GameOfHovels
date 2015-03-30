@@ -33,6 +33,9 @@
 - (void)beginTurnPhases;
 - (void)buildPhase;
 
+
+
+
 -(BOOL)isMyTurn;
 
 - (void)treeGrowthPhase;
@@ -45,7 +48,7 @@
 - (NSMutableArray*)getTilesforVillage:(Village*)v;
 - (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile;
 - (NSMutableArray*)getTilesWithMyVillages;
--(void)killAllVillagers:(Tile*)village;
+
 
 
 
