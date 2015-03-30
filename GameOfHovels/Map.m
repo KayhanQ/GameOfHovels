@@ -745,11 +745,13 @@
 - (void)beginTurnPhases
 {
     [self treeGrowthPhase];
+    [self tombstonePhase];
+    [self incomePhase];
+    [self paymentPhase];
     [self buildPhase];
     
     
 }
-
 - (void)treeGrowthPhase
 {
     NSLog(@"Tree Growth Phase");
@@ -770,18 +772,16 @@
     }
 }
 
-- (void)tombstonePhase //Any tombstones on tiles owned by the player are replaced by trees
+//Any tombstones on tiles owned by the player are replaced by trees
+- (void)tombstonePhase
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasTombstone]) {
-                
                 [t removeStructure];
                 [t addStructure:BAUM];
-                
             }
         }
-    
     }
 }
 
@@ -791,75 +791,50 @@
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
-            
             switch([t getStructureType]){
-                    
                 case MEADOW:
+                {
                     vTile.village.goldPile += 2;
                     break;
-                    
-                case NONE:
+                }
+                default:
+                {
                     vTile.village.goldPile += 1;
-                    
                     break;
-                    
-                    default:
-                    break;
-      
+                }
                     
             }
-            
-            
         }
+        [self updateHud:vTile];
     }
-
 }
 
 //also known as upkeep phase
-- (void)paymentPhase // Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
+// Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
+- (void)paymentPhase
 {
-    
     for (Tile* vTile in [self getTilesWithMyVillages]) {
-        
-        if(vTile.village.goldPile < 0){
-            
-            //[vTile killAllVillagers];
-            break;
-            
-        }
-        
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
-            
-            if([t hasUnit]){
-                
+            if([t hasUnit]) {
                 vTile.village.goldPile -= t.unit.upkeepCost;
-                
-              
-                
-            }
-            
-            
-            
+           }
         }
+        if(vTile.village.goldPile < 0) {
+            [self killAllVillagers: vTile];
+            break;
+        }
+        [self updateHud:vTile];
     }
-    
-    
 }
 
--(void)killAllVillagers:(Tile*)village;
+-(void)killAllVillagers:(Tile*)villageTile;
 {
- 
-        for (Tile* t in [self getTilesforVillage:village.village]){
-        
-            if([t hasUnit]){
-                [t removeUnit];
-                [t addStructure:TOMBSTONE];
-                
-            }
-            
+    for (Tile* t in [self getTilesforVillage:villageTile.village]){
+        if([t hasUnit]){
+            [t removeUnit];
+            [t addStructure:TOMBSTONE];
         }
-            
-    
+    }
 }
 
 - (void)buildPhase
