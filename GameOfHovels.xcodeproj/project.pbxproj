@@ -8,7 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
+		C65C1F2F1AC6639800B5B3EA /* Cannon.m in Sources */ = {isa = PBXBuildFile; fileRef = C65C1F2C1AC6639800B5B3EA /* Cannon.m */; };
+		C65C1F301AC6639800B5B3EA /* Castle.m in Sources */ = {isa = PBXBuildFile; fileRef = C65C1F2E1AC6639800B5B3EA /* Castle.m */; };
 		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
+		C6B2D0551AC6611300F8D880 /* archer.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0441AC6611300F8D880 /* archer.png */; };
+		C6B2D0561AC6611300F8D880 /* archer.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0451AC6611300F8D880 /* archer.xml */; };
+		C6B2D0571AC6611300F8D880 /* atlas.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0461AC6611300F8D880 /* atlas.png */; };
+		C6B2D0581AC6611300F8D880 /* atlas.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0471AC6611300F8D880 /* atlas.xml */; };
+		C6B2D0591AC6611300F8D880 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0481AC6611300F8D880 /* background.jpg */; };
+		C6B2D05A1AC6611300F8D880 /* cannon.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0491AC6611300F8D880 /* cannon.png */; };
+		C6B2D05B1AC6611300F8D880 /* cannon.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04A1AC6611300F8D880 /* cannon.xml */; };
+		C6B2D05C1AC6611300F8D880 /* infantry.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04B1AC6611300F8D880 /* infantry.png */; };
+		C6B2D05D1AC6611300F8D880 /* infantry.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04C1AC6611300F8D880 /* infantry.xml */; };
+		C6B2D05E1AC6611300F8D880 /* knight.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04D1AC6611300F8D880 /* knight.png */; };
+		C6B2D05F1AC6611300F8D880 /* knight.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04E1AC6611300F8D880 /* knight.xml */; };
+		C6B2D0601AC6611300F8D880 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D04F1AC6611300F8D880 /* peasant.png */; };
+		C6B2D0611AC6611300F8D880 /* peasant.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0501AC6611300F8D880 /* peasant.xml */; };
+		C6B2D0621AC6611300F8D880 /* soldier.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0511AC6611300F8D880 /* soldier.png */; };
+		C6B2D0631AC6611300F8D880 /* soldier.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0521AC6611300F8D880 /* soldier.xml */; };
+		C6B2D0641AC6611300F8D880 /* tileset.png in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0531AC6611300F8D880 /* tileset.png */; };
+		C6B2D0651AC6611300F8D880 /* tileset.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6B2D0541AC6611300F8D880 /* tileset.xml */; };
+		C6F12F031AC8D9BB0006A959 /* hudpanel.png in Resources */ = {isa = PBXBuildFile; fileRef = C6F12F021AC8D9BB0006A959 /* hudpanel.png */; };
+		C6F12F051AC8DE6B0006A959 /* endturn.png in Resources */ = {isa = PBXBuildFile; fileRef = C6F12F041AC8DE6B0006A959 /* endturn.png */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -140,8 +161,31 @@
 
 /* Begin PBXFileReference section */
 		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
+		C65C1F2B1AC6639800B5B3EA /* Cannon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cannon.h; sourceTree = "<group>"; };
+		C65C1F2C1AC6639800B5B3EA /* Cannon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cannon.m; sourceTree = "<group>"; };
+		C65C1F2D1AC6639800B5B3EA /* Castle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Castle.h; sourceTree = "<group>"; };
+		C65C1F2E1AC6639800B5B3EA /* Castle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Castle.m; sourceTree = "<group>"; };
 		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
 		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
+		C6B2D0441AC6611300F8D880 /* archer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = archer.png; sourceTree = "<group>"; };
+		C6B2D0451AC6611300F8D880 /* archer.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = archer.xml; sourceTree = "<group>"; };
+		C6B2D0461AC6611300F8D880 /* atlas.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = atlas.png; sourceTree = "<group>"; };
+		C6B2D0471AC6611300F8D880 /* atlas.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = atlas.xml; sourceTree = "<group>"; };
+		C6B2D0481AC6611300F8D880 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
+		C6B2D0491AC6611300F8D880 /* cannon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cannon.png; sourceTree = "<group>"; };
+		C6B2D04A1AC6611300F8D880 /* cannon.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cannon.xml; sourceTree = "<group>"; };
+		C6B2D04B1AC6611300F8D880 /* infantry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infantry.png; sourceTree = "<group>"; };
+		C6B2D04C1AC6611300F8D880 /* infantry.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = infantry.xml; sourceTree = "<group>"; };
+		C6B2D04D1AC6611300F8D880 /* knight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knight.png; sourceTree = "<group>"; };
+		C6B2D04E1AC6611300F8D880 /* knight.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = knight.xml; sourceTree = "<group>"; };
+		C6B2D04F1AC6611300F8D880 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
+		C6B2D0501AC6611300F8D880 /* peasant.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = peasant.xml; sourceTree = "<group>"; };
+		C6B2D0511AC6611300F8D880 /* soldier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soldier.png; sourceTree = "<group>"; };
+		C6B2D0521AC6611300F8D880 /* soldier.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = soldier.xml; sourceTree = "<group>"; };
+		C6B2D0531AC6611300F8D880 /* tileset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tileset.png; sourceTree = "<group>"; };
+		C6B2D0541AC6611300F8D880 /* tileset.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tileset.xml; sourceTree = "<group>"; };
+		C6F12F021AC8D9BB0006A959 /* hudpanel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hudpanel.png; sourceTree = "<group>"; };
+		C6F12F041AC8DE6B0006A959 /* endturn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endturn.png; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -761,10 +805,15 @@
 			children = (
 				F380660B1A964C5F009D3C56 /* Unit.h */,
 				F380660C1A964C5F009D3C56 /* Unit.m */,
+				C6F12F021AC8D9BB0006A959 /* hudpanel.png */,
 				F35D38251AAF2A2500E97F78 /* Peasant.h */,
 				F35D38261AAF2A3300E97F78 /* Peasant.m */,
 				F3D8ADE81ABB06B400920E99 /* Infantry.h */,
 				F3D8ADE91ABB06B400920E99 /* Infantry.m */,
+				C65C1F2B1AC6639800B5B3EA /* Cannon.h */,
+				C65C1F2C1AC6639800B5B3EA /* Cannon.m */,
+				C65C1F2D1AC6639800B5B3EA /* Castle.h */,
+				C65C1F2E1AC6639800B5B3EA /* Castle.m */,
 				F3D8ADEA1ABB06B400920E99 /* Soldier.h */,
 				F3D8ADEB1ABB06B400920E99 /* Soldier.m */,
 				F380660D1A964C5F009D3C56 /* Ritter.h */,
@@ -870,6 +919,24 @@
 			children = (
 				F3A2835D1AC2261A00AE8BB5 /* archer.png */,
 				F3A2835E1AC2261A00AE8BB5 /* archer.xml */,
+				C6B2D0441AC6611300F8D880 /* archer.png */,
+				C6B2D0451AC6611300F8D880 /* archer.xml */,
+				C6B2D0461AC6611300F8D880 /* atlas.png */,
+				C6B2D0471AC6611300F8D880 /* atlas.xml */,
+				C6B2D0481AC6611300F8D880 /* background.jpg */,
+				C6B2D0491AC6611300F8D880 /* cannon.png */,
+				C6B2D04A1AC6611300F8D880 /* cannon.xml */,
+				C6B2D04B1AC6611300F8D880 /* infantry.png */,
+				C6B2D04C1AC6611300F8D880 /* infantry.xml */,
+				C6B2D04D1AC6611300F8D880 /* knight.png */,
+				C6B2D04E1AC6611300F8D880 /* knight.xml */,
+				C6B2D04F1AC6611300F8D880 /* peasant.png */,
+				C6B2D0501AC6611300F8D880 /* peasant.xml */,
+				C6F12F041AC8DE6B0006A959 /* endturn.png */,
+				C6B2D0511AC6611300F8D880 /* soldier.png */,
+				C6B2D0521AC6611300F8D880 /* soldier.xml */,
+				C6B2D0531AC6611300F8D880 /* tileset.png */,
+				C6B2D0541AC6611300F8D880 /* tileset.xml */,
 				F38066661A9657DB009D3C56 /* tileset.png */,
 				F38066671A9657DB009D3C56 /* tileset.xml */,
 				F380665B1A964F7A009D3C56 /* atlas.png */,
@@ -1926,23 +1993,42 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6B2D0591AC6611300F8D880 /* background.jpg in Resources */,
 				F38065C91A96441B009D3C56 /* Main.storyboard in Resources */,
+				C6B2D05E1AC6611300F8D880 /* knight.png in Resources */,
 				F38066561A964F3B009D3C56 /* button.png in Resources */,
+				C6B2D0641AC6611300F8D880 /* tileset.png in Resources */,
 				F38066531A964F3B009D3C56 /* baum.png in Resources */,
 				F380665F1A964F7A009D3C56 /* atlas.xml in Resources */,
+				C6B2D05F1AC6611300F8D880 /* knight.xml in Resources */,
 				F38066541A964F3B009D3C56 /* meadow.png in Resources */,
+				C6B2D05D1AC6611300F8D880 /* infantry.xml in Resources */,
 				F38066551A964F3B009D3C56 /* tile_grass.png in Resources */,
 				F38066601A964F7A009D3C56 /* background.jpg in Resources */,
+				C6B2D0581AC6611300F8D880 /* atlas.xml in Resources */,
+				C6B2D0621AC6611300F8D880 /* soldier.png in Resources */,
 				F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */,
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
+				C6F12F031AC8D9BB0006A959 /* hudpanel.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
+				C6F12F051AC8DE6B0006A959 /* endturn.png in Resources */,
 				F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */,
+				C6B2D0611AC6611300F8D880 /* peasant.xml in Resources */,
+				C6B2D0571AC6611300F8D880 /* atlas.png in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
+				C6B2D05C1AC6611300F8D880 /* infantry.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
+				C6B2D0651AC6611300F8D880 /* tileset.xml in Resources */,
+				C6B2D0561AC6611300F8D880 /* archer.xml in Resources */,
+				C6B2D0601AC6611300F8D880 /* peasant.png in Resources */,
+				C6B2D0551AC6611300F8D880 /* archer.png in Resources */,
 				F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */,
 				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
+				C6B2D05B1AC6611300F8D880 /* cannon.xml in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
+				C6B2D0631AC6611300F8D880 /* soldier.xml in Resources */,
+				C6B2D05A1AC6611300F8D880 /* cannon.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,
 				F38066591A964F3B009D3C56 /* hovel.png in Resources */,
@@ -1972,6 +2058,7 @@
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
 				F38066631A9650F9009D3C56 /* GameEngine+iOSTouchEvents.m in Sources */,
 				F38065C61A96441B009D3C56 /* ViewController.m in Sources */,
+				C65C1F301AC6639800B5B3EA /* Castle.m in Sources */,
 				F3D8ADF61ABB06D800920E99 /* GlobalFlags.m in Sources */,
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
 				F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */,
@@ -1998,6 +2085,7 @@
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,
 				F380662B1A964CD7009D3C56 /* SparrowHelper.m in Sources */,
+				C65C1F2F1AC6639800B5B3EA /* Cannon.m in Sources */,
 				F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */,
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,
@@ -2181,6 +2269,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = GameOfHovelsTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GameOfHovels.app/GameOfHovels";
@@ -2196,6 +2285,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = GameOfHovelsTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GameOfHovels.app/GameOfHovels";
