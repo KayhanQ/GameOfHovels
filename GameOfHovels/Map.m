@@ -749,12 +749,6 @@
     [self incomePhase];
     [self paymentPhase];
     [self buildPhase];
-<<<<<<< Updated upstream
-    [self incomePhase];
-    //[self paymentPhase];
-=======
->>>>>>> Stashed changes
-    
 }
 
 - (void)treeGrowthPhase
