@@ -11,12 +11,13 @@
 
 @interface ActionMenu : BasicSprite {
     
-    enum ActionType {AWAITINGCOMMAND = 0, UPGRADEVILLAGE, BUYUNIT, BUILDMEADOW, BUILDROAD, MOVEUNIT, UPGRADEUNIT};
+    enum ActionType {BUYPEASANT = 1, BUYINFANTRY, BUYSOLDIER, BUYRITTER, BUYCANNON, AWAITINGCOMMAND, UPGRADEVILLAGE,  BUILDMEADOW, BUILDROAD, MOVEUNIT, UPGRADEUNIT};
 
     
 }
 
 @property (nonatomic) Tile* tile;
+@property (nonatomic) SPSprite* buttonSprite;;
 
 
 -(id)initWithTile: (Tile*)tile;

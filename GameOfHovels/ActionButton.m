@@ -35,9 +35,29 @@
                 text = @"Upgrade Village";
                 break;
             }
-            case BUYUNIT:
+            case BUYPEASANT:
             {
-                text = @"Buy Unit";
+                text = @"Buy Peasant";
+                break;
+            }
+            case BUYINFANTRY:
+            {
+                text = @"Buy Infantry";
+                break;
+            }
+            case BUYSOLDIER:
+            {
+                text = @"Buy Soldier";
+                break;
+            }
+            case BUYRITTER:
+            {
+                text = @"Buy Knight";
+                break;
+            }
+            case BUYCANNON:
+            {
+                text = @"Buy Cannon";
                 break;
             }
             case BUILDMEADOW:

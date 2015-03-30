@@ -183,11 +183,6 @@
             [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }
-        case BUYUNIT:
-        {
-            [_map buyUnitFromTile:tile tile:destTile];
-            break;
-        }
         case BUILDMEADOW:
         {
             [_map buildMeadow:tile];
@@ -215,6 +210,10 @@
     
     _actionMenu = [[ActionMenu alloc] initWithTile:tile];
     [_popupMenuSprite addChild:_actionMenu];
+    if (_actionMenu.buttonSprite.numChildren == 0) {
+        [_actionMenu removeFromParent];
+        [self addTileListener];
+    }
 }
 
 - (void)actionMenuAction:(ActionMenuEvent*) event
@@ -223,16 +222,46 @@
     Tile* tile = event.tile;
     BOOL actionCompleted = true;
     
-    switch (event.aType) {
+    enum ActionType aType = event.aType;
+    
+    switch (aType) {
         case UPGRADEVILLAGE:
         {
             [_map upgradeVillageWithTile:tile villageType:tile.village.vType + 1];
             break;
         }
-        case BUYUNIT:
+        case BUYPEASANT:
         {
             [self selectTile:tile];
-            _currentPlayerAction.action = BUYUNIT;
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
+        case BUYINFANTRY:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
+        case BUYSOLDIER:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
+        case BUYRITTER:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
+        case BUYCANNON:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
             actionCompleted = false;
             break;
         }
@@ -287,9 +316,33 @@
             [self deselectTile:selectedTile];
             break;
         }
-        case BUYUNIT:
+        case BUYPEASANT:
         {
-            [_map buyUnitFromTile:_currentPlayerAction.selectedTile tile:tile];
+            [_map buyUnitFromTile:selectedTile tile:tile unitType:PEASANT];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case BUYINFANTRY:
+        {
+            [_map buyUnitFromTile:selectedTile tile:tile unitType:INFANTRY];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case BUYSOLDIER:
+        {
+            [_map buyUnitFromTile:selectedTile tile:tile unitType:SOLDIER];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case BUYRITTER:
+        {
+            [_map buyUnitFromTile:selectedTile tile:tile unitType:RITTER];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case BUYCANNON:
+        {
+            [_map buyUnitFromTile:selectedTile tile:tile unitType:CANNON];
             [self deselectTile:selectedTile];
             break;
         }

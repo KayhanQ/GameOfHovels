@@ -16,6 +16,7 @@
     enum WorkState {NOWORKSTATE = 0, BUILDINGMEADOW, BUILDINGROAD};
     enum AnimationType {IDLE = 0, CHOPPINGBAUM, BUILDING, ATTACKING};
     
+    
     SPMovieClip* _idleMovie;
     SPMovieClip* _attackMovie;
     SPMovieClip* _walkMovie;

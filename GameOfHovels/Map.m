@@ -125,6 +125,8 @@
         if (j>9 && j<13) {
             if (i<15 && i>9) {
                 t.village = villageTile.village;
+                t.village.goldPile = 100;
+                t.village.woodPile = 100;
                 [t setPColor: villageTile.village.player.pColor];
                 if (j == 12 && i == 10) {
                     [t addUnitWithType:PEASANT];
@@ -285,7 +287,7 @@
 
 
 
-- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile
+- (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile unitType:(enum UnitType)uType
 {
     BOOL actionPossible = true;
     if ([self isMyTurn]) {
@@ -295,12 +297,12 @@
     
     if (actionPossible == false) return;
     
-    [destTile addUnitWithType:PEASANT];
+    [destTile addUnitWithType:uType];
     
     if ([self isMyTurn]) {
         villageTile.village.goldPile-=10;
         [self updateHud:villageTile];
-        [_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
+        //[_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
     }
 }
 
