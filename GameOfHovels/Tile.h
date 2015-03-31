@@ -63,9 +63,11 @@
 - (BOOL)canBeSelected;
 - (BOOL)canHaveTree;
 - (BOOL)canHaveUnit;
+- (BOOL)canHaveTower;
 - (BOOL)isNeutral;
 - (BOOL)hasRoad;
 - (BOOL)hasTombstone;
+- (BOOL)hasTower;
 
 - (Structure*)getStructure;
 

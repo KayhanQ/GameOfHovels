@@ -16,6 +16,7 @@
 #import "Meadow.h"
 #import "Road.h"
 #import "Tombstone.h"
+#import "Tower.h"
 
 #import "Hovel.h"
 #import "Town.h"
@@ -281,6 +282,11 @@
             [_structuresSprite addChild:r];
             break;
         }
+        case TOWER: {
+            Tower* r = [[Tower alloc] initWithTile:self];
+            [_structuresSprite addChild:r];
+            break;
+        }
         default:
             break;
     }
@@ -429,6 +435,14 @@
     return false;
 }
 
+- (BOOL)canHaveTower
+{
+    if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {
+        return true;
+    }
+    return false;
+}
+
 - (BOOL)hasRoad
 {
     for (Structure* s in _structuresSprite) {
@@ -441,6 +455,14 @@
 {
     for (Structure* s in _structuresSprite) {
         if (s.sType == TOMBSTONE) return true;
+    }
+    return false;
+}
+
+- (BOOL)hasTower
+{
+    for (Structure* s in _structuresSprite) {
+        if (s.sType == TOWER) return true;
     }
     return false;
 }

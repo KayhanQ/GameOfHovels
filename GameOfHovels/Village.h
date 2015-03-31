@@ -34,6 +34,7 @@
 - (void)transferSuppliesFrom:(Village*)village;
 - (BOOL)canSupportUnit:(Unit*)unit;
 - (BOOL)canBeConqueredByUnit:(Unit*)unit;
+- (BOOL)canBuildTower;
 - (BOOL)canUpgrade;
 - (BOOL)protectsRegion;
 

@@ -74,6 +74,12 @@
     return self;
 }
 
+- (BOOL)canBuildTower
+{
+    if (_woodPile>=5 && _vType == TOWN) return true;
+    return false;
+}
+
 //unused method
 - (BOOL)canSupportUnit:(Unit*)unit
 {

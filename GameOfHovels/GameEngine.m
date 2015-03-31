@@ -265,6 +265,13 @@
             actionCompleted = false;
             break;
         }
+        case BUILDTOWER:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
         case BUILDMEADOW:
         {
             [_map buildMeadow:tile];
@@ -343,6 +350,12 @@
         case BUYCANNON:
         {
             [_map buyUnitFromTile:selectedTile tile:tile unitType:CANNON];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case BUILDTOWER:
+        {
+            [_map buildTowerFromTile:selectedTile tile:tile];
             [self deselectTile:selectedTile];
             break;
         }

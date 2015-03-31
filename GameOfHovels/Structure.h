@@ -13,7 +13,7 @@
 
 @interface Structure : BasicSprite {
 
-    enum StructureType {NONE = 0, GRASS, BAUM, ROAD, TOMBSTONE, MEADOW, SEA};
+    enum StructureType {NONE = 0, GRASS, BAUM, ROAD, TOMBSTONE, MEADOW, TOWER, SEA};
     
 }
 

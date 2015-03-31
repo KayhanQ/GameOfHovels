@@ -19,7 +19,7 @@
 
 @interface Map : BasicSprite {
 
-    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TOTOMBSTONE, TONEUTRALTILE, TOENEMYTILE, MERGEVILLAGES};
+    enum MovesType {TOOWNTILE = 0, TOOWNUNIT, TOOWNVILLAGE, TOBAUM, TOMEADOW, TOTOMBSTONE, TOOWNTOWER, TONEUTRALTILE, TOENEMYTILE, MERGEVILLAGES};
 
 }
 
@@ -61,5 +61,6 @@
 
 - (void)buildMeadow:(Tile*)tile;
 - (void)buildRoad:(Tile*)tile;
+- (void)buildTowerFromTile:(Tile*)villageTile tile:(Tile*)destTile;
 
 @end

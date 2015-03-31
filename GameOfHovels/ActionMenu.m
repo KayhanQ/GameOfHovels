@@ -51,6 +51,10 @@
                 [self makeButton:UPGRADEVILLAGE];
             }
             
+            if ([village canBuildTower]) {
+                [self makeButton: BUILDTOWER];
+            }
+            
             
             if (gold >= _unitGoldCosts[0] || wood >= _unitWoodCosts[0]) {
                 [self makeButton:BUYPEASANT];

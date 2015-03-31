@@ -14,6 +14,8 @@
 #import "Soldier.h"
 #import "Ritter.h"
 #import "Baum.h"
+#import "Tower.h"
+
 #import "Hovel.h"
 #import "GamePlayer.h"
 #import "Hud.h"
@@ -334,6 +336,13 @@
                 for (Tile* eTile in [self getTilesForVillagesProtectingTile:destTile]) {
                     if (eTile.village.strength >= unit.strength) return false;
                 }
+                for (Tile* eTile in [self getTilesForTowersProtectingTile:destTile]) {
+                    Tower* tower = (Tower*)[eTile getStructure];
+                    if (tower.strength >= unit.strength) return false;
+                }
+                if ([destTile hasTower]) {
+                    if (unit.strength <= 2) return false;
+                }
                 if ([destTile isVillage])
                     if (![destTile.village canBeConqueredByUnit:unit]) return false;
                 break;
@@ -346,6 +355,11 @@
             case TOTOMBSTONE:
             {
                 if (![unit canClearTombstone]) return false;
+                break;
+            }
+            case TOOWNTOWER:
+            {
+                return false;
                 break;
             }
             default:
@@ -362,7 +376,8 @@
 
     if (destTile.village == unitTile.village) {
         [moveTypes addObject: [NSNumber numberWithInt:TOOWNTILE]];
-        if (destTile.isVillage) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
+        if ([destTile hasTower]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNTOWER]];
+        if ([destTile isVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
     }
     else {
         if ([destTile hasVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOENEMYTILE]];
@@ -541,6 +556,7 @@
     //We are taking over an enemyTile
     if (takingOverEnemyTile) {
         if ([destTile hasUnit]) [destTile removeUnit];
+        if ([destTile hasTower]) [destTile removeStructure];
         if ([self tileWithNeighboursSplitsRegion:nTiles]) {
             NSLog(@"TILE SPLITS REGION");
             NSMutableArray* regions = [self getSplitRegions:nTiles];
@@ -726,6 +742,16 @@
             [u setWorkState:NOWORKSTATE];
         }
     }
+}
+
+- (void)buildTowerFromTile:(Tile*)villageTile tile:(Tile*)destTile
+{
+    if ([self isMyTurn]) {
+        if (villageTile.village != destTile.village) return;
+        if (![destTile canHaveTower]) return;
+    }
+    
+    [destTile addStructure:TOWER];
 }
 
 - (void)updateHud:(Tile*)tile
@@ -946,6 +972,21 @@
         }
     }
     return vUnitTiles;
+}
+
+//returns the enemy Towers that protect a tile, 1 hex
+- (NSMutableArray*)getTilesForTowersProtectingTile:(Tile*)tile
+{
+    NSMutableArray* towerTiles = [NSMutableArray array];
+    GamePlayer* ePlayer = tile.village.player;
+    for (Tile* nTile in [tile getNeighbours]) {
+        if (nTile.village.player == ePlayer) {
+            if ([nTile hasTower]) {
+                [towerTiles addObject:nTile];
+            }
+        }
+    }
+    return towerTiles;
 }
 
 - (BOOL)isMyTurn

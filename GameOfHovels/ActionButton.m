@@ -65,6 +65,11 @@
                 text = @"Build Meadow";
                 break;
             }
+            case BUILDTOWER:
+            {
+                text = @"Build Tower";
+                break;
+            }
             case BUILDROAD:
             {
                 text = @"Build ROAD";
