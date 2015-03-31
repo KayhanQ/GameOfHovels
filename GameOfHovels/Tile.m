@@ -464,6 +464,18 @@
     return false;
 }
 
+- (BOOL)canHaveMeadow
+{
+    if ([self getStructureType] == GRASS) return true;
+    return false;
+}
+
+- (BOOL)canHaveRoad
+{
+    if ([self getStructureType] == GRASS) return true;
+    return false;
+}
+
 - (BOOL)canHaveTower
 {
     if (![self hasUnit] && ![self isVillage] && [self getStructureType] == GRASS) {

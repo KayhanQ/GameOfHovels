@@ -69,8 +69,8 @@
         Unit* unit = tile.unit;
         
         if (unit != nil) {
-            if (unit.uType == PEASANT) [self makeButton:BUILDMEADOW];
-            if (unit.uType == PEASANT) [self makeButton:BUILDROAD];
+            if (unit.uType == PEASANT && [tile canHaveMeadow]) [self makeButton:BUILDMEADOW];
+            if (unit.uType == PEASANT && [tile canHaveRoad]) [self makeButton:BUILDROAD];
             if (unit.uType != CANNON) [self makeButton:UPGRADEUNIT];
             if (unit.uType == CANNON) [self makeButton:SHOOTCANNON];
         }

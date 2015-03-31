@@ -64,6 +64,9 @@
 - (void)deselectTile;
 - (BOOL)canBeSelected;
 - (BOOL)canHaveTree;
+- (BOOL)canHaveMeadow;
+- (BOOL)canHaveRoad;
+
 - (BOOL)canHaveUnit;
 - (BOOL)canHaveTower;
 - (BOOL)isNeutral;
