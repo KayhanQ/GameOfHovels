@@ -10,6 +10,7 @@
 
 
 +(BOOL)isGameWithGC;
++ (BOOL)isGameWithRandomMap;
 
 
 

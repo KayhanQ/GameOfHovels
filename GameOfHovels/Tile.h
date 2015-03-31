@@ -30,6 +30,7 @@
 - (Tile*)getNeighbour:(enum TileNeighbours)tileNeighbour;
 - (NSMutableArray*)getNeighbours;
 - (NSMutableArray*)getNeighboursOfSameRegion;
+- (NSMutableArray*)getNeighboursOfSameColor;
 - (void)makeNeutral;
 
 - (void)setPColor:(enum PlayerColor)pColor;

@@ -19,4 +19,9 @@
     return false;
 }
 
++ (BOOL)isGameWithRandomMap
+{
+    return true;
+}
+
 @end

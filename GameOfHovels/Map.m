@@ -23,6 +23,7 @@
 #import "MessageLayer.h"
 #import "GameEngine.h"
 #import "SparrowHelper.h"
+#import "GlobalFlags.h"
 
 @implementation Map {
     MessageLayer* _messageLayer;
@@ -62,12 +63,19 @@
         
         [self makeBasicMap];
         [self setNeighbours];
-        [self makePlayer1Tiles: _messageLayer.players[0]];
-        [self makePlayer2Tiles: _messageLayer.players[1]];
+        
+        if ([GlobalFlags isGameWithRandomMap]) {
+            [self assignTilesToPlayers];
+            [self assignVillagesToRegions];
+            [self addTrees];
+            [self addMeadows];
+        }
+        else {
+            [self makePlayer1Tiles: _messageLayer.players[0]];
+            [self makePlayer2Tiles: _messageLayer.players[1]];
+            [self makeTreesAndMeadows];
+        }
 
-        //[self addTrees];
-        //[self addMeadows];
-        [self makeTreesAndMeadows];
 		
         [self refreshTeritory];
         
@@ -87,139 +95,37 @@
     }
 }
 
-- (void)makeTreesAndMeadows
+- (void)assignTilesToPlayers
 {
-	NSInteger treesData[80] = {1, 2, 19, 26, 33, 35, 37, 50, 51, 57, 63, 72, 74, 78, 83, 84, 92, 99, 105, 110, 116, 119, 120, 142, 143, 146, 148, 149, 164, 186, 191, 193, 196, 201, 207, 208, 211, 213, 216, 222, 225, 228, 234, 238, 240, 252, 257, 265, 274, 280, 281, 283, 289, 294, 298, 322, 326, 333, 334, 335, 336, 338, 340, 348, 350, 358, 359, 366, 375, 377, 380, 383, 394, 395, 396};
-	NSInteger meadowsData[40] = {8, 14, 25, 36, 65, 69, 79, 96, 103, 109, 144, 145, 155, 176, 182, 192, 195, 206, 219, 220, 229, 248, 271, 287, 304, 324, 325, 327, 361, 363, 371, 393, 397};
-	
-	for (Tile* t in _tilesSprite) {
-	int tileIndex = [_tilesSprite childIndex: t];
-		for (int i = 0; i<80; i++) {
-			if (tileIndex == treesData[i]) {
-				if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
-					[t addStructure:BAUM];
-				}
-			}
-		}
-		for (int i = 0; i<40; i++) {
-			if (tileIndex == meadowsData[i]) {
-				if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
-					[t addStructure:MEADOW];
-				}
-			}
-		}
-	}
-}
-
-- (void)makePlayer1Tiles:(GamePlayer*)player1
-{
-    Tile* villageTile;
-    int i = 0;
-    int j = 0;
-    
-    for (Tile* t in _tilesSprite) {
-        if (j == 10 && i == 10) {
-            [t addVillage:HOVEL];
-            villageTile = t;
-            t.village.player = player1;
-        }
-        
-        if (j>9 && j<13) {
-            if (i<15 && i>9) {
-                t.village = villageTile.village;
-                t.village.goldPile = 100;
-                t.village.woodPile = 100;
-                [t setPColor: villageTile.village.player.pColor];
-                if (j == 12 && i == 10) {
-                    [t addUnitWithType:PEASANT];
-                }
-            }
-        }
-
-        i++;
-        if (i == _gridWidth) {
-            i=0;
-            j++;
-        }
+    NSMutableArray* colors = [NSMutableArray array];
+    [colors addObject:[NSNumber numberWithInt:NOCOLOR]];
+    for (GamePlayer* p in _messageLayer.players) {
+        [colors addObject:[NSNumber numberWithInt:p.pColor]];
     }
     
-    i=0;
-    j=0;
     for (Tile* t in _tilesSprite) {
-        if (j == 10 && i == 6) {
-            [t addVillage:HOVEL];
-            villageTile = t;
-            t.village.player = player1;
-        }
-        
-        if (j>9 && j<13) {
-            if (i<8 && i>6) {
-                t.village = villageTile.village;
-                [t setPColor: villageTile.village.player.pColor];
-            }
-        }
-        
-        i++;
-        if (i == _gridWidth) {
-            i=0;
-            j++;
-        }
+        enum PlayerColor color = [[colors objectAtIndex:arc4random() % colors.count] intValue];
+        [t setPColor:color];
     }
     
-}
-
-- (void)makePlayer2Tiles:(GamePlayer*)player2
-{
-    Tile* villageTile;
-    int i = 0;
-    int j = 0;
-    
     for (Tile* t in _tilesSprite) {
-        
-        if (j == 4 && i == 5) {
-            [t addVillage:HOVEL];
-            villageTile = t;
-            t.village.player = player2;
-        }
-        
-        if (j>3 && j<7) {
-            if (i<10 && i>4) {
-                t.village = villageTile.village;
-                [t setPColor:villageTile.village.player.pColor];
-                if (j == 6 && i == 9) {
-                    [t addUnitWithType:INFANTRY];
-                }
-            }
-        }
-        i++;
-        if (i == _gridWidth) {
-            i=0;
-            j++;
-        }
+        if ([self getConnectedTilesByColor:t].count<=3) [t makeNeutral];
     }
 }
 
-- (void)setNeighbours
+- (void)assignVillagesToRegions
 {
-    for (int j  = 1 ; j<_gridWidth - 1; j++) {
-        for (int i  = 1 ; i<_gridHeight - 1; i++) {
-            int tIndex = i + j*_gridWidth;
-            
-            Tile* t = (Tile*)[_tilesSprite childAtIndex:tIndex];
-            for (int k = 0; k<6; k++) {
-                int nIndex = 0;
-                if (k == 0) nIndex = tIndex - _gridWidth;
-                else if (k == 1) nIndex = tIndex + 1;
-                else if (k == 2) nIndex = tIndex + _gridWidth;
-                else if (k == 3) nIndex = tIndex + _gridWidth-1;
-                else if (k == 4) nIndex = tIndex - 1;
-                else if (k == 5) nIndex = tIndex - _gridWidth - 1;
-
-                if (j%2 == 1 && k!=1 && k!=4) nIndex++;
-                
-                [t setNeighbour:k tile:(Tile*)[_tilesSprite childAtIndex:nIndex]];
-            }
-        }
+    for (Tile* t in _tilesSprite) {
+        if (t.pColor == NOCOLOR) continue;
+        if ([t hasVillage]) continue;
+        
+        enum PlayerColor tColor = t.pColor;
+        GamePlayer* p = _messageLayer.players[tColor-1];
+        NSMutableArray* connectedTiles = [self getConnectedTilesByColor:t];
+        Tile* vTile = [connectedTiles objectAtIndex:arc4random() % connectedTiles.count];
+        [vTile addVillage:HOVEL];
+        vTile.village.player = p;
+        for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
     }
 }
 
@@ -228,7 +134,7 @@
     for (int j  = 1 ; j<80; j++) {
         int index = arc4random() % [_tilesSprite numChildren];
         Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
-        if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+        if (t.getStructureType == GRASS && ![t hasUnit] && ![t isVillage]) {
             [t addStructure:BAUM];
         }
     }
@@ -239,7 +145,7 @@
     for (int j  = 1 ; j<40; j++) {
         int index = arc4random() % [_tilesSprite numChildren];
         Tile* t = (Tile*)[_tilesSprite childAtIndex:index];
-        if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+        if (t.getStructureType == GRASS && ![t hasUnit] && ![t isVillage]) {
             [t addStructure:MEADOW];
         }
     }
@@ -631,110 +537,7 @@
     }
 }
 
-//We have already set the village of the tile we are splitting on as the new village
-//so we have to send in his neighbours instead of him
-- (BOOL)tileWithNeighboursSplitsRegion:(NSMutableArray*)nTiles
-{
-    for (Tile* nT1 in nTiles) {
-        for (Tile* nT2 in nTiles) {
-            if (nT1 == nT2) continue;
-            if (![self areConnectedByRegion:nT1 t2:nT2]) return true;
-        }
-    }
-    return false;
-}
 
-- (BOOL)areConnectedByRegion:(Tile*)t1 t2:(Tile*)t2
-{
-    NSMutableArray* searchTiles = [NSMutableArray array];
-    [searchTiles addObject:t1];
-    
-    for (int i = 0; i < searchTiles.count; i++) {
-        Tile* sTile = [searchTiles objectAtIndex:i];
-        sTile.visitedBySearch = true;
-        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
-            if (nTile.visitedBySearch) continue;
-            if (nTile == t2) {
-                [self resetVisitedBySearchFlags];
-                return true;
-            }
-            [searchTiles addObject:nTile];
-        }
-    }
-    [self resetVisitedBySearchFlags];
-    return false;
-}
-
-- (NSMutableArray*)getSplitRegions:(NSMutableArray*)nTiles
-{
-    NSMutableArray* disconnectedNeighbours = [NSMutableArray array];
-    
-    for (Tile* nT1 in nTiles) {
-        for (Tile* nT2 in nTiles) {
-            if (nT1 == nT2) continue;
-            if (![self areConnectedByRegion:nT1 t2:nT2]) {
-                if (![disconnectedNeighbours containsObject:nT1]) [disconnectedNeighbours addObject:nT1];
-                if (![disconnectedNeighbours containsObject:nT2]) [disconnectedNeighbours addObject:nT2];
-            }
-        }
-    }
-    
-    //remove any tiles that are connected to each other
-    for (int i = 0; i < disconnectedNeighbours.count; i++) {
-        Tile* t1 = [disconnectedNeighbours objectAtIndex:i];
-        for (int j = 0; j < disconnectedNeighbours.count; j++) {
-            Tile* t2 = [disconnectedNeighbours objectAtIndex:j];
-            if (t1 == t2) continue;
-            if ([self areConnectedByRegion:t1 t2:t2]) {
-                [disconnectedNeighbours removeObject:t2];
-                continue;
-            }
-        }
-    }
-    
-    NSMutableArray* regions = [NSMutableArray array];
-    for (Tile* dN in disconnectedNeighbours) {
-        [regions addObject:[self getConnectedTiles:dN]];
-    }
-    
-    return regions;
-}
-
-//returns list of all connected tiles in same region
-- (NSMutableArray*)getConnectedTiles:(Tile*)tile
-{
-    NSMutableArray* searchTiles = [NSMutableArray array];
-    [searchTiles addObject:tile];
-    
-    for (int i = 0; i < searchTiles.count; i++) {
-        Tile* sTile = [searchTiles objectAtIndex:i];
-        sTile.visitedBySearch = true;
-        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
-            if (nTile.visitedBySearch) continue;
-            nTile.visitedBySearch = true;
-            [searchTiles addObject:nTile];
-        }
-    }
-    [self resetVisitedBySearchFlags];
-    return searchTiles;
-}
-
-- (BOOL)regionHasVillage:(NSMutableArray*)region
-{
-    for (Tile* t in region) {
-        if ([t isVillage]) return true;
-    }
-    return false;
-}
-
-
-- (void)resetVisitedBySearchFlags
-{
-    for (Tile* t in _tilesSprite)
-    {
-        t.visitedBySearch = false;
-    }
-}
 
 //makes a region neutral by removing units and village pointers
 - (void)makeRegionNeutral:(NSMutableArray*)region
@@ -792,11 +595,6 @@
 - (void)updateHud:(Tile*)tile
 {
     [_hud update:tile];
-}
-
-- (void)createRandomMap
-{
-    
 }
 
 //call your phases
@@ -950,6 +748,30 @@
 //  Helper Functions
 //--------------------------
 
+- (void)setNeighbours
+{
+    for (int j  = 1 ; j<_gridWidth - 1; j++) {
+        for (int i  = 1 ; i<_gridHeight - 1; i++) {
+            int tIndex = i + j*_gridWidth;
+            
+            Tile* t = (Tile*)[_tilesSprite childAtIndex:tIndex];
+            for (int k = 0; k<6; k++) {
+                int nIndex = 0;
+                if (k == 0) nIndex = tIndex - _gridWidth;
+                else if (k == 1) nIndex = tIndex + 1;
+                else if (k == 2) nIndex = tIndex + _gridWidth;
+                else if (k == 3) nIndex = tIndex + _gridWidth-1;
+                else if (k == 4) nIndex = tIndex - 1;
+                else if (k == 5) nIndex = tIndex - _gridWidth - 1;
+                
+                if (j%2 == 1 && k!=1 && k!=4) nIndex++;
+                
+                [t setNeighbour:k tile:(Tile*)[_tilesSprite childAtIndex:nIndex]];
+            }
+        }
+    }
+}
+
 //How is current player represented
 - (NSMutableArray*)getTilesWithMyVillages
 {
@@ -1024,9 +846,250 @@
     return towerTiles;
 }
 
+//We have already set the village of the tile we are splitting on as the new village
+//so we have to send in his neighbours instead of him
+- (BOOL)tileWithNeighboursSplitsRegion:(NSMutableArray*)nTiles
+{
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) return true;
+        }
+    }
+    return false;
+}
+
+- (BOOL)areConnectedByRegion:(Tile*)t1 t2:(Tile*)t2
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:t1];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            if (nTile == t2) {
+                [self resetVisitedBySearchFlags];
+                return true;
+            }
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return false;
+}
+
+- (NSMutableArray*)getSplitRegions:(NSMutableArray*)nTiles
+{
+    NSMutableArray* disconnectedNeighbours = [NSMutableArray array];
+    
+    for (Tile* nT1 in nTiles) {
+        for (Tile* nT2 in nTiles) {
+            if (nT1 == nT2) continue;
+            if (![self areConnectedByRegion:nT1 t2:nT2]) {
+                if (![disconnectedNeighbours containsObject:nT1]) [disconnectedNeighbours addObject:nT1];
+                if (![disconnectedNeighbours containsObject:nT2]) [disconnectedNeighbours addObject:nT2];
+            }
+        }
+    }
+    
+    //remove any tiles that are connected to each other
+    for (int i = 0; i < disconnectedNeighbours.count; i++) {
+        Tile* t1 = [disconnectedNeighbours objectAtIndex:i];
+        for (int j = 0; j < disconnectedNeighbours.count; j++) {
+            Tile* t2 = [disconnectedNeighbours objectAtIndex:j];
+            if (t1 == t2) continue;
+            if ([self areConnectedByRegion:t1 t2:t2]) {
+                [disconnectedNeighbours removeObject:t2];
+                continue;
+            }
+        }
+    }
+    
+    NSMutableArray* regions = [NSMutableArray array];
+    for (Tile* dN in disconnectedNeighbours) {
+        [regions addObject:[self getConnectedTiles:dN]];
+    }
+    
+    return regions;
+}
+
+//returns list of all connected tiles in same region by Villages
+- (NSMutableArray*)getConnectedTiles:(Tile*)tile
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:tile];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            nTile.visitedBySearch = true;
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return searchTiles;
+}
+
+//returns list of all connected tiles in same region by their color
+- (NSMutableArray*)getConnectedTilesByColor:(Tile*)tile
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:tile];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameColor]) {
+            if (nTile.visitedBySearch) continue;
+            nTile.visitedBySearch = true;
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return searchTiles;
+}
+
+
+- (BOOL)regionHasVillage:(NSMutableArray*)region
+{
+    for (Tile* t in region) {
+        if ([t isVillage]) return true;
+    }
+    return false;
+}
+
+
+- (void)resetVisitedBySearchFlags
+{
+    for (Tile* t in _tilesSprite)
+    {
+        t.visitedBySearch = false;
+    }
+}
+
 - (BOOL)isMyTurn
 {
     return _gameEngine.currentPlayer == _gameEngine.mePlayer;
 }
 
-    @end
+//-------------------------
+// Old Hardcoded Map
+//-------------------------
+
+- (void)makeTreesAndMeadows
+{
+    NSInteger treesData[80] = {1, 2, 19, 26, 33, 35, 37, 50, 51, 57, 63, 72, 74, 78, 83, 84, 92, 99, 105, 110, 116, 119, 120, 142, 143, 146, 148, 149, 164, 186, 191, 193, 196, 201, 207, 208, 211, 213, 216, 222, 225, 228, 234, 238, 240, 252, 257, 265, 274, 280, 281, 283, 289, 294, 298, 322, 326, 333, 334, 335, 336, 338, 340, 348, 350, 358, 359, 366, 375, 377, 380, 383, 394, 395, 396};
+    NSInteger meadowsData[40] = {8, 14, 25, 36, 65, 69, 79, 96, 103, 109, 144, 145, 155, 176, 182, 192, 195, 206, 219, 220, 229, 248, 271, 287, 304, 324, 325, 327, 361, 363, 371, 393, 397};
+    
+    for (Tile* t in _tilesSprite) {
+        int tileIndex = [_tilesSprite childIndex: t];
+        for (int i = 0; i<80; i++) {
+            if (tileIndex == treesData[i]) {
+                if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+                    [t addStructure:BAUM];
+                }
+            }
+        }
+        for (int i = 0; i<40; i++) {
+            if (tileIndex == meadowsData[i]) {
+                if (t.getStructureType == GRASS && t.unit==nil && !t.isVillage) {
+                    [t addStructure:MEADOW];
+                }
+            }
+        }
+    }
+}
+
+- (void)makePlayer1Tiles:(GamePlayer*)player1
+{
+    Tile* villageTile;
+    int i = 0;
+    int j = 0;
+    
+    for (Tile* t in _tilesSprite) {
+        if (j == 10 && i == 10) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player1;
+        }
+        
+        if (j>9 && j<13) {
+            if (i<15 && i>9) {
+                t.village = villageTile.village;
+                t.village.goldPile = 100;
+                t.village.woodPile = 100;
+                [t setPColor: villageTile.village.player.pColor];
+                if (j == 12 && i == 10) {
+                    [t addUnitWithType:PEASANT];
+                }
+            }
+        }
+        
+        i++;
+        if (i == _gridWidth) {
+            i=0;
+            j++;
+        }
+    }
+    
+    i=0;
+    j=0;
+    for (Tile* t in _tilesSprite) {
+        if (j == 10 && i == 6) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player1;
+        }
+        
+        if (j>9 && j<13) {
+            if (i<8 && i>6) {
+                t.village = villageTile.village;
+                [t setPColor: villageTile.village.player.pColor];
+            }
+        }
+        
+        i++;
+        if (i == _gridWidth) {
+            i=0;
+            j++;
+        }
+    }
+    
+}
+
+- (void)makePlayer2Tiles:(GamePlayer*)player2
+{
+    Tile* villageTile;
+    int i = 0;
+    int j = 0;
+    
+    for (Tile* t in _tilesSprite) {
+        
+        if (j == 4 && i == 5) {
+            [t addVillage:HOVEL];
+            villageTile = t;
+            t.village.player = player2;
+        }
+        
+        if (j>3 && j<7) {
+            if (i<10 && i>4) {
+                t.village = villageTile.village;
+                [t setPColor:villageTile.village.player.pColor];
+                if (j == 6 && i == 9) {
+                    [t addUnitWithType:INFANTRY];
+                }
+            }
+        }
+        i++;
+        if (i == _gridWidth) {
+            i=0;
+            j++;
+        }
+    }
+}
+
+@end
