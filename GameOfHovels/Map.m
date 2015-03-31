@@ -245,7 +245,35 @@
     }
 }
 
+- (void)shootCannonFromTile:(Tile*)unitTile tile:(Tile*)destTile
+{
+    if ([self isMyTurn]) {
+        if (destTile.village == unitTile.village) return;
+        if ([self distanceFromTile:unitTile toTile:destTile] > 2) return;
+    }
+    
+    NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
+    Village* enemyPlayersVillage = destTile.village;
+    BOOL areAttackingVillage = [destTile isVillage];
+    
+    [destTile attackWithCannon];
+    
+    if (areAttackingVillage) [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
+}
 
+//tells you if the distance is 1 or 2 hex
+- (int)distanceFromTile:(Tile*)t1 toTile:(Tile*)t2
+{
+    for (Tile* n1 in [t1 getNeighbours]) {
+        if (n1 == t2) return 1;
+        for (Tile* n2 in [n1 getNeighbours]) {
+            if (n1 == n2) continue;
+            if (n2 == t2) return 2;
+        }
+    }
+    
+    return 999;
+}
 
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
@@ -303,6 +331,28 @@
     }
 }
 
+- (NSMutableArray*)getMoveTypesForMove:(Tile*)unitTile tile:(Tile*)destTile
+{
+    NSMutableArray* moveTypes = [NSMutableArray array];
+    
+    if (destTile.village == unitTile.village) {
+        [moveTypes addObject: [NSNumber numberWithInt:TOOWNTILE]];
+        if ([destTile hasTower]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNTOWER]];
+        if ([destTile isVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
+    }
+    else {
+        if ([destTile hasVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOENEMYTILE]];
+        else [moveTypes addObject: [NSNumber numberWithInt:TONEUTRALTILE]];
+    }
+    if (destTile.village.player == unitTile.village.player && [destTile hasUnit]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNUNIT]];
+    if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
+    if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
+    if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
+    if ([destTile getStructureType] == TOMBSTONE ) [moveTypes addObject: [NSNumber numberWithInt:TOTOMBSTONE]];
+    
+    return moveTypes;
+}
+
 - (BOOL)isMovePossible:(Tile*)unitTile tile:(Tile*)destTile moveTypes:(NSMutableArray*)moveTypes
 {
     Unit* unit = unitTile.unit;
@@ -310,7 +360,7 @@
     //Basic checks for game logic
     if (![self isMyTurn]) return false;
     if (!unit.movable) return false;
-    if ([unitTile neighboursContainTile:destTile] == false) return false;
+    if (![unitTile neighboursContainTile:destTile]) return false;
     if (unit.distTravelled == unit.stamina) return false;
 
     for (NSNumber* n in moveTypes) {
@@ -368,28 +418,6 @@
     }
     
     return true;
-}
-
-- (NSMutableArray*)getMoveTypesForMove:(Tile*)unitTile tile:(Tile*)destTile
-{
-    NSMutableArray* moveTypes = [NSMutableArray array];
-
-    if (destTile.village == unitTile.village) {
-        [moveTypes addObject: [NSNumber numberWithInt:TOOWNTILE]];
-        if ([destTile hasTower]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNTOWER]];
-        if ([destTile isVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNVILLAGE]];
-    }
-    else {
-        if ([destTile hasVillage]) [moveTypes addObject: [NSNumber numberWithInt:TOENEMYTILE]];
-        else [moveTypes addObject: [NSNumber numberWithInt:TONEUTRALTILE]];
-    }
-    if (destTile.village.player == unitTile.village.player && [destTile hasUnit]) [moveTypes addObject: [NSNumber numberWithInt:TOOWNUNIT]];
-    if ([self hasVillageMergingPotential:unitTile tile:destTile]) [moveTypes addObject: [NSNumber numberWithInt:MERGEVILLAGES]];
-    if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
-    if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
-    if ([destTile getStructureType] == TOMBSTONE ) [moveTypes addObject: [NSNumber numberWithInt:TOTOMBSTONE]];
-
-    return moveTypes;
 }
 
 //completes the move to new tile
@@ -551,6 +579,8 @@
     if ([destTile hasUnit]) {
         [destTile removeUnit];
     }
+    
+    //IMPORTANT
     destTile.village = unitTile.village;
 
     //We are taking over an enemyTile
@@ -570,13 +600,18 @@
         else {
             //if we didn't split the region but we did take over a village Tile
             if (takingOverEnemyVillage) {
-                for (Tile* nT in nTiles) {
-                    NSMutableArray* region = [self getConnectedTiles:nT];
-                    [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
-                    break;
-                }
+                [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
             }
         }
+    }
+}
+
+- (void)takeOverEnemyVillageTileWithNeighbours:(NSMutableArray*)nTiles enemyVillage:(Village*)eVillage
+{
+    for (Tile* nT in nTiles) {
+        NSMutableArray* region = [self getConnectedTiles:nT];
+        [self convertRegionAfterTileTakenFrom:eVillage region:region];
+        break;
     }
 }
 

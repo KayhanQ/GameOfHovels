@@ -57,6 +57,7 @@
 - (Unit*)getUnit;
 - (void)upgradeUnit:(enum UnitType)uType;
 - (enum UnitType)getUnitType;
+- (void)attackWithCannon;
 
 - (void)selectTile;
 - (void)deselectTile;

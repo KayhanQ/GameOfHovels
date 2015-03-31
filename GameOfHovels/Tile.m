@@ -403,6 +403,19 @@
     
 }
 
+- (void)attackWithCannon
+{
+    if ([self hasVillage]) {
+        _village.health--;
+        if (_village.health <= 0) {
+            [self removeVillage];
+            [self makeNeutral];
+        }
+    }
+    [self removeUnit];
+    [self removeAllStructures];
+}
+
 - (BOOL)hasVillage
 {
     return _village != nil;
@@ -502,7 +515,7 @@
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
         if ([self hasUnit] || [self isVillage]) {
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.3
+            _timer = [NSTimer scheduledTimerWithTimeInterval:0.25
                                                       target:self
                                                     selector:@selector(showActionMenu:)
                                                     userInfo:nil

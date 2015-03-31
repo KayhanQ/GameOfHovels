@@ -60,6 +60,11 @@
                 text = @"Buy Cannon";
                 break;
             }
+            case SHOOTCANNON:
+            {
+                text = @"Shoot Cannon";
+                break;
+            }
             case BUILDMEADOW:
             {
                 text = @"Build Meadow";

@@ -265,6 +265,13 @@
             actionCompleted = false;
             break;
         }
+        case SHOOTCANNON:
+        {
+            [self selectTile:tile];
+            _currentPlayerAction.action = aType;
+            actionCompleted = false;
+            break;
+        }
         case BUILDTOWER:
         {
             [self selectTile:tile];
@@ -350,6 +357,12 @@
         case BUYCANNON:
         {
             [_map buyUnitFromTile:selectedTile tile:tile unitType:CANNON];
+            [self deselectTile:selectedTile];
+            break;
+        }
+        case SHOOTCANNON:
+        {
+            [_map shootCannonFromTile: selectedTile tile:tile];
             [self deselectTile:selectedTile];
             break;
         }

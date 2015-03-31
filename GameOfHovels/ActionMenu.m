@@ -66,10 +66,13 @@
             }
         }
         
-        if (tile.unit != nil) {
-            if (tile.unit.uType == PEASANT) [self makeButton:BUILDMEADOW];
-            if (tile.unit.uType == PEASANT) [self makeButton:BUILDROAD];
-            if (tile.unit.uType != CANNON) [self makeButton:UPGRADEUNIT];
+        Unit* unit = tile.unit;
+        
+        if (unit != nil) {
+            if (unit.uType == PEASANT) [self makeButton:BUILDMEADOW];
+            if (unit.uType == PEASANT) [self makeButton:BUILDROAD];
+            if (unit.uType != CANNON) [self makeButton:UPGRADEUNIT];
+            if (unit.uType == CANNON) [self makeButton:SHOOTCANNON];
         }
 
         

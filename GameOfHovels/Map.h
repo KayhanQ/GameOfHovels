@@ -58,7 +58,7 @@
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile;
 
 - (void)buyUnitFromTile:(Tile*)villageTile tile:(Tile*)destTile unitType:(enum UnitType)uType;
-
+- (void)shootCannonFromTile:(Tile*)unitTile tile:(Tile*)destTile;
 - (void)buildMeadow:(Tile*)tile;
 - (void)buildRoad:(Tile*)tile;
 - (void)buildTowerFromTile:(Tile*)villageTile tile:(Tile*)destTile;

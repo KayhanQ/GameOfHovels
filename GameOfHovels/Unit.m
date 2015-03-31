@@ -51,7 +51,7 @@
                 _strength = 1;
                 _buyCostGold = 10;
                 _upkeepCost = 2;
-                _stamina = 10;
+                _stamina = 1000;
                 break;
                 
             }
@@ -60,7 +60,7 @@
                 _strength = 2;
                 _buyCostGold = 20;
                 _upkeepCost = 6;
-                _stamina = 10;
+                _stamina = 1000;
                 break;
             }
             case SOLDIER:
@@ -68,7 +68,7 @@
                 _strength = 3;
                 _buyCostGold = 30;
                 _upkeepCost = 18;
-                _stamina = 10;
+                _stamina = 1000;
                 break;
             }
             case RITTER:
@@ -76,7 +76,7 @@
                 _strength = 4;
                 _buyCostGold = 40;
                 _upkeepCost = 54;
-                _stamina = 10;
+                _stamina = 1000;
                 break;
             }
             case CANNON:
