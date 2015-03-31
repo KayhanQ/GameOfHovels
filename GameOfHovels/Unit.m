@@ -148,14 +148,14 @@
 - (BOOL)canChopBaum
 {
     BOOL possible = false;
-    if (_uType == PEASANT || _uType == INFANTRY) possible = true;
+    if (_uType == PEASANT || _uType == INFANTRY || _uType == SOLDIER) possible = true;
     return possible;
 }
 
 - (BOOL)canClearTombstone
 {
     BOOL possible = false;
-    if (_uType == PEASANT || _uType == INFANTRY) possible = true;
+    if (_uType == PEASANT || _uType == INFANTRY || _uType == SOLDIER) possible = true;
     return possible;
 }
 
