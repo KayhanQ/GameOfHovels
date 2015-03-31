@@ -89,9 +89,15 @@
         for (int i  = 0 ; i<_gridHeight; i++) {
             int xOffset = j%2 * _tileWidth/2;
             SPPoint *p = [SPPoint pointWithX:i*_tileWidth+xOffset y:j*_offsetHeight];
-            Tile *t = [[Tile alloc] initWithPosition:p structure:GRASS];
+            enum StructureType s;
+            if (j == 0 || j == _gridWidth-1 || i == 0 || i == _gridHeight-1) s = SEA;
+            else s = GRASS;
+            Tile *t = [[Tile alloc] initWithPosition:p structure:s];
             [_tilesSprite addChild:t];
         }
+    }
+    for (Tile* t in _tilesSprite) {
+        if ([t getStructureType] == SEA) t.touchable = false;
     }
 }
 
@@ -104,11 +110,13 @@
     }
     
     for (Tile* t in _tilesSprite) {
+        if ([t getStructureType] == SEA) continue;
         enum PlayerColor color = [[colors objectAtIndex:arc4random() % colors.count] intValue];
         [t setPColor:color];
     }
     
     for (Tile* t in _tilesSprite) {
+        if ([t getStructureType] == SEA) continue;
         if ([self getConnectedTilesByColor:t].count<=3) [t makeNeutral];
     }
 }
@@ -116,6 +124,7 @@
 - (void)assignVillagesToRegions
 {
     for (Tile* t in _tilesSprite) {
+        if ([t getStructureType] == SEA) continue;
         if (t.pColor == NOCOLOR) continue;
         if ([t hasVillage]) continue;
         
@@ -255,7 +264,8 @@
     if ([destTile getStructureType] == BAUM ) [moveTypes addObject: [NSNumber numberWithInt:TOBAUM]];
     if ([destTile getStructureType] == MEADOW ) [moveTypes addObject: [NSNumber numberWithInt:TOMEADOW]];
     if ([destTile getStructureType] == TOMBSTONE ) [moveTypes addObject: [NSNumber numberWithInt:TOTOMBSTONE]];
-    
+    if ([destTile getStructureType] == SEA ) [moveTypes addObject: [NSNumber numberWithInt:TOSEA]];
+
     return moveTypes;
 }
 
@@ -314,6 +324,11 @@
                 break;
             }
             case TOOWNTOWER:
+            {
+                return false;
+                break;
+            }
+            case TOSEA:
             {
                 return false;
                 break;

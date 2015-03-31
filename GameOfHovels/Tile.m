@@ -12,6 +12,7 @@
 
 #import "Structure.h"
 #import "Grass.h"
+#import "Sea.h"
 #import "Baum.h"
 #import "Meadow.h"
 #import "Road.h"
@@ -79,7 +80,7 @@
         SPTexture* tileTexture = [Media atlasTexture:@"tileGrass_tile.png"];
         _selectionLayer = [SPImage imageWithTexture:tileTexture];
         [SparrowHelper centerPivot:_selectionLayer];
-        _selectionLayer.alpha = 0.2;
+        _selectionLayer.alpha = 0;
         [self addChild:_selectionLayer];
         
         
@@ -259,6 +260,11 @@
         case GRASS: {
             Grass* g = [[Grass alloc] initWithTile:self];
             [_structuresSprite addChild:g];
+            break;
+        }
+        case SEA: {
+            Sea* r = [[Sea alloc] initWithTile:self];
+            [_structuresSprite addChild:r];
             break;
         }
         case BAUM: {
@@ -517,7 +523,7 @@
 
 - (void)deselectTile
 {
-    _selectionLayer.alpha = 0.2;
+    _selectionLayer.alpha = 0;
 }
 
 - (void)onTouch:(SPTouchEvent*)event
