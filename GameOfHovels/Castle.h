@@ -6,8 +6,20 @@
 //  Copyright (c) 2015 CivetAtelier. All rights reserved.
 //
 
-#ifndef GameOfHovels_Castle_h
-#define GameOfHovels_Castle_h
+@class Village;
+@class Tile;
+
+#import "Village.h"
+
+@interface Castle : Village
+{
+    
+    
+    
+}
+
+-(id)initWithTile:(Tile *)tile;
 
 
-#endif
+
+@end

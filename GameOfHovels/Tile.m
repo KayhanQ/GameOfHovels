@@ -20,6 +20,7 @@
 #import "Hovel.h"
 #import "Town.h"
 #import "Fort.h"
+#import "Castle.h"
 
 #import "Peasant.h"
 #import "Soldier.h"
@@ -226,6 +227,11 @@
             newVillage = [[Fort alloc] initWithTile:self];
             break;
         }
+        case CASTLE:
+        {
+            newVillage = [[Castle alloc] initWithTile:self];
+            break;
+        }
         default:
         {
             return;
@@ -241,7 +247,9 @@
 - (void)mergeVillageBySwallowing:(Village*)v
 {
     [_village transferSuppliesFrom:v];
-    [self upgradeVillageTo:_village.vType + v.vType];
+    int upgradeTo = _village.vType + v.vType;
+    if (upgradeTo > 4) upgradeTo = 4;
+    [self upgradeVillageTo:upgradeTo];
 }
 
 -(void)addStructure:(enum StructureType)sType

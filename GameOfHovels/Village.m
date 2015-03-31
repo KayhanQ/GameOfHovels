@@ -20,9 +20,12 @@
 @synthesize woodPile = _woodPile;
 @synthesize goldPile = _goldPile;
 @synthesize cost = _cost;
-@synthesize upkeep = _upkeep;
+@synthesize upkeepCost = _upkeepCost;
 @synthesize health = _health;
 @synthesize strength = _strength;
+
+//upkeep cost is in gold
+//buy cost is in wood
 
 -(id)initWithStructureType:(enum VillageType)vType
 {
@@ -34,7 +37,7 @@
             case HOVEL:
             {
                 _cost = 0;
-                _upkeep = 0;
+                _upkeepCost = 0;
                 _health = 1;
                 break;
                 
@@ -42,14 +45,14 @@
             case TOWN:
             {
                 _cost = 8;
-                _upkeep = 0;
+                _upkeepCost = 0;
                 _health = 2;
                 break;
             }
             case FORT:
             {
                 _cost = 8;
-                _upkeep = 0;
+                _upkeepCost = 0;
                 _health = 5;
                 _strength = 3;
                 break;
@@ -57,7 +60,7 @@
             case CASTLE:
             {
                 _cost = 12;
-                _upkeep = 80;
+                _upkeepCost = 80;
                 _health = 10;
                 _strength = 5;
                 break;
@@ -71,6 +74,7 @@
     return self;
 }
 
+//unused method
 - (BOOL)canSupportUnit:(Unit*)unit
 {
     enum UnitType uType = unit.uType;
@@ -120,11 +124,38 @@
             if (uType >= 4) canBeConquered = true;
             break;
         }
+        case CASTLE:
+        {
+            if (uType >= 5) canBeConquered = true;
+            break;
+        }
         default:
             break;
     }
     
     return canBeConquered;
+}
+
+- (BOOL)canUpgrade
+{
+    switch (_vType) {
+        case FORT:
+        {
+            if (_woodPile >= 12) return true;
+            break;
+        }
+        case CASTLE:
+        {
+            return false;
+            break;
+        }
+        default:
+        {
+            if (_woodPile >= 8) return true;
+            break;
+        }
+    }
+    return false;
 }
 
 - (void)transferSuppliesFrom:(Village*)village

@@ -25,7 +25,7 @@
 @property (nonatomic) int goldPile;
 @property (nonatomic) int cost;
 @property (nonatomic) int health;
-@property (nonatomic, readonly) int upkeep;
+@property (nonatomic, readonly) int upkeepCost;
 @property (nonatomic, readonly) int strength;
 
 - (id)initWithStructureType:(enum VillageType)vType;
@@ -34,6 +34,7 @@
 - (void)transferSuppliesFrom:(Village*)village;
 - (BOOL)canSupportUnit:(Unit*)unit;
 - (BOOL)canBeConqueredByUnit:(Unit*)unit;
+- (BOOL)canUpgrade;
 - (BOOL)protectsRegion;
 
 @end

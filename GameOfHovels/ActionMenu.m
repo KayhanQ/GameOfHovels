@@ -47,7 +47,7 @@
             int gold = village.goldPile;
             int wood = village.woodPile;
             
-            if (wood >= village.cost) {
+            if ([village canUpgrade]) {
                 [self makeButton:UPGRADEVILLAGE];
             }
             

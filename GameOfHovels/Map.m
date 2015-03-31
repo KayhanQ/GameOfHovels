@@ -247,23 +247,18 @@
 
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
-    BOOL actionPossible = true;
-
     if ([self isMyTurn]) {
-        //if (tileVillage.woodPile<8) actionPossible = false;
-    }
-    
-    if (actionPossible == false) {
-        return;
+
     }
 
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
+    
     for (Tile* t in tiles) t.village = tile.village;
     
     if ([self isMyTurn]) {
-        tile.village.woodPile -= 8;
+        tile.village.woodPile -= tile.village.cost;
         [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
@@ -811,17 +806,22 @@
     }
 }
 
-//also known as upkeep phase
-// Money is subtracted from each village’s treasury based on the villagers that it supports. If a village has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and are replaced by tombstones.
+// also known as upkeep phase
+// Money is subtracted from each village’s treasury based on the villagers that it supports. If a village
+// has insufficient funds to pay the villagers it supports, all villagers supported by that village perish and
+// are replaced by tombstones.
 - (void)paymentPhase
 {
     for (Tile* vTile in [self getTilesWithMyVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if([t hasUnit]) {
                 vTile.village.goldPile -= t.unit.upkeepCost;
-           }
+            }
         }
-        if(vTile.village.goldPile < 0) {
+        vTile.village.goldPile -= vTile.village.upkeepCost;
+        
+        if (vTile.village.goldPile < 0) {
+            vTile.village.goldPile = 0;
             [self killAllVillagers: vTile];
             break;
         }
@@ -829,7 +829,7 @@
     }
 }
 
--(void)killAllVillagers:(Tile*)villageTile;
+- (void)killAllVillagers:(Tile*)villageTile;
 {
     for (Tile* t in [self getTilesforVillage:villageTile.village]){
         if([t hasUnit]){
