@@ -99,10 +99,6 @@
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
-    _hud = [[Hud alloc] initWithPlayer:_mePlayer];
-    [_contents addChild:_hud];
-    
-    
     SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
     q.x = -q.width/2;
     q.y = -q.height/2;
@@ -114,13 +110,17 @@
 	_map.gameEngine = self;
     [_world addChild:_map];
     
+    _hud = [[Hud alloc] initWithMap:_map];
+    [_contents addChild:_hud];
+    
+    
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
     
     //event Listeners
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
-    [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
+    [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
 
     [self enableScroll];
@@ -205,14 +205,14 @@
     //if (tile.village.player != _currentPlayer) return;
     if (![tile canBeSelected]) return;
     
-    [self removeTileListener];
+    [self removeTileListeners];
     [self selectTile:tile];
     
     _actionMenu = [[ActionMenu alloc] initWithTile:tile];
     [_popupMenuSprite addChild:_actionMenu];
     if (_actionMenu.buttonSprite.numChildren == 0) {
         [_actionMenu removeFromParent];
-        [self addTileListener];
+        [self addTileListeners];
     }
 }
 
@@ -298,7 +298,7 @@
     }
     
     [_actionMenu removeFromParent];
-    [self addTileListener];
+    [self addTileListeners];
     if (actionCompleted) {
         [self deselectTile:_currentPlayerAction.selectedTile];
     }
@@ -402,14 +402,16 @@
     [self removeEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
 }
 
-- (void)removeTileListener
+- (void)removeTileListeners
 {
     [self removeEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+    [self removeEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
 }
 
-- (void)addTileListener
+- (void)addTileListeners
 {
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+    [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
 }
 
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data
