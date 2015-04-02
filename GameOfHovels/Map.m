@@ -105,6 +105,7 @@
             };
             
             if(i == _gridWidth/2 && j == _gridHeight/2){
+           
                 s = GRASS;
                 Tile *t = [[Tile alloc] initWithPosition:p structure:s];
                 keyTile = t;
@@ -122,8 +123,6 @@
             [_tilesSprite addChild:t];
         }
     }
-    
-    //Tile* keyTile = [_tilesSprite childAtIndex:arc4random_uniform(_tileWidth * _tileHeight)];
 
     for(Tile* t in _tilesSprite){
         
@@ -131,15 +130,11 @@
             continue;
         }
         
-      //  if(![self areConnectedByLand:t t2:keyTile]) [t addStructure:SEA];//
-        
+        if([self areConnectedByLand:t t2:keyTile])
+        {
+         [t addStructure:SEA];//
+        }
     }
-    
-       //check through all of the tiles. If you can't
-    
-    //pathfinding to do the same thing as color
-        //establish a hook in the middle. There is a center tile called the keystone. If a tile can't reach it, make it a sea tile.
-    
 }
 
 
@@ -943,7 +938,7 @@
     for (int i = 0; i < searchTiles.count; i++) {
         Tile* sTile = [searchTiles objectAtIndex:i];
         sTile.visitedBySearch = true;
-        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+        for (Tile* nTile in [sTile getNeighboursOfSameStructure]) {
             if (nTile.visitedBySearch) continue;
             if (nTile == t2) {
                 [self resetVisitedBySearchFlags];
