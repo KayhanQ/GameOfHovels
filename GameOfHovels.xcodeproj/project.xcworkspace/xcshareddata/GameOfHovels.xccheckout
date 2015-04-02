@@ -12,6 +12,8 @@
 	<dict>
 		<key>40DC266EC0FC92B6988AE3DB7387A98879419975</key>
 		<string>https://github.com/KayhanQ/GameOfHovels.git</string>
+		<key>98CEC1A321BAE52156B3AC98889B8E2F0503C925</key>
+		<string>https://github.com/Gamua/Sparrow-Framework.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>GameOfHovels.xcodeproj</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>40DC266EC0FC92B6988AE3DB7387A98879419975</key>
 		<string>../..</string>
+		<key>98CEC1A321BAE52156B3AC98889B8E2F0503C925</key>
+		<string>../../../XCodeFrameworks/Sparrow-Framework</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/KayhanQ/GameOfHovels.git</string>
@@ -35,6 +39,14 @@
 			<string>40DC266EC0FC92B6988AE3DB7387A98879419975</string>
 			<key>IDESourceControlWCCName</key>
 			<string>GameOfHovels</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>98CEC1A321BAE52156B3AC98889B8E2F0503C925</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Sparrow-Framework</string>
 		</dict>
 	</array>
 </dict>

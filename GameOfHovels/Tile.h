@@ -31,7 +31,6 @@
 - (NSMutableArray*)getNeighbours;
 - (NSMutableArray*)getNeighboursOfSameRegion;
 - (NSMutableArray*)getNeighboursOfSameColor;
-- (NSMutableArray*)getNeighboursOfSameStructure;
 - (void)makeNeutral;
 
 - (void)setPColor:(enum PlayerColor)pColor;

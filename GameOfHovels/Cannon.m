@@ -35,7 +35,14 @@
         
         [movie play];
         [juggler addObject:movie];
-
+        
+        /*
+        SPTexture* cannonTexture = [Media atlasTexture:@"alienPink.png"];
+        SPImage* baseImage = [SPImage imageWithTexture:cannonTexture];
+        baseImage.scale = 0.4;
+        [self addChild:baseImage];
+        [SparrowHelper centerPivot:self];
+         */
     }
     return self;
     
