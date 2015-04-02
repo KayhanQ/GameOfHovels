@@ -17,6 +17,7 @@
 }
 
 @synthesize strength = _strength;
+@synthesize buyCostWood = _buyCostWood;
 
 
 -(id)initWithTile:(Tile *)tile
@@ -26,6 +27,8 @@
         //custom code here
         
         _strength = 2;
+        _buyCostWood = 5;
+        
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"tower.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
         baseImage.scale = 0.15;

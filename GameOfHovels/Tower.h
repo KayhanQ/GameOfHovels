@@ -19,5 +19,6 @@
 -(id)initWithTile:(Tile *)tile;
 
 @property(nonatomic, readonly) int strength;
+@property(nonatomic, readonly) int buyCostWood;
 
 @end
