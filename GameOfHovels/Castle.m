@@ -26,7 +26,7 @@
         
         SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"castle.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.14;
+        baseImage.scale = 0.10;
         [self addChild:baseImage];
         
         [SparrowHelper centerPivot:self];
