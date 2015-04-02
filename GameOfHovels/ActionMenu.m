@@ -56,7 +56,7 @@
             }
             
             
-            if (gold >= _unitGoldCosts[0] || wood >= _unitWoodCosts[0]) {
+            if (gold >= _unitGoldCosts[0]) {
                 [self makeButton:BUYPEASANT];
             }
             //adds buttons from infantry upwards
