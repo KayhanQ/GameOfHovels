@@ -81,7 +81,7 @@
             }
             case CANNON:
             {
-                _strength = 5;
+                _strength = 3;
                 _buyCostWood = 12;
                 _buyCostGold = 35;
                 _upkeepCost = 5;
