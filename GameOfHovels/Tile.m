@@ -382,6 +382,16 @@
     return nTiles;
 }
 
+- (NSMutableArray*)getNeighboursOfSameStructure
+{
+    NSMutableArray* nTiles = [NSMutableArray array];
+    for (Tile* nT in _neighboursArray) {
+        if ([self getStructureType] == [nT getStructureType]) [nTiles addObject:nT];
+    }
+    return nTiles;
+}
+
+
 - (NSMutableArray*)getNeighboursOfSameColor
 {
     NSMutableArray* nTiles = [NSMutableArray array];

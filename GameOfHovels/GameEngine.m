@@ -106,7 +106,7 @@
     SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
     q.x = -q.width/2;
     q.y = -q.height/2;
-    q.color = 0xB3E8F2;
+   // q.color = 0xB3E8F2;
     [_world addChild:q];
     
     

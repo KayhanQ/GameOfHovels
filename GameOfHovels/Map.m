@@ -61,7 +61,8 @@
         _tilesSprite = [SPSprite sprite];
         [self addChild:_tilesSprite];
         
-        [self makeBasicMap];
+       // [self makeBasicMap];
+        [self makeRandomMap];
         [self setNeighbours];
         
         if ([GlobalFlags isGameWithRandomMap]) {
@@ -82,6 +83,66 @@
     }
     return self;
 }
+
+- (void)makeRandomMap
+{
+    int randomChance;
+    Tile* keyTile;
+
+    for (int j  = 0 ; j<_gridWidth; j++) {
+        for (int i  = 0 ; i<_gridHeight; i++) {
+           
+            randomChance = arc4random_uniform(50); //just a magic number here that will help us get the chance of something being a sea tile
+            int xOffset = j%2 * _tileWidth/2;
+            SPPoint *p = [SPPoint pointWithX:i*_tileWidth+xOffset y:j*_offsetHeight];
+            enum StructureType s;
+            
+            if (j == 0 || j == _gridWidth-1 || i == 0 || i == _gridHeight-1){
+                s = SEA;
+                Tile *t = [[Tile alloc] initWithPosition:p structure:s];
+                [_tilesSprite addChild:t];
+                continue;
+            };
+            
+            if(i == _gridWidth/2 && j == _gridHeight/2){
+                s = GRASS;
+                Tile *t = [[Tile alloc] initWithPosition:p structure:s];
+                keyTile = t;
+                [_tilesSprite addChild:t];
+                continue;
+            }
+            
+            if(randomChance <35){
+                s= GRASS;
+                
+            } else{
+            s = SEA;
+            }
+            Tile *t = [[Tile alloc] initWithPosition:p structure:s];
+            [_tilesSprite addChild:t];
+        }
+    }
+    
+    //Tile* keyTile = [_tilesSprite childAtIndex:arc4random_uniform(_tileWidth * _tileHeight)];
+
+    for(Tile* t in _tilesSprite){
+        
+        if(t.getStructureType == SEA){
+            continue;
+        }
+        
+      //  if(![self areConnectedByLand:t t2:keyTile]) [t addStructure:SEA];//
+        
+    }
+    
+       //check through all of the tiles. If you can't
+    
+    //pathfinding to do the same thing as color
+        //establish a hook in the middle. There is a center tile called the keystone. If a tile can't reach it, make it a sea tile.
+    
+}
+
+
 
 - (void)makeBasicMap
 {
@@ -873,6 +934,30 @@
     }
     return false;
 }
+
+- (BOOL)areConnectedByLand:(Tile*)t1 t2:(Tile*)t2 //sees if two tiles are connected by land.
+{
+    NSMutableArray* searchTiles = [NSMutableArray array];
+    [searchTiles addObject:t1];
+    
+    for (int i = 0; i < searchTiles.count; i++) {
+        Tile* sTile = [searchTiles objectAtIndex:i];
+        sTile.visitedBySearch = true;
+        for (Tile* nTile in [sTile getNeighboursOfSameRegion]) {
+            if (nTile.visitedBySearch) continue;
+            if (nTile == t2) {
+                [self resetVisitedBySearchFlags];
+                return true;
+            }
+            [searchTiles addObject:nTile];
+        }
+    }
+    [self resetVisitedBySearchFlags];
+    return false;
+}
+
+
+
 
 - (BOOL)areConnectedByRegion:(Tile*)t1 t2:(Tile*)t2
 {

@@ -23,7 +23,6 @@
         
         SPTexture* tileTexture = [Media atlasTexture:@"tileWater_tile.png"];
         SPImage* image = [SPImage imageWithTexture:tileTexture];
-        self.alpha = 0;
         [self addChild:image];
         
         
