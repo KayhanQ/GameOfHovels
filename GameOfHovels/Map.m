@@ -134,6 +134,8 @@
         Tile* vTile = [connectedTiles objectAtIndex:arc4random() % connectedTiles.count];
         [vTile addVillage:HOVEL];
         vTile.village.player = p;
+        vTile.village.goldPile = 11;
+        vTile.village.woodPile = 100;
         for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
     }
 }
@@ -165,6 +167,7 @@
     if ([self isMyTurn]) {
         if (destTile.village == unitTile.village) return;
         if ([self distanceFromTile:unitTile toTile:destTile] > 2) return;
+        if (unitTile.village.woodPile <= 1) return;
     }
     
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
@@ -173,7 +176,11 @@
     
     [destTile attackWithCannon];
     
-    if (areAttackingVillage) [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
+    if (areAttackingVillage) {
+        if (![destTile isVillage]) {
+            [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
+        }
+    }
 }
 
 //tells you if the distance is 1 or 2 hex
@@ -192,13 +199,14 @@
 
 - (void)upgradeVillageWithTile:(Tile*)tile villageType:(enum VillageType)vType
 {
-    if ([self isMyTurn]) {
-
-    }
-
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
+    
+    //Subtract Gold
+    if ([self isMyTurn]) {
+        tile.village.woodPile -= tile.village.cost;
+    }
     
     for (Tile* t in tiles) t.village = tile.village;
     
@@ -211,6 +219,10 @@
 
 - (void)upgradeUnitWithTile:(Tile *)tile unitType:(enum UnitType)uType
 {
+    //Subtract Gold
+    if ([self isMyTurn]) {
+        tile.village.goldPile -= tile.unit.upgradeCost;
+    }
     [tile upgradeUnit:uType];
 }
 
@@ -233,6 +245,9 @@
     if ([self isMyTurn]) {
         if (villageTile.village != destTile.village) actionPossible = false;
         if (![destTile canHaveUnit]) actionPossible = false;
+        if (uType == CANNON) {
+            if (![[villageTile getNeighboursOfSameRegion] containsObject:destTile]) actionPossible = false;
+        }
     }
     
     if (actionPossible == false) return;
@@ -240,7 +255,8 @@
     [destTile addUnitWithType:uType];
     
     if ([self isMyTurn]) {
-        villageTile.village.goldPile-=10;
+        villageTile.village.goldPile -= destTile.unit.buyCostGold;
+        villageTile.village.goldPile -= destTile.unit.buyCostWood;
         [self updateHud:villageTile];
         //[_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
     }
@@ -605,6 +621,11 @@
     }
     
     [destTile addStructure:TOWER];
+    
+    if ([self isMyTurn]) {
+        Tower* tower = (Tower*)[destTile getStructure];
+        villageTile.village.woodPile -= tower.buyCostWood;
+    }
 }
 
 - (void)updateHud:(Tile*)tile
