@@ -421,7 +421,7 @@
 
 - (void)attackWithCannon
 {
-    if ([self hasVillage]) {
+    if ([self isVillage]) {
         _village.health--;
         if (_village.health <= 0) {
             [self removeVillage];
