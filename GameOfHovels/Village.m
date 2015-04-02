@@ -76,7 +76,7 @@
 
 - (BOOL)canBuildTower
 {
-    if (_woodPile>=5 && _vType == TOWN) return true;
+    if (_woodPile>=5 && _vType >= TOWN) return true;
     return false;
 }
 
@@ -168,7 +168,6 @@
 {
     _woodPile += village.woodPile;
     _goldPile += village.goldPile;
-    _health += village.health;
     village.woodPile = 0;
     village.goldPile = 0;
     village.health = 0;
