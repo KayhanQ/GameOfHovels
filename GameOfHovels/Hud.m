@@ -13,12 +13,16 @@
 #import "SparrowHelper.h"
 #import "Tile.h"
 #import "Village.h"
+#import "Map.h"
+
 
 @implementation Hud {
     
     SPButton* _endTurnButton;
     SPTextField* _woodField;
     SPTextField* _goldField;
+    SPTextField* _healthField;
+    SPTextField* _numTilesInRegion;
 
     int _yOffsetMinor;
     float _middleX;
@@ -26,18 +30,17 @@
     float _width;
 }
 
-@synthesize player = _player;
+@synthesize map = _map;
 
--(id)initWithPlayer:(GamePlayer *)player
+-(id)initWithMap:(Map *)map
 {
     if (self=[super init]) {
         //custom code here
         
-        _player = player;
-        
+        _map = map;
         
         _height = 380;
-        _width = 130;
+        _width = 60;
 
         _yOffsetMinor = 3;
         
@@ -67,6 +70,16 @@
         _goldField.text = @"Gold: ";
         _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
         [self addChild:_goldField];
+        
+        _healthField = [self newTextField];
+        _healthField.text = @"Village Health: ";
+        _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
+        [self addChild:_healthField];
+        
+        _numTilesInRegion = [self newTextField];
+        _numTilesInRegion.text = @"Village Health: ";
+        _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
+        [self addChild:_numTilesInRegion];
     }
     return self;
 }
@@ -76,6 +89,7 @@
     SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
     t.x = _middleX;
     t.border = true;
+    t.fontSize = 5;
     [SparrowHelper centerPivot:t];
     return t;
 }
@@ -89,6 +103,13 @@
     
     NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
     _goldField.text = goldString;
+    
+    NSString* healthString = [NSString stringWithFormat:@"Village Health: %d", v.health];
+    _healthField.text = healthString;
+    
+    NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Num Tiles: %d", [_map getTilesforVillage:v].count];
+    _numTilesInRegion.text = _numTilesInRegionString;
+    
     
     //who is the unit and all its stats, workstate
     //if you click a village then put up how many tiles the village has
