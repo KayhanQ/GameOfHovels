@@ -42,45 +42,47 @@
 @synthesize gameEngine = _gameEngine;
 
 
--(id)initWithRandomMap:(Hud *)hud
+- (id)initWithBasicMap
 {
     if (self=[super init]) {
-		
-		_messageLayer = [MessageLayer sharedMessageLayer];
-        _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
-        
-        _gridWidth = 20;
-        _gridHeight = 20;
-        _tileWidth = 54;
-        _tileHeight = 57;
-        _offsetHeight = 40;
+        [self setup];
+    }
+    return self;
+}
 
-        _hud = hud;
-
-        
-        _tilesSprite = [SPSprite sprite];
-        [self addChild:_tilesSprite];
-        
-        [self makeBasicMap];
-        [self setNeighbours];
-        
+- (id)initWithRandomMap
+{
+    if (self=[super init]) {
+        [self setup];
         if ([GlobalFlags isGameWithRandomMap]) {
             [self assignTilesToPlayers];
             [self assignVillagesToRegions];
             [self addTrees];
             [self addMeadows];
         }
-        else {
-            [self makePlayer1Tiles: _messageLayer.players[0]];
-            [self makePlayer2Tiles: _messageLayer.players[1]];
-            [self makeTreesAndMeadows];
-        }
-
-		
-        [self refreshTeritory];
-        
     }
     return self;
+}
+
+- (void)setup
+{
+    _messageLayer = [MessageLayer sharedMessageLayer];
+    _gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
+    
+    _gridWidth = 20;
+    _gridHeight = 20;
+    _tileWidth = 54;
+    _tileHeight = 57;
+    _offsetHeight = 40;
+    
+    
+    _tilesSprite = [SPSprite sprite];
+    [self addChild:_tilesSprite];
+    
+    [self makeBasicMap];
+    
+    [self setNeighbours];
+    [self refreshTeritory];
 }
 
 - (void)makeBasicMap
@@ -570,7 +572,7 @@
 
 
 
-//makes a region neutral by removing units and village pointers
+//makes a region neutral by removing units and village pointers and towers
 - (void)makeRegionNeutral:(NSMutableArray*)region
 {
     for (Tile* t in region) [t makeNeutral];

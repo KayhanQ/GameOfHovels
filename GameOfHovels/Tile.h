@@ -35,10 +35,6 @@
 
 - (void)setPColor:(enum PlayerColor)pColor;
 
-- (void)addStructure:(enum StructureType)sType;
-
-- (void)removeStructure;
-- (void)removeAllStructures;
 
 - (BOOL)neighboursContainTile:(Tile*) tile;
 - (enum StructureType)getStructureType;
@@ -75,6 +71,10 @@
 - (BOOL)hasTower;
 
 - (Structure*)getStructure;
+- (NSMutableArray*)getStructureTypes;
+- (void)addStructure:(enum StructureType)sType;
+- (void)removeStructure;
+- (void)removeAllStructures;
 
 - (void)endTurnUpdates;
 

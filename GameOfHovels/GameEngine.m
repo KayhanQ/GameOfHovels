@@ -105,13 +105,13 @@
     q.color = 0xB3E8F2;
     [_world addChild:q];
     
-    
-    _map = [[Map alloc] initWithRandomMap:_hud];
-	_map.gameEngine = self;
-    [_world addChild:_map];
-    
     _hud = [[Hud alloc] initWithMap:_map];
     [_contents addChild:_hud];
+    
+    _map = [[Map alloc] initWithRandomMap];
+	_map.gameEngine = self;
+    _map.hud = _hud;
+    [_world addChild:_map];
     
     
     _popupMenuSprite = [SPSprite sprite];

@@ -325,6 +325,15 @@
     return s.sType;
 }
 
+- (NSMutableArray*)getStructureTypes
+{
+    NSMutableArray* structures = [NSMutableArray array];
+    for (Structure* s in _structuresSprite) {
+        [structures addObject:[NSNumber numberWithInt:s.sType]];
+    }
+    return structures;
+}
+
 - (void)makeNeutral
 {
     [self setPColor:NOCOLOR];
@@ -333,6 +342,7 @@
         [self removeUnit];
         [self addStructure:TOMBSTONE];
     }
+    if ([self hasTower]) [self removeStructure];
 }
 //cancels timer
 - (void)invalidateTimer
