@@ -201,7 +201,6 @@
 {
     Tile* tile = event.tile;
     
-    //if (tile.village.player != _currentPlayer) return;
     if (![tile canBeSelected]) return;
     
     [self removeTileListeners];
@@ -212,6 +211,9 @@
     if (_actionMenu.buttonSprite.numChildren == 0) {
         [_actionMenu removeFromParent];
         [self addTileListeners];
+    }
+    else {
+        [_map addEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     }
 }
 
@@ -297,9 +299,21 @@
     }
     
     [_actionMenu removeFromParent];
+    [_map removeEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     [self addTileListeners];
     if (actionCompleted) {
         [self deselectTile:_currentPlayerAction.selectedTile];
+    }
+}
+
+- (void)cancelActionMenu:(SPTouchEvent*)event
+{
+    SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
+    if (touchBegan) {
+        [_actionMenu removeFromParent];
+        [self addTileListeners];
+        [self deselectTile:_currentPlayerAction.selectedTile];
+        [_map removeEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     }
 }
 
