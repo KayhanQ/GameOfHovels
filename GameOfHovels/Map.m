@@ -164,6 +164,7 @@
     }
 }
 
+//we don't transfer supplies when you attack a village with a Cannon.
 - (void)shootCannonFromTile:(Tile*)unitTile tile:(Tile*)destTile
 {
     if ([self isMyTurn]) {
@@ -207,12 +208,7 @@
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
-    
-    //Subtract Gold
-    if ([self isMyTurn]) {
-        tile.village.woodPile -= tile.village.cost;
-    }
-    
+        
     for (Tile* t in tiles) t.village = tile.village;
     
     if ([self isMyTurn]) {

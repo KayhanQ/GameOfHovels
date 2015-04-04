@@ -13,20 +13,40 @@
 
 - (void)onMapTouched:(SPTouchEvent *)event
 {
-    //NSSet *touches = [event touchesWithTarget:self andPhase:SPTouchPhaseEnded];
-    
+    NSArray *touchesMoved = [[event touchesWithTarget:self andPhase:SPTouchPhaseMoved] allObjects];
+
     _touching = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] count] == 0;
-    if (!_touching) return;
     
-    SPTouch* touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseMoved] anyObject];
-    SPPoint *localPos = [touch locationInSpace:self];
-    SPPoint *previousLocalPos = [touch previousLocationInSpace:self];
-    
-    _scrollVector.x = previousLocalPos.x - localPos.x;
-    _scrollVector.y = previousLocalPos.y - localPos.y;
-    
-    _world.x -= _scrollVector.x;
-    _world.y -= _scrollVector.y;
+    if (touchesMoved.count == 2) {
+        SPPoint *previousPos1 = [[touchesMoved objectAtIndex:0] previousLocationInSpace:_world];
+        SPPoint *previousPos2 = [[touchesMoved objectAtIndex:1] previousLocationInSpace:_world];
+        
+        SPPoint *currentPos1 = [[touchesMoved objectAtIndex:0] locationInSpace:_world];
+        SPPoint *currentPos2 = [[touchesMoved objectAtIndex:1] locationInSpace:_world];
+        
+        float distance1 = [SPPoint distanceFromPoint:currentPos1 toPoint:currentPos2];
+        float distance2 = [SPPoint distanceFromPoint:previousPos1 toPoint:previousPos2];
+        
+        float scaleX = (([_world scaleX] / distance2) * distance1);
+        float scaleY = (([_world scaleY] / distance2) * distance1);
+        
+        if (scaleX > 0.40 && scaleX <= 1.00) {
+            _world.scaleX = scaleX;
+            _world.scaleY = scaleY;
+        }
+    }
+    if (_touching) {
+        SPTouch* touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseMoved] anyObject];
+        SPPoint *localPos = [touch locationInSpace:self];
+        SPPoint *previousLocalPos = [touch previousLocationInSpace:self];
+        
+        _scrollVector.x = previousLocalPos.x - localPos.x;
+        _scrollVector.y = previousLocalPos.y - localPos.y;
+        
+        _world.x -= _scrollVector.x;
+        _world.y -= _scrollVector.y;
+    }
+
 }
 
 // enter frame event listener

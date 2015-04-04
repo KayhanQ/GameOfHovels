@@ -23,7 +23,6 @@
 #import "GlobalFlags.h"
 #import "CurrentPlayerAction.h"
 
-
 @implementation GameEngine
 {
     Map* _map;

@@ -38,7 +38,7 @@
     // Enable some common settings here:
     //
     // _viewController.showStats = YES;
-    // _viewController.multitouchEnabled = YES;
+    _viewController.multitouchEnabled = YES;
     // _viewController.preferredFramesPerSecond = 60;
     
     [_viewController startWithRoot:[GameEngine class] supportHighResolutions:YES doubleOnPad:YES];
