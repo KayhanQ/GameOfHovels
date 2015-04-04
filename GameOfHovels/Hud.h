@@ -16,7 +16,7 @@
     
 }
 
-@property (nonatomic, readonly) Map* map;
+@property (nonatomic, readonly, weak) Map* map;
 
 - (id)initWithMap:(Map*)map;
 - (void)update:(Tile*)tile;
