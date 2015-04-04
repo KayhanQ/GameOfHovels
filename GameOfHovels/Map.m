@@ -170,6 +170,7 @@
         if (destTile.village == unitTile.village) return;
         if ([self distanceFromTile:unitTile toTile:destTile] > 2) return;
         if (unitTile.village.woodPile <= 1) return;
+        unitTile.village.woodPile--;
     }
     
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
@@ -179,6 +180,8 @@
     [destTile attackWithCannon];
     
     if (areAttackingVillage) {
+        destTile.village = enemyPlayersVillage;
+        // the village was destroyed!
         if (![destTile isVillage]) {
             [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
         }

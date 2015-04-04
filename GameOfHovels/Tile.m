@@ -435,11 +435,14 @@
         _village.health--;
         if (_village.health <= 0) {
             [self removeVillage];
-            [self makeNeutral];
         }
     }
-    [self removeUnit];
     [self removeAllStructures];
+
+    if ([self hasUnit]) {
+        [self removeUnit];
+        [self addStructure:TOMBSTONE];
+    }
 }
 
 - (BOOL)hasVillage
