@@ -476,13 +476,13 @@
 
 - (BOOL)canHaveMeadow
 {
-    if ([self getStructureType] == GRASS) return true;
+    if ([self getStructureType] == GRASS || [self getStructureType] == ROAD) return true;
     return false;
 }
 
 - (BOOL)canHaveRoad
 {
-    if ([self getStructureType] == GRASS) return true;
+    if ([self getStructureType] == GRASS || [self getStructureType] == MEADOW) return true;
     return false;
 }
 
