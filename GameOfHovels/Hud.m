@@ -20,9 +20,16 @@
 
 @implementation Hud {
     
-    SPButton* _village1, *_village2, *_leftButton, *_rightButton;
+    SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
     
     SPButton* _endTurnButton;
+    
+    NSMutableArray * listOfVillages;
+    
+    Tile * villageTile1, *villageTile2;
+    
+    SPImage *village1Picture;
+    SPTexture * _buttonTexture; //TEST
     
     //unit
     SPTextField* _woodField;
@@ -54,11 +61,15 @@
         //_player = player;
         _map = map;
         
+        listOfVillages = [map getTilesWithMyVillages];
+        
         _height = 380;
         _width = 130;
         _yOffsetMinor = 3;
         
         SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
+        
+        SPSprite* sprite = [SPSprite sprite]; //container for ui elements
         
         background.width = _width;
         background.height = _height + 4;
@@ -67,14 +78,23 @@
         
         _middleX = _width/2;
         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
+        _buttonTexture = buttonTexture;
+     //   SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
         
         
         //
+        _settingsButton = [SPButton buttonWithUpState:buttonTexture];
+        _settingsButton.y = 0;
+        _settingsButton.height = 20; //Just Some magic number
+        _settingsButton.width = background.width - 10;
+        [sprite addChild:_settingsButton];
+        
         
         _village1 = [SPButton buttonWithUpState:buttonTexture];
         _village1.x = 7;
         _village1.height = 100; //Just Some magic number
         _village1.width = background.width - 10;
+        
         
         _village2 = [SPButton buttonWithUpState:buttonTexture];
         _village2.x = 7;
@@ -82,72 +102,58 @@
          _village2.width = background.width - 10;
         
         //
+        _village1.y = 20;
         
-        SPSprite* sprite = [SPSprite sprite];
+        village1Picture = [SPImage imageWithContentsOfFile:@"fort.png"];
+        village1Picture.height = 40;
+        village1Picture.width = 40;
+        [_village1 addChild:village1Picture];
         
         [sprite addChild:_village1];
-        _village2.y = _village1.y +100;
+        
+        
+        
+        _village2.y = _village1.y +90;
         [sprite addChild:_village2];
+        
+        _leftButton = [SPButton buttonWithUpState:buttonTexture];
+        _leftButton.x = 7;
+        _leftButton.y = _village2.y + 90;
+        _leftButton.width = 50;
+        _leftButton.height = 50;
+        [sprite addChild:_leftButton];
+        [_leftButton addEventListener:@selector(leftButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        _rightButton = [SPButton buttonWithUpState:buttonTexture];
+        _rightButton.x = _leftButton.x + 70;
+        _rightButton.y = _leftButton.y;
+        _rightButton.width = _leftButton.width;
+        _rightButton.height = _leftButton.height;
+        [sprite addChild:_rightButton];
+        [_rightButton addEventListener:@selector(rightButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
+
+        
+        
+        
         [self addChild:sprite];
         
         
         _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
         
-        _endTurnButton.height = 40; //Just Some magic number
-        _endTurnButton.width = 100;
+        _endTurnButton.height = 50; //Just Some magic number
+        _endTurnButton.width = 110;
         
         [SparrowHelper centerPivot:_endTurnButton];
         
         _endTurnButton.x = _middleX;
-        _endTurnButton.y = _height - _endTurnButton.height;
+        _endTurnButton.y = _height - _endTurnButton.height + 20;
         
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
-        
-        
-        
-        //Village Info------- ADD TO METHOD
-        _woodField = [self newTextField];
-        //_woodField.text = @"Wood: ";
-        _woodField.y = 200;
-        [self addChild:_woodField];
-        
-        _goldField = [self newTextField];
-        //_goldField.text = @"Gold: ";
-        _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
-        [self addChild:_goldField];
-        
-         _healthField = [self newTextField];
-         //_healthField.text = @"Village Health: ";
-         _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
-         [self addChild:_healthField];
-         
-         _numTilesInRegion = [self newTextField];
-        // _numTilesInRegion.text = @"Village Health: ";
-         _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
-         [self addChild:_numTilesInRegion];
-
-        
-        
-        //Unit Info--------- ADD TO METHOD
-        _upkeepField = [self newTextField];
-        _upkeepField.y = _woodField.y + _woodField.height + _yOffsetMinor;
-        [self addChild:_upkeepField];
-        
-        _unitNameField = [self newTextField];
-        _unitNameField.y = _woodField.y;
-        [self addChild:_unitNameField];
-        
-        _homeCoordField = [self newTextField];
-        _homeCoordField.y = _woodField.y - _woodField.height - _yOffsetMinor;
-        _homeCoordField.fontSize = 10;
-        [self addChild:_homeCoordField];
-        
-        _ownerField = [self newTextField];
-        _ownerField.y = _woodField.y - 2*_woodField.height - _yOffsetMinor;
-        [self addChild:_ownerField];
+        [self initVillageFields];
+        [self initUnitFields];
         
         
     }
@@ -236,6 +242,61 @@
         GHEvent *event = [[GHEvent alloc] initWithType:EVENT_TYPE_TURN_ENDED];
         [self dispatchEvent:event];
     }
+}
+
+- (void)leftButtonTouched:(SPTouchEvent*) event
+{
+    NSLog(@"leftButton Touched");
+    village1Picture.texture = _buttonTexture;
+}
+
+- (void)rightButtonTouched:(SPTouchEvent*) event
+{
+    NSLog(@"rightButton Touched");
+}
+
+- (void)initUnitFields{
+    //Unit Info--------- ADD TO METHOD
+    _upkeepField = [self newTextField];
+    _upkeepField.y = _woodField.y + _woodField.height + _yOffsetMinor;
+    [self addChild:_upkeepField];
+    
+    _unitNameField = [self newTextField];
+    _unitNameField.y = _woodField.y;
+    [self addChild:_unitNameField];
+    
+    _homeCoordField = [self newTextField];
+    _homeCoordField.y = _woodField.y - _woodField.height - _yOffsetMinor;
+    _homeCoordField.fontSize = 10;
+    [self addChild:_homeCoordField];
+    
+    _ownerField = [self newTextField];
+    _ownerField.y = _woodField.y - 2*_woodField.height - _yOffsetMinor;
+    [self addChild:_ownerField];
+    
+}
+
+-(void) initVillageFields{
+    //Village Info------- ADD TO METHOD
+    _woodField = [self newTextField];
+    //_woodField.text = @"Wood: ";
+    _woodField.y = 290;
+    [self addChild:_woodField];
+    
+    _goldField = [self newTextField];
+    //_goldField.text = @"Gold: ";
+    _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
+    [self addChild:_goldField];
+    
+    _healthField = [self newTextField];
+    //_healthField.text = @"Village Health: ";
+    _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
+    [self addChild:_healthField];
+    
+    _numTilesInRegion = [self newTextField];
+    // _numTilesInRegion.text = @"Village Health: ";
+    _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
+    [self addChild:_numTilesInRegion];
 }
 
 
