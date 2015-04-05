@@ -77,7 +77,7 @@
         [self addChild:_healthField];
         
         _numTilesInRegion = [self newTextField];
-        _numTilesInRegion.text = @"Village Health: ";
+        _numTilesInRegion.text = @"Numb Tiles: ";
         _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
         [self addChild:_numTilesInRegion];
     }
@@ -107,7 +107,8 @@
     NSString* healthString = [NSString stringWithFormat:@"Village Health: %d", v.health];
     _healthField.text = healthString;
     
-    NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Num Tiles: %d", [_map getTilesforVillage:v].count];
+    int tCount = [_map getTilesforVillage:v].count;
+    NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Numb Tiles: %d", tCount];
     _numTilesInRegion.text = _numTilesInRegionString;
     
     

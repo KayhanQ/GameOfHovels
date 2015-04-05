@@ -526,11 +526,8 @@
         if ([destTile hasUnit]) [destTile removeUnit];
         if ([destTile hasTower]) [destTile removeStructure];
         if ([self tileWithNeighboursSplitsRegion:nTiles]) {
-            NSLog(@"TILE SPLITS REGION");
             NSMutableArray* regions = [self getSplitRegions:nTiles];
-            NSLog(@"Regions count: %d",regions.count);
             for (NSMutableArray* region in regions) {
-                NSLog(@"Tiles count: %d",region.count);
                 if ([self regionHasVillage:region]) continue;
                 [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
             }
