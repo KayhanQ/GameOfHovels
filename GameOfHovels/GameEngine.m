@@ -116,12 +116,7 @@
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
     
-    //event Listeners
-    [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
-    [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
-    [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
-    [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
-
+    [self addTurnEventListeners];
     [self enableScroll];
 
     
@@ -131,6 +126,22 @@
 	[MessageLayer sharedMessageLayer].gameEngine = self;
 }
 
+- (void)addTurnEventListeners
+{
+    [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+    [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
+    [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
+    [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+}
+
+//unused
+- (void)removeTurnEventListeners
+{
+    [self removeEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
+    [self removeEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
+    [self removeEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
+    [self removeEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+}
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
@@ -144,7 +155,8 @@
 - (void)endTurn:(GHEvent*)event
 {
     _map.touchable = false;
-    _currentPlayerAction.selectedTile = nil;
+    [self removeActionMenu];
+    [self deselectTile:_currentPlayerAction.selectedTile];
     [_map endTurnUpdates];
     
     //We rebegin our turn
@@ -208,13 +220,8 @@
     
     _actionMenu = [[ActionMenu alloc] initWithTile:tile];
     [_popupMenuSprite addChild:_actionMenu];
-    if (_actionMenu.buttonSprite.numChildren == 0) {
-        [_actionMenu removeFromParent];
-        [self addTileListeners];
-    }
-    else {
-        [_map addEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    }
+    [_map addEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    if (_actionMenu.buttonSprite.numChildren == 0) [self removeActionMenu];
 }
 
 - (void)actionMenuAction:(ActionMenuEvent*) event
@@ -298,9 +305,7 @@
             break;
     }
     
-    [_actionMenu removeFromParent];
-    [_map removeEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    [self addTileListeners];
+    [self removeActionMenu];
     if (actionCompleted) {
         [self deselectTile:_currentPlayerAction.selectedTile];
     }
@@ -310,11 +315,17 @@
 {
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
-        [_actionMenu removeFromParent];
-        [self addTileListeners];
+        [self removeActionMenu];
         [self deselectTile:_currentPlayerAction.selectedTile];
-        [_map removeEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     }
+}
+
+- (void)removeActionMenu
+{
+    [_popupMenuSprite removeAllChildren];
+    _actionMenu = nil;
+    [self addTileListeners];
+    [_map removeEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 }
 
 - (void)tileTouched:(TileTouchedEvent*) event
