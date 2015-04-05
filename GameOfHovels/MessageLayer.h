@@ -64,11 +64,6 @@ typedef enum {
 	kGameStateDone
 } GameState;
 
-
-/*@protocol MessageLayerDelegate
-- (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
-@end*/
-
 @interface MessageLayer : NSObject<GKMatchmakerViewControllerDelegate, GKMatchDelegate>
 
 + (instancetype)sharedMessageLayer;
@@ -79,24 +74,18 @@ typedef enum {
 - (BOOL)allRandomNumbersAreReceived;
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile;
 - (void)makePlayers;
+- (void)makePlayersGC;
 - (GamePlayer*)getCurrentPlayer;
 
 @property GameEngine* gameEngine;
-@property NSMutableArray *orderOfPlayers;
 @property NSMutableArray *players;
 
-@property BOOL isPlayer1, receivedAllRandomNumbers;
-@property BOOL receivedRandom;
+@property BOOL isPlayer1, receivedAllRandomNumbers, receivedRandom, matchHasStarted, enableGameCenter, matchStarted;
 @property GameState gameState;
 @property uint32_t ourRandom;
-@property NSString *otherPlayerID;
 @property (nonatomic, readonly) UIViewController *authenticationViewController;
 @property (nonatomic, readonly) NSError *lastError;
 @property (nonatomic, strong) GKMatch *match;
-@property NSMutableDictionary *playersDict;
-@property BOOL matchStarted;
 @property NSObject *messageLayer;
-@property BOOL enableGameCenter;
-@property BOOL matchHasStarted;
 
 @end

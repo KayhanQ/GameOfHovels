@@ -9,8 +9,6 @@
 
 #import "MessageLayer.h"
 #import "Tile.h"
-#define playerIdKey @"PlayerId"
-#define randomNumberKey @"randomNumber"
 #import "GameEngine.h"
 #import "GamePlayer.h"
 
@@ -18,141 +16,6 @@
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 @synthesize gameEngine = _gameEngine;
-
-// on "init" you need to initialize your instance
--(id) init
-{
-	// always call "super" init
-	// Apple recommends to re-assign "self" with the "super" return value
-	if( (self=[super init])) {
-		
-		// Set up main loop to check for wins
-		//[self scheduleUpdate];
-		_enableGameCenter = YES;
-
-		// Set ourselves as player 1 and the game to active
-		self.isPlayer1 = YES;
-		[self setGameState:kGameStateActive];
-		
-		//AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-		//[[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:delegate.viewController delegate:self];
-		
-		self.ourRandom = arc4random();
-		NSLog(@"OurRandom=%d", self.ourRandom);
-		[self setGameState:kGameStateWaitingForMatch];
-        
-        _players = [NSMutableArray array];
-        
-		self.orderOfPlayers = [NSMutableArray array];
-		[self authenticateLocalPlayer];
-	}
-	return self;
-}
-
-// A peer-to-peer match has been found, the game should start
-- (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFindMatch:(GKMatch *)match {
-	[viewController dismissViewControllerAnimated:YES completion:nil];
-	self.match = match;
-	match.delegate = self;
-	if (!_matchHasStarted && match.expectedPlayerCount == 0) {
-		NSLog(@"Ready to start match!");
-		[self lookupPlayers];
-		ViewController *vc = [[ViewController alloc]init];
-		[viewController presentViewController:vc animated:YES completion:nil];
-	}
-}
-
-- (void)lookupPlayers {
- 
-	NSLog(@"Looking up %d players...", self.match.playerIDs.count);
-	[GKPlayer loadPlayersForIdentifiers:self.match.playerIDs withCompletionHandler:^(NSArray *players, NSError *error) {
-		
-		if (error != nil) {
-			NSLog(@"Error retrieving player info: %@", error.localizedDescription);
-			self.matchHasStarted = NO;
-			[self matchEnded];
-		} else {
-			
-			// Populate players dict
-			self.playersDict = [NSMutableDictionary dictionaryWithCapacity:players.count];
-			for (GKPlayer *player in players) {
-				NSLog(@"Found player: %@", player.alias);
-				[self.playersDict setObject:player forKey:player.playerID];
-			}
-			
-			// Notify delegate match can begin
-			self.matchHasStarted = YES;
-			[self matchStarted];
-			
-		}
-	}];
-}
-
--(void)processReceivedRandomNumber:(NSDictionary*)randomNumberDetails {
-	if([_orderOfPlayers containsObject:randomNumberDetails]) {
-		[_orderOfPlayers removeObjectAtIndex: [_orderOfPlayers indexOfObject:randomNumberDetails]];
-	}
-	[_orderOfPlayers addObject:randomNumberDetails];
-	NSSortDescriptor *sortByRandomNumber =
-	[NSSortDescriptor sortDescriptorWithKey:randomNumberKey
-								  ascending:NO];
-	NSArray *sortDescriptors = @[sortByRandomNumber];
-	[_orderOfPlayers sortUsingDescriptors:sortDescriptors];
- 	if ([self allRandomNumbersAreReceived]) {
-		_receivedAllRandomNumbers = YES;
-	}
-
-}
-
-- (BOOL)isLocalPlayerPlayer1
-{
-	NSDictionary *dictionary = _orderOfPlayers[0];
-	if ([dictionary[playerIdKey]
-		 isEqualToString:[GKLocalPlayer localPlayer].playerID]) {
-		NSLog(@"I'm player 1");
-
-		return YES;
-	}
-	return NO;
-}
-
-- (void)tryStartGame {
-	NSLog(@"tryStartGame");
-	if (self.isPlayer1 && self.gameState == kGameStateWaitingForStart) {
-		[self setGameState:kGameStateActive];
-		[self sendGameBegin];
-		//[self setupStringsWithOtherPlayerId:otherPlayerID];
-	}
-}
-
-- (void)sendRandomNumber {
-	NSLog(@"sendRandomNumber");
-	MessageRandomNumber message;
-	message.message.messageType = kMessageTypeRandomNumber;
-	message.randomNumber = self.ourRandom;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageRandomNumber)];
-	[self sendData:data];
-}
-
-- (void)sendGameBegin {
-	NSLog(@"sendGameBegin");
-	MessageGameBegin message;
-	message.message.messageType = kMessageTypeGameBegin;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
-	[self sendData:data];
-	
-}
-
-- (void)sendGameOver:(BOOL)player1Won {
-	
-	MessageGameOver message;
-	message.message.messageType = kMessageTypeGameOver;
-	message.player1Won = player1Won;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameOver)];
-	[self sendData:data];
-	
-}
-
 
 + (instancetype)sharedMessageLayer
 {
@@ -164,45 +27,133 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	return sharedMessageLayer;
 }
 
-- (void)setLastError:(NSError *)error
+-(id) init
 {
-	_lastError = [error copy];
-	if (_lastError) {
-		NSLog(@"MessageLayer ERROR: %@",
-			  [[_lastError userInfo] description]);
+	if( (self=[super init])) {
+		_enableGameCenter = YES;
+
+		// Set ourselves as player 1 and the game to active
+		self.isPlayer1 = YES;
+		[self setGameState:kGameStateActive];
+		
+		self.ourRandom = arc4random();
+		NSLog(@"OurRandom=%d", self.ourRandom);
+		[self setGameState:kGameStateWaitingForMatch];
+        
+        _players = [NSMutableArray array];
+        
+		[self authenticateLocalPlayer];
+	}
+	return self;
+}
+
+- (void)authenticateLocalPlayer
+{
+	if ([GKLocalPlayer localPlayer].isAuthenticated) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
+		return;
+	}
+	[[GKLocalPlayer localPlayer] setAuthenticateHandler:(^(UIViewController *viewController, NSError *error) {
+		[self setLastError:error];
+		
+		if(viewController != nil) {
+			[self setAuthenticationViewController:viewController];
+		} else if([GKLocalPlayer localPlayer].isAuthenticated) {
+			_enableGameCenter = YES;
+			[[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
+		} else {
+			_enableGameCenter = NO;
+		}
+		NSLog(@"[GKLocalPlayer localPlayer].playerID=%@", [GKLocalPlayer localPlayer].playerID);
+		
+		//for some reason [GKLocalPlayer localPlayer].playerID returns null, but ONLY ON SIMULATOR
+		if([GKLocalPlayer localPlayer].playerID != nil){
+			[self createAndAddPlayer:[GKLocalPlayer localPlayer].playerID randomNumber:self.ourRandom];
+		}
+	})];
+}
+
+-(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber{
+	NSLog(@"[createAndAddPlayer");
+	GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
+	[p setPlayerId: playerId];
+	[p setRandomNumber:randomNumber];
+	if([_players count] == 0){
+		[_players addObject:p];
+	}
+	for(int i = 0; i < [_players count]; i++){
+		if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
+			[_players insertObject:p atIndex:i];
+		}
+	}
+}
+
+- (BOOL)allRandomNumbersAreReceived
+{
+	if ([_players count] == self.match.expectedPlayerCount) {
+		return YES;
+	}
+	return NO;
+}
+
+- (void)didReceivePlayerOrderingRandomNumber:data fromPlayer:(NSString *)playerID
+{
+	MessageRandomNumber * messageInit = (MessageRandomNumber *) [data bytes];
+	NSLog(@"Received random number: %ud, ours %ud", messageInit->randomNumber, self.ourRandom);
+	bool tie = false;
+	
+	if (messageInit->randomNumber == self.ourRandom) {
+		NSLog(@"TIE!");
+		tie = true;
+		self.ourRandom = arc4random();
+		[self sendRandomNumber];
+	} else {
+		if ([self allRandomNumbersAreReceived]) {
+			_receivedAllRandomNumbers = YES;
+		}
 	}
 	
+	if (!tie && self.receivedAllRandomNumbers) {
+		if (_gameState == kGameStateWaitingForRandomNumber) {
+			_gameState = kGameStateWaitingForStart;
+		}
+		[self tryStartGame];
+	}
 }
 
-- (void)findMatchWithMinPlayers:(int)minPlayers maxPlayers:(int)maxPlayers
-				 viewController:(UIViewController *)viewController{
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+	Message *message = (Message *) [data bytes];
+	MessageMove * messageMove = (MessageMove *) [data bytes];
+	MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
 	
-	if (!_enableGameCenter) return;
-	
-	_matchHasStarted = NO;
-	self.match = nil;
-	[viewController dismissViewControllerAnimated:NO completion:nil];
-	
-	GKMatchRequest *request = [[GKMatchRequest alloc] init];
-	request.minPlayers = minPlayers;
-	request.maxPlayers = maxPlayers;
-	
-	GKMatchmakerViewController *mmvc =
-	[[GKMatchmakerViewController alloc] initWithMatchRequest:request];
-	mmvc.matchmakerDelegate = self;
-	
-	[viewController presentViewController:mmvc animated:YES completion:nil];
+	switch(message->messageType){
+		case kMessageTypeRandomNumber:
+			[self didReceivePlayerOrderingRandomNumber:data fromPlayer:playerID];
+			break;
+		case kMessageTypeGameBegin:
+			[self setGameState:kGameStateActive];
+			break;
+		case kMessageTypeMove:
+			[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
+			break;
+		case kMessageTypeGameOver:
+			NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
+			/* End Game */
+			if (messageGameOver->player1Won) {
+				//[self endScene:kEndReasonLose];
+			} else {
+				//[self endScene:kEndReasonWin];
+			}
+			break;
+	}
 }
 
-// The user has cancelled matchmaking
-- (void)matchmakerViewControllerWasCancelled:(GKMatchmakerViewController *)viewController {
-	[viewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-// Matchmaking has failed with an error
-- (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFailWithError:(NSError *)error {
-	[viewController dismissViewControllerAnimated:YES completion:nil];
-	NSLog(@"Error finding match: %@", error.localizedDescription);
+- (void)tryStartGame {
+	NSLog(@"tryStartGame");
+	if (self.isPlayer1 && self.gameState == kGameStateWaitingForStart) {
+		[self setGameState:kGameStateActive];
+		[self sendGameBegin];
+	}
 }
 
 - (void)matchStarted {
@@ -226,61 +177,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	}
 }
 
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
- 
-	// Store away other player ID for later
-	if (self.otherPlayerID == nil) {
-		NSLog(@"self.otherPlayerID==nil, apparently");
-		//otherPlayerID = [playerID retain];
-	}
- 
-	Message *message = (Message *) [data bytes];
-	if (message->messageType == kMessageTypeRandomNumber) {
-		
-		MessageRandomNumber * messageInit = (MessageRandomNumber *) [data bytes];
-		NSLog(@"Received random number: %ud, ours %ud", messageInit->randomNumber, self.ourRandom);
-		bool tie = false;
-		
-		if (messageInit->randomNumber == self.ourRandom) {
-			NSLog(@"TIE!");
-			tie = true;
-			self.ourRandom = arc4random();
-			[self sendRandomNumber];
-		} else {
-			NSDictionary *dictionary = @{playerIdKey : playerID,
-										 randomNumberKey : @(messageInit->randomNumber)};
-			[self processReceivedRandomNumber:dictionary];
-		}
-		
-		if (self.receivedAllRandomNumbers) {
-			_isPlayer1 = [self isLocalPlayerPlayer1];
-		}
-		
-		if (!tie && self.receivedAllRandomNumbers) {
-			if (_gameState == kGameStateWaitingForRandomNumber) {
-				_gameState = kGameStateWaitingForStart;
-			}
-			[self tryStartGame];
-		}
-	}else if (message->messageType == kMessageTypeGameBegin) {
-		[self setGameState:kGameStateActive];
-	} else if (message->messageType == kMessageTypeMove) {
-		NSLog(@"Received move");
-		
-			//[player2 moveForward];
-			MessageMove * messageMove = (MessageMove *) [data bytes];
-			[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
-	} else if (message->messageType == kMessageTypeGameOver) {
-		MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
-		NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
-		/* End Game */
-		if (messageGameOver->player1Won) {
-			//[self endScene:kEndReasonLose];
-		} else {
-			//[self endScene:kEndReasonWin];
-		}
-	}
-}
 
 // The player state changed (eg. connected or disconnected)
 - (void)match:(GKMatch *)match player:(NSString *)playerID didChangeState:(GKPlayerConnectionState)state {
@@ -288,17 +184,14 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	
 	switch (state) {
 		case GKPlayerStateConnected:
-			// handle a new player connection.
 			NSLog(@"Player connected!");
-			
 			if (!_matchHasStarted && match.expectedPlayerCount == 0) {
-				[self lookupPlayers];
+				[self matchStarted];
 				NSLog(@"Ready to start match!");
 			}
-			
 			break;
+			
 		case GKPlayerStateDisconnected:
-			// a player just disconnected.
 			NSLog(@"Player disconnected!");
 			_matchHasStarted = NO;
 			[self matchEnded];
@@ -330,34 +223,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	NSLog(@"Match ended");
 }
 
-- (void)authenticateLocalPlayer
-{
-	if ([GKLocalPlayer localPlayer].isAuthenticated) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
-		return;
-	}
-	[[GKLocalPlayer localPlayer] setAuthenticateHandler:(^(UIViewController *viewController, NSError *error) {
-		[self setLastError:error];
-		
-		if(viewController != nil) {
-			[self setAuthenticationViewController:viewController];
-		} else if([GKLocalPlayer localPlayer].isAuthenticated) {
-			_enableGameCenter = YES;
-			[[NSNotificationCenter defaultCenter] postNotificationName:LocalPlayerIsAuthenticated object:nil];
-		} else {
-			_enableGameCenter = NO;
-		}
-		NSLog(@"[GKLocalPlayer localPlayer].playerID=%@", [GKLocalPlayer localPlayer].playerID);
-		
-		//for some reason [GKLocalPlayer localPlayer].playerID returns null, but ONLY ON SIMULATOR
-		if([GKLocalPlayer localPlayer].playerID != nil){
-			NSLog([GKLocalPlayer localPlayer].playerID);
-			[self.orderOfPlayers addObject:@{playerIdKey : [GKLocalPlayer localPlayer].playerID,
-											 randomNumberKey : @(self.ourRandom)}];
-		}
-		
-	})];
-}
 
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController
 { 
@@ -367,23 +232,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		 postNotificationName:PresentAuthenticationViewController
 		 object:self];
 	}
-}
-
-- (BOOL)allRandomNumbersAreReceived
-{
-	NSMutableArray *receivedRandomNumbers =
-	[NSMutableArray array];
-	
-	for (NSDictionary *dict in _orderOfPlayers) {
-		[receivedRandomNumbers addObject:dict[randomNumberKey]];
-	}
-	
-	NSArray *arrayOfUniqueRandomNumbers = [[NSSet setWithArray:receivedRandomNumbers] allObjects];
-	
-	if (arrayOfUniqueRandomNumbers.count == self.match.playerIDs.count + 1) {
-		return YES;
-	}
-	return NO;
 }
 
 //We receive which move occured and encode and send it to all players
@@ -402,17 +250,113 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 //code Kayhan has implemented
 - (void)makePlayers
 {
-    GamePlayer* p1 = [[GamePlayer alloc] initWithString:@"Player 1" color:RED];
+    GamePlayer* p1 = [[GamePlayer alloc] initWithNumber:1];
     [_players addObject:p1];
     
-    GamePlayer* p2 = [[GamePlayer alloc] initWithString:@"Player 2" color:BLUE];
+	GamePlayer* p2 = [[GamePlayer alloc] initWithNumber:2];
     [_players addObject:p2];
 }
+
+- (void)makePlayersGC
+{
+	for (int i = 0; i < [_players count]; i++)
+	{
+		GamePlayer* p = [[GamePlayer alloc] initWithNumber:i];
+		NSDictionary* player = [_players objectAtIndex:i];
+		[_players removeObjectAtIndex:i];
+		[p setPlayerId:(NSString*)[player objectForKey:@"PlayerId"]];
+		[p setRandomNumber:(long)[player objectForKey:@"randomNumber"]];
+		[_players addObject:p];
+	}
+}
+
 
 //TODO
 - (GamePlayer*)getCurrentPlayer
 {
     return [_players objectAtIndex:0];
+}
+
+
+- (void)sendRandomNumber {
+	NSLog(@"sendRandomNumber");
+	MessageRandomNumber message;
+	message.message.messageType = kMessageTypeRandomNumber;
+	message.randomNumber = self.ourRandom;
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageRandomNumber)];
+	[self sendData:data];
+}
+
+- (void)sendGameBegin {
+	NSLog(@"sendGameBegin");
+	MessageGameBegin message;
+	message.message.messageType = kMessageTypeGameBegin;
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
+	[self sendData:data];
+	
+}
+
+- (void)sendGameOver:(BOOL)player1Won {
+	
+	MessageGameOver message;
+	message.message.messageType = kMessageTypeGameOver;
+	message.player1Won = player1Won;
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameOver)];
+	[self sendData:data];
+}
+
+
+- (void)setLastError:(NSError *)error
+{
+	_lastError = [error copy];
+	if (_lastError) {
+		NSLog(@"MessageLayer ERROR: %@",
+			  [[_lastError userInfo] description]);
+	}
+}
+
+- (void)findMatchWithMinPlayers:(int)minPlayers maxPlayers:(int)maxPlayers
+				 viewController:(UIViewController *)viewController{
+	
+	if (!_enableGameCenter) return;
+	
+	_matchHasStarted = NO;
+	self.match = nil;
+	[viewController dismissViewControllerAnimated:NO completion:nil];
+	
+	GKMatchRequest *request = [[GKMatchRequest alloc] init];
+	request.minPlayers = minPlayers;
+	request.maxPlayers = maxPlayers;
+	
+	GKMatchmakerViewController *mmvc =
+	[[GKMatchmakerViewController alloc] initWithMatchRequest:request];
+	mmvc.matchmakerDelegate = self;
+	
+	[viewController presentViewController:mmvc animated:YES completion:nil];
+}
+
+// FOUND MATCH
+- (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFindMatch:(GKMatch *)match {
+	[viewController dismissViewControllerAnimated:YES completion:nil];
+	self.match = match;
+	match.delegate = self;
+	if (!_matchHasStarted && match.expectedPlayerCount == 0) {
+		NSLog(@"Ready to start match!");
+		[self matchStarted];
+		ViewController *vc = [[ViewController alloc]init];
+		[viewController presentViewController:vc animated:YES completion:nil];
+	}
+}
+
+// The user has cancelled matchmaking
+- (void)matchmakerViewControllerWasCancelled:(GKMatchmakerViewController *)viewController {
+	[viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+// Matchmaking has failed with an error
+- (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFailWithError:(NSError *)error {
+	[viewController dismissViewControllerAnimated:YES completion:nil];
+	NSLog(@"Error finding match: %@", error.localizedDescription);
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "Hud.h"
-#import "GamePlayer.h"
 #import "GHEvent.h"
 #import "SparrowHelper.h"
 #import "Tile.h"

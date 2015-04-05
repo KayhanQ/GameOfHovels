@@ -31,7 +31,7 @@
 //villages
 //players...
 
-- (void)encodeMap:(Map *)map
+- (NSMutableArray*) encodeMap:(Map *)map
 {
     NSMutableArray* encoding = [NSMutableArray array];
     //array of array of structures per tile
@@ -56,9 +56,7 @@
     [encoding addObject:units];
     [encoding addObject:villages];
     [encoding addObject:colors];
-
-    
-    
+	return encoding;
 }
 
 - (Map*)decodeMap:(NSMutableArray*)encoding
@@ -84,7 +82,6 @@
         if (vType != nil) [t addVillage:[vType intValue]];
         
         t.pColor = [colors[i] intValue];
-        
     }
 
     

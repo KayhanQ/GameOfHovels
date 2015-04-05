@@ -34,9 +34,7 @@
 }
 
 - (void)playerAuthenticated {
-	NSLog(@"asdfasdf");
-	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self
-	];
+	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
 }
 
 @end
