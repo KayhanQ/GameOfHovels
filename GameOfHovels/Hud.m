@@ -20,17 +20,20 @@
 
 @implementation Hud {
     
+    SPButton* _village1, *_village2, *_leftButton, *_rightButton;
+    
     SPButton* _endTurnButton;
+    
+    //unit
     SPTextField* _woodField;
     SPTextField* _goldField;
-    
     SPTextField* _upkeepField;
     SPTextField* _unitNameField;
-    
+    //village
     SPTextField* _healthField;
     SPTextField* _numTilesInRegion;
-    
     SPTextField* _homeCoordField;
+    //universal
     SPTextField* _ownerField;
     
     SPTextField* _tileNumberField;
@@ -65,6 +68,30 @@
         _middleX = _width/2;
         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
         
+        
+        //
+        
+        _village1 = [SPButton buttonWithUpState:buttonTexture];
+        _village1.x = 7;
+        _village1.height = 100; //Just Some magic number
+        _village1.width = background.width - 10;
+        
+        _village2 = [SPButton buttonWithUpState:buttonTexture];
+        _village2.x = 7;
+        _village2.height = 100; //Just Some magic number
+         _village2.width = background.width - 10;
+        
+        //
+        
+        SPSprite* sprite = [SPSprite sprite];
+        
+        [sprite addChild:_village1];
+        _village2.y = _village1.y +100;
+        [sprite addChild:_village2];
+
+        [self addChild:sprite];
+        
+        
         _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
         
         _endTurnButton.height = 40; //Just Some magic number
@@ -78,7 +105,10 @@
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
-        //Village Info-------
+        
+        
+        
+        //Village Info------- ADD TO METHOD
         _woodField = [self newTextField];
         //_woodField.text = @"Wood: ";
         _woodField.y = 200;
@@ -99,7 +129,9 @@
          _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
          [self addChild:_numTilesInRegion];
 
-        //Unit Info---------
+        
+        
+        //Unit Info--------- ADD TO METHOD
         _upkeepField = [self newTextField];
         _upkeepField.y = _woodField.y + _woodField.height + _yOffsetMinor;
         [self addChild:_upkeepField];
@@ -205,6 +237,7 @@
         [self dispatchEvent:event];
     }
 }
+
 
 
 @end
