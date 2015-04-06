@@ -39,6 +39,8 @@
     SPJuggler* _gameJuggler;
     
     CurrentPlayerAction* _currentPlayerAction;
+    
+    UIAlertController* _alertController;
 }
 
 - (id)init
@@ -176,8 +178,57 @@
     NSLog(@"saving game");
     MapEncoding* mapEncoder = [[MapEncoding alloc] init];
     
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Save Game"
+                                          message:@"Enter Save Game Name"
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         textField.placeholder = NSLocalizedString(@"LoginPlaceholder", @"Login");
+     }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         textField.placeholder = NSLocalizedString(@"PasswordPlaceholder", @"Password");
+         textField.secureTextEntry = YES;
+     }];
+    
+    UIAlertAction *okAction = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"OK", @"OK action")
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *action)
+                               {
+                                   UITextField *login = alertController.textFields.firstObject;
+                                   UITextField *password = alertController.textFields.lastObject;
+                               }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         [[NSNotificationCenter defaultCenter] addObserver:self
+                                                  selector:@selector(alertTextFieldDidChange:)
+                                                      name:UITextFieldTextDidChangeNotification
+                                                    object:textField];
+     }];
+    
+    _alertController = alertController;
+    
+    [self. presentViewController:alertController animated:YES completion:nil];
+
+    self
     [mapEncoder encodeMap:_map];
     
+}
+
+- (void)alertTextFieldDidChange:(NSNotification *)notification
+{
+    UIAlertController *alertController = (UIAlertController *)_alertController;
+    if (alertController)
+    {
+        UITextField *login = alertController.textFields.firstObject;
+        UIAlertAction *okAction = alertController.actions.lastObject;
+        okAction.enabled = login.text.length > 2;
+    }
 }
 
 //here we play the opponents move
