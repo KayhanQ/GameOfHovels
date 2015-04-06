@@ -18,6 +18,8 @@
 @implementation Hud {
     
     SPButton* _endTurnButton;
+    SPButton* _saveGameButton;
+
     SPTextField* _woodField;
     SPTextField* _goldField;
     SPTextField* _healthField;
@@ -51,14 +53,21 @@
         _middleX = _width/2;
         
         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+        _saveGameButton = [SPButton buttonWithUpState:buttonTexture];
+        _saveGameButton.text = @"Save Game";
+        [SparrowHelper centerPivot:_saveGameButton];
+        _saveGameButton.x = _middleX;
+        _saveGameButton.y = _height - _saveGameButton.height;
+        [self addChild:_saveGameButton];
+        [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+
         _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
         _endTurnButton.text = @"End Turn";
         [SparrowHelper centerPivot:_endTurnButton];
         _endTurnButton.x = _middleX;
-        _endTurnButton.y = _height - _endTurnButton.height;
+        _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
         
         _woodField = [self newTextField];
         _woodField.text = @"Wood: ";
@@ -76,7 +85,7 @@
         [self addChild:_healthField];
         
         _numTilesInRegion = [self newTextField];
-        _numTilesInRegion.text = @"Village Health: ";
+        _numTilesInRegion.text = @"Numb Tiles: ";
         _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
         [self addChild:_numTilesInRegion];
     }
@@ -106,7 +115,8 @@
     NSString* healthString = [NSString stringWithFormat:@"Village Health: %d", v.health];
     _healthField.text = healthString;
     
-    NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Num Tiles: %d", [_map getTilesforVillage:v].count];
+    int tCount = [_map getTilesforVillage:v].count;
+    NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Numb Tiles: %d", tCount];
     _numTilesInRegion.text = _numTilesInRegionString;
     
     
@@ -125,5 +135,14 @@
     }
 }
 
-
+- (void)saveGameTouched:(SPTouchEvent*) event
+{
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+        NSLog(@"End turn pressed");
+        GHEvent *event = [[GHEvent alloc] initWithType:EVENT_TYPE_SAVE_GAME];
+        [self dispatchEvent:event];
+    }
+}
 @end

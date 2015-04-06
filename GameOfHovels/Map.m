@@ -525,11 +525,8 @@
         if ([destTile hasUnit]) [destTile removeUnit];
         if ([destTile hasTower]) [destTile removeStructure];
         if ([self tileWithNeighboursSplitsRegion:nTiles]) {
-            NSLog(@"TILE SPLITS REGION");
             NSMutableArray* regions = [self getSplitRegions:nTiles];
-            NSLog(@"Regions count: %d",regions.count);
             for (NSMutableArray* region in regions) {
-                NSLog(@"Tiles count: %d",region.count);
                 if ([self regionHasVillage:region]) continue;
                 [self convertRegionAfterTileTakenFrom:enemyPlayersVillage region:region];
             }
@@ -539,6 +536,22 @@
             if (takingOverEnemyVillage) {
                 [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
             }
+        }
+    }
+    
+    //check if any region is less than 3 tiles
+    for (Tile* nT in nTiles) {
+        if (nT.village.player != enemyPlayersVillage.player) continue;
+        NSMutableArray* region = [self getConnectedTiles:nT];
+        if (region == nil) continue;
+        if (region.count < 3 && region.count > 0) {
+            for (Tile* t in region) {
+                if ([t isVillage]) {
+                    [t removeVillage];
+                    [t addStructure:BAUM];
+                }
+            }
+            [self makeRegionNeutral:region];
         }
     }
 }

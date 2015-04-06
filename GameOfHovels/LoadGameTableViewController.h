@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LoadGameTableViewController : UITableViewController
-
+@property NSArray* dirContents;
 @end
