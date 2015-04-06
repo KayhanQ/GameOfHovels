@@ -78,17 +78,6 @@
         village1Index = 0;
         village2Index = 1;
         
-        
-        SPTexture* saveButtonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-        _saveGameButton = [SPButton buttonWithUpState:saveButtonTexture];
-        _saveGameButton.text = @"Save Game";
-       
-        [SparrowHelper centerPivot:_saveGameButton];
-        _saveGameButton.x = _middleX;
-        _saveGameButton.y = _height - _saveGameButton.height;
-        [self addChild:_saveGameButton];
-        [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
         _height = 380;
         _width = 130;
         _yOffsetMinor = 3;
@@ -381,12 +370,14 @@
     SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
     
     
-    //
+    /* Settings Button
     _settingsButton = [SPButton buttonWithUpState:buttonTexture];
     _settingsButton.y = 0;
     _settingsButton.height = 20; //Just Some magic number
     _settingsButton.width = background.width - 10;
     [sprite addChild:_settingsButton];
+*/
+    
     
     _village1 = [SPButton buttonWithUpState:buttonTexture];
     _village1.x = 7;
@@ -450,6 +441,29 @@
     [self addChild:_endTurnButton];
     [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
+    
+    SPTexture* saveButtonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+    _saveGameButton = [SPButton buttonWithUpState:saveButtonTexture];
+    _saveGameButton.text = @"Save Game";
+    _settingsButton.height = 20; //Just Some magic number
+    _settingsButton.width = background.width - 10;
+    
+    [SparrowHelper centerPivot:_saveGameButton];
+    _saveGameButton.y = 0;
+    [sprite addChild:_saveGameButton];
+    [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    
+    /*
+    SPTexture* saveButtonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+    _saveGameButton = [SPButton buttonWithUpState:saveButtonTexture];
+    _saveGameButton.text = @"Save Game";
+    
+    [SparrowHelper centerPivot:_saveGameButton];
+    _saveGameButton.x = _middleX;
+    _saveGameButton.y = _height - _saveGameButton.height;
+    [self addChild:_saveGameButton];
+    [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    */
 }
 
 -(void) initUITool
