@@ -22,6 +22,8 @@
     
     SPSprite* sprite;
     
+    SPPoint * _center;
+    
     SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
     
     SPButton* _endTurnButton;
@@ -70,6 +72,9 @@
         _world = world;
         
         sprite = [SPSprite sprite];//background
+        
+        _center.y = _world.height/2;
+        _center.x = _world.width/2;
         
         _listOfVillages = [map getTilesWithMyVillages];
         village1Index = 0;
@@ -522,8 +527,8 @@
 -(void)village1Touched:(SPTouchEvent*) event
 {
     
-    _world.x = _villageTile1.x;
-    _world.y=_villageTile1.y;
+    _world.x = _villageTile1.x - 300;
+    _world.y =_villageTile1.y- 300;
     
 }
 
@@ -531,9 +536,12 @@
 -(void)village2Touched:(SPTouchEvent*) event
 {
     
-    _world.x = _villageTile2.x;
-    _world.y=_villageTile2.y;
+   // _world.x = _villageTile2.x - 300;
+    //_world.y =_villageTile2.y - 300;
     
+    _world.x = _center.x + _villageTile2.x;
+    _world.y = _center.y + _villageTile2.y;
+  
 }
 
 @end
