@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #define EVENT_TYPE_TURN_ENDED @"turnEnded"
+#define EVENT_TYPE_SAVE_GAME @"saveGame"
 
 @interface GHEvent : SPEvent
 

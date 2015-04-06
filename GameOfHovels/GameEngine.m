@@ -22,6 +22,7 @@
 #import "SparrowHelper.h"
 #import "GlobalFlags.h"
 #import "CurrentPlayerAction.h"
+#import "MapEncoding.h"
 
 @implementation GameEngine
 {
@@ -127,6 +128,7 @@
     
     [self beginTurnWithPlayer:_currentPlayer];
 	[MessageLayer sharedMessageLayer].gameEngine = self;
+    
 }
 
 - (void)addTurnEventListeners
@@ -135,6 +137,8 @@
     [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
     [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+    [self addEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
+
 }
 
 //unused
@@ -144,6 +148,7 @@
     [self removeEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
     [self removeEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self removeEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+    [self removeEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
 }
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
@@ -164,22 +169,15 @@
     
     //We rebegin our turn
     [self beginTurnWithPlayer:_currentPlayer];
+}
+
+- (void)saveGame:(GHEvent*)event
+{
+    NSLog(@"saving game");
+    MapEncoding* mapEncoder = [[MapEncoding alloc] init];
     
-    /*
-	if(_currentPlayer == [_players objectAtIndex:0]){
-		_currentPlayer = [_players objectAtIndex:1];
-	}
-	else{
-		_currentPlayer = [_players objectAtIndex:0];
-	}
-	
-    //relay turn has ended
-    //Begin Turn will get called again
-    //Now we just simulate it by giving our player another turn
-	if(_currentPlayer == _mePlayer){
-		[self beginTurnWithPlayer:_currentPlayer];
-	}
-     */
+    [mapEncoder encodeMap:_map];
+    
 }
 
 //here we play the opponents move
