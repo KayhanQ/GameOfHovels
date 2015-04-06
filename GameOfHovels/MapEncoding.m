@@ -64,32 +64,26 @@
     [encoding addObject:villages];
     [encoding addObject:colors];
 
-    /*
-    NSFileManager *fileManager;
-    fileManager = [NSFileManager defaultManager];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"cats"];
-    [fileManager createFileAtPath: @"/Resources/cats" contents: dataBuffer attributes: nil];
-    */
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString* rootPath = paths[0];
+    NSString* path = [rootPath stringByAppendingPathComponent:@"sg2"];
+    path = [path stringByAppendingPathExtension:@"txt"];
     
-    NSFileHandle *file;
-    file = [NSFileHandle fileHandleForWritingAtPath: @"/Saved_Games/game1.txt"];
-    
-    NSMutableData *data;
-    
-    const char *bytestring = "black cat";
-    
-    data = [NSMutableData dataWithBytes:bytestring length:strlen(bytestring)];
-    
-    if (file == nil)
-        NSLog(@"Failed to open file");
-    
-    
-    //[file seekToFileOffset: 10];
-    
-    [file writeData: data];
-    [file closeFile];
-    
+    NSLog(@"path: %@", path);
+    if ([fileManager fileExistsAtPath: path] == YES) {
+        NSLog (@"File exists");
+        NSData* databuffer = [fileManager contentsAtPath:path];
+        NSString* dataString = [databuffer base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        NSLog(@"data: %@", dataString);
+    }
+    else {
+        NSLog (@"File not found");
+        NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"the cat ate the crumbs"];
+        [fileManager createFileAtPath: path contents: dataBuffer attributes: nil];
+
+    }
     
 }
 
