@@ -1,4 +1,5 @@
 
+
 //
 //  MessageLayer.m
 //  GameOfHovels
@@ -90,6 +91,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 
 - (BOOL)allRandomNumbersAreReceived
 {
+	NSLog(@"Players Count = %d", [_players count]);
+	NSLog(@"Expected Players Count = %d", self.match.expectedPlayerCount);
+
 	if ([_players count] == self.match.expectedPlayerCount) {
 		return YES;
 	}
@@ -257,7 +261,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     [_players addObject:p2];
 }
 
-- (void)makePlayersGC
+/*- (void)makePlayersGC
 {
 	for (int i = 0; i < [_players count]; i++)
 	{
@@ -268,7 +272,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		[p setRandomNumber:(long)[player objectForKey:@"randomNumber"]];
 		[_players addObject:p];
 	}
-}
+}*/
 
 
 //TODO

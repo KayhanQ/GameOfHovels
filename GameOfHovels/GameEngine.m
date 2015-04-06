@@ -83,7 +83,7 @@
     //we check if we are using GC networking
     //if not we can manually create our own setup
     if ([GlobalFlags isGameWithGC]) {
-		[_messageLayer makePlayersGC];
+		//[_messageLayer makePlayersGC];
 		_currentPlayer = [_messageLayer getCurrentPlayer];
 		_mePlayer = _currentPlayer;
     }

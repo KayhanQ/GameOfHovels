@@ -10,7 +10,7 @@
 #import "GCViewcontroller.h"
 #import "MessageLayer.h"
 #import "GlobalFlags.h"
-
+#import "MenuViewController.h"
 
 @interface GCViewcontroller()
 @end
@@ -34,7 +34,10 @@
 }
 
 - (void)playerAuthenticated {
-	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
+	//Menu 
+	MenuViewController *mvc = [[MenuViewController alloc]init];
+	[self presentViewController:mvc animated:YES completion:nil];
+	//[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
 }
 
 @end
