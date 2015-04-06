@@ -539,6 +539,22 @@
             }
         }
     }
+    
+    //check if any region is less than 3 tiles
+    for (Tile* nT in nTiles) {
+        if (nT.village.player != enemyPlayersVillage.player) continue;
+        NSMutableArray* region = [self getConnectedTiles:nT];
+        if (region == nil) continue;
+        if (region.count < 3 && region.count > 0) {
+            for (Tile* t in region) {
+                if ([t isVillage]) {
+                    [t removeVillage];
+                    [t addStructure:BAUM];
+                }
+            }
+            [self makeRegionNeutral:region];
+        }
+    }
 }
 
 - (void)takeOverEnemyVillageTileWithNeighbours:(NSMutableArray*)nTiles enemyVillage:(Village*)eVillage
