@@ -30,6 +30,7 @@
 //units
 //villages
 //players...
+//format: s1,s2,s3,u,v,c
 
 - (void) encodeMap:(Map *)map
 {
@@ -44,9 +45,10 @@
     
     for (Tile* t in map.tilesSprite) {
         NSMutableArray* structures = [NSMutableArray array];
-        for (NSNumber* sType in [t getStructureTypes]) {
-            //fix this
-            [structures addObject:sType];
+        for (int i = 0; i < 3; i++) [structures addObject:minusOne];
+        NSMutableArray* sTypes = [t getStructureTypes];
+        for (int i = 0; i < sTypes.count-1; i++) {
+            structures[i] = sTypes[i];
         }
         [allStructures addObject:structures];
         
@@ -64,6 +66,11 @@
     [encoding addObject:villages];
     [encoding addObject:colors];
 
+    
+    
+    
+    NSString* stringToEncode = @"adlksjfhMEOWalskjdfha, 2,3,q54524562346,346256256,563243 asdflkh LKHD";
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
@@ -75,19 +82,19 @@
         if(![fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL])
             NSLog(@"Error: Create folder failed %@", path);
     
-    path = [path stringByAppendingPathComponent:@"sg6"];
+    path = [path stringByAppendingPathComponent:@"sg9"];
     path = [path stringByAppendingPathExtension:@"txt"];
     
     NSLog(@"path: %@", path);
     if ([fileManager fileExistsAtPath: path] == YES) {
         NSLog (@"File exists");
         NSData* databuffer = [fileManager contentsAtPath:path];
-        NSString* dataString = [databuffer base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        NSString* dataString = [[NSString alloc] initWithData:databuffer encoding:NSUTF8StringEncoding];;
         NSLog(@"data: %@", dataString);
     }
     else {
         NSLog (@"File not found");
-        NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"1,2,3,3,333,444,44444,555,666,777,7888,9999"];
+        NSData* dataBuffer = [stringToEncode dataUsingEncoding:NSUTF8StringEncoding];
         [fileManager createFileAtPath: path contents: dataBuffer attributes: nil];
 
     }

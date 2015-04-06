@@ -10,8 +10,9 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "ActionMenu.h"
+#import "GamePlayer.h"
+
 @class GameEngine;
-@class GamePlayer;
 
 extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
@@ -76,6 +77,7 @@ typedef enum {
 - (void)makePlayers;
 - (void)makePlayersGC;
 - (GamePlayer*)getCurrentPlayer;
+- (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;

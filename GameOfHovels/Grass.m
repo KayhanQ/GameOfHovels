@@ -36,6 +36,16 @@
                 tileTexture = [Media atlasTexture:@"tileMagic_tile.png"];
                 break;
             }
+            case GREY:
+            {
+                tileTexture = [Media atlasTexture:@"tileStone_tile.png"];
+                break;
+            }
+            case ORANGE:
+            {
+                tileTexture = [Media atlasTexture:@"tileDirt_tile.png"];
+                break;
+            }
             default:
             {
                 tileTexture = [Media atlasTexture:@"tileGrass_tile.png"];
