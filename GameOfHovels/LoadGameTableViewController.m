@@ -7,7 +7,7 @@
 //
 
 #import "LoadGameTableViewController.h"
-
+#import "TableViewCell.h"
 @interface LoadGameTableViewController ()
 
 @end
@@ -19,9 +19,11 @@
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 	NSString* rootPath = paths[0];
+	NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+
 	
 	NSFileManager *fm = [NSFileManager defaultManager];
-	self.dirContents = [fm contentsOfDirectoryAtPath:rootPath error:nil];
+	self.dirContents = [fm contentsOfDirectoryAtPath:path error:nil];
 	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -39,23 +41,26 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 0;
+	NSLog(@"what up: %d",[self.dirContents count]);
+    return [self.dirContents count];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+	static NSString *CellIdentifier = @"thisCell";
+	
+	TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+	cell.textLabel.text = [self.dirContents objectAtIndex:indexPath.row];
+	
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
