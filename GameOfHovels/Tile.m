@@ -215,6 +215,18 @@
     _village = nil;
 }
 
+- (Village*)getVillage
+{
+    return _village;
+}
+
+- (enum VillageType)getVillageType
+{
+    Village* v = [self getVillage];
+    return v.vType;
+}
+
+
 - (void)upgradeVillageTo:(enum VillageType)vType
 {
     Village* newVillage;

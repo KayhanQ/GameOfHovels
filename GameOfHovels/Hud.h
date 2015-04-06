@@ -9,6 +9,7 @@
 #import "BasicSprite.h"
 @class Tile;
 @class Map;
+@class GamePlayer;
 
 @interface Hud : BasicSprite {
     
@@ -16,9 +17,10 @@
     
 }
 
-@property (nonatomic, readonly, weak) Map* map;
+@property (nonatomic, readonly) Map* map;
+@property (nonatomic) GamePlayer* player;
 
-- (id)initWithMap:(Map*)map;
+- (id)initWithMap:(Map*)map world:(SPSprite*)world;
 - (void)update:(Tile*)tile;
 
 

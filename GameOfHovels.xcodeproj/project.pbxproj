@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
 		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
+		C6AEE74E1AD0750F008C9C9E /* Cannon.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE74D1AD0750F008C9C9E /* Cannon.m */; };
+		C6AEE7531AD07524008C9C9E /* Castle.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE7501AD07524008C9C9E /* Castle.m */; };
+		C6AEE7541AD07524008C9C9E /* Tower.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE7521AD07524008C9C9E /* Tower.m */; };
+		C6AF01E01AD30A560022C018 /* castle.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF01DF1AD30A560022C018 /* castle.png */; };
+		C6AF01E21AD3118D0022C018 /* blankButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF01E11AD3118D0022C018 /* blankButton.png */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -142,6 +147,14 @@
 		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
 		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
 		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
+		C6AEE74C1AD0750F008C9C9E /* Cannon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cannon.h; sourceTree = "<group>"; };
+		C6AEE74D1AD0750F008C9C9E /* Cannon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cannon.m; sourceTree = "<group>"; };
+		C6AEE74F1AD07524008C9C9E /* Castle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Castle.h; sourceTree = "<group>"; };
+		C6AEE7501AD07524008C9C9E /* Castle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Castle.m; sourceTree = "<group>"; };
+		C6AEE7511AD07524008C9C9E /* Tower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
+		C6AEE7521AD07524008C9C9E /* Tower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tower.m; sourceTree = "<group>"; };
+		C6AF01DF1AD30A560022C018 /* castle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = castle.png; sourceTree = "<group>"; };
+		C6AF01E11AD3118D0022C018 /* blankButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankButton.png; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -769,6 +782,8 @@
 				F3D8ADEB1ABB06B400920E99 /* Soldier.m */,
 				F380660D1A964C5F009D3C56 /* Ritter.h */,
 				F380660E1A964C5F009D3C56 /* Ritter.m */,
+				C6AEE74C1AD0750F008C9C9E /* Cannon.h */,
+				C6AEE74D1AD0750F008C9C9E /* Cannon.m */,
 			);
 			name = Units;
 			sourceTree = "<group>";
@@ -776,6 +791,10 @@
 		F380661D1A964C72009D3C56 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
+				C6AEE74F1AD07524008C9C9E /* Castle.h */,
+				C6AEE7501AD07524008C9C9E /* Castle.m */,
+				C6AEE7511AD07524008C9C9E /* Tower.h */,
+				C6AEE7521AD07524008C9C9E /* Tower.m */,
 				F380661E1A964C7E009D3C56 /* Structure.h */,
 				F380661F1A964C7E009D3C56 /* Structure.m */,
 				F38066731A968361009D3C56 /* Grass.h */,
@@ -916,6 +935,7 @@
 			isa = PBXGroup;
 			children = (
 				F380664A1A964F3B009D3C56 /* button.png */,
+				C6AF01E11AD3118D0022C018 /* blankButton.png */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -950,6 +970,7 @@
 			isa = PBXGroup;
 			children = (
 				F38066511A964F3B009D3C56 /* hovel.png */,
+				C6AF01DF1AD30A560022C018 /* castle.png */,
 				F38066521A964F3B009D3C56 /* town.png */,
 			);
 			path = Hovel;
@@ -1940,8 +1961,10 @@
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
+				C6AF01E21AD3118D0022C018 /* blankButton.png in Resources */,
 				F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */,
 				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
+				C6AF01E01AD30A560022C018 /* castle.png in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,
@@ -1972,7 +1995,9 @@
 				F380660F1A964C5F009D3C56 /* Unit.m in Sources */,
 				F38066631A9650F9009D3C56 /* GameEngine+iOSTouchEvents.m in Sources */,
 				F38065C61A96441B009D3C56 /* ViewController.m in Sources */,
+				C6AEE7531AD07524008C9C9E /* Castle.m in Sources */,
 				F3D8ADF61ABB06D800920E99 /* GlobalFlags.m in Sources */,
+				C6AEE7541AD07524008C9C9E /* Tower.m in Sources */,
 				F380661C1A964C69009D3C56 /* Fort.m in Sources */,
 				F38066371A964D10009D3C56 /* TileTouchedEvent.m in Sources */,
 				F380663D1A964D21009D3C56 /* Media.m in Sources */,
@@ -1998,6 +2023,7 @@
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,
 				F380662B1A964CD7009D3C56 /* SparrowHelper.m in Sources */,
+				C6AEE74E1AD0750F008C9C9E /* Cannon.m in Sources */,
 				F3CC71E01A992CC200E40479 /* ActionMenuEvent.m in Sources */,
 				F38066101A964C5F009D3C56 /* Ritter.m in Sources */,
 				F38066721A967C8F009D3C56 /* GHEvent.m in Sources */,
