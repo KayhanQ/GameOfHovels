@@ -40,14 +40,21 @@
     NSMutableArray* villages = [NSMutableArray array];
     NSMutableArray* colors = [NSMutableArray array];
 
+    NSNumber* minusOne = [NSNumber numberWithInt:-1];
+    
     for (Tile* t in map.tilesSprite) {
         NSMutableArray* structures = [NSMutableArray array];
-        for (NSNumber* sType in [t getStructureTypes]) [structures addObject:sType];
+        for (NSNumber* sType in [t getStructureTypes]) {
+            //fix this
+            [structures addObject:sType];
+        }
         [allStructures addObject:structures];
         
-        [units addObject:t.unit];
+        if ([t hasUnit]) [units addObject:t.unit];
+        else [units addObject:minusOne];
+        
         if ([t isVillage]) [villages addObject:t.village];
-        else [villages addObject:nil];
+        else [villages addObject:minusOne];
         
         [colors addObject:[NSNumber numberWithInt: t.pColor]];
 
@@ -57,6 +64,31 @@
     [encoding addObject:villages];
     [encoding addObject:colors];
 
+    /*
+    NSFileManager *fileManager;
+    fileManager = [NSFileManager defaultManager];
+    
+    NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"cats"];
+    [fileManager createFileAtPath: @"/Resources/cats" contents: dataBuffer attributes: nil];
+    */
+    
+    NSFileHandle *file;
+    file = [NSFileHandle fileHandleForWritingAtPath: @"/Saved_Games/game1.txt"];
+    
+    NSMutableData *data;
+    
+    const char *bytestring = "black cat";
+    
+    data = [NSMutableData dataWithBytes:bytestring length:strlen(bytestring)];
+    
+    if (file == nil)
+        NSLog(@"Failed to open file");
+    
+    
+    //[file seekToFileOffset: 10];
+    
+    [file writeData: data];
+    [file closeFile];
     
     
 }
@@ -68,20 +100,22 @@
     NSMutableArray* villages = [encoding objectAtIndex:2];
     NSMutableArray* colors = [encoding objectAtIndex:3];
     
+    NSNumber* minusOne = [NSNumber numberWithInt:-1];
+
     Map* map = [[Map alloc] initWithBasicMap];
     
     for (int i = 0; i < map.tilesSprite.numChildren; i++) {
         Tile* t = (Tile*)[map.tilesSprite childAtIndex:i];
         
         for (NSNumber* sType in allStructures[i]) {
-            if (sType == nil) continue;
+            if (sType == minusOne) continue;
             [t addStructure:[sType intValue]];
         }
         
         NSNumber* uType = units[i];
-        if (uType != nil) [t addUnitWithType:[uType intValue]];
+        if (uType != minusOne) [t addUnitWithType:[uType intValue]];
         NSNumber* vType = villages[i];
-        if (vType != nil) [t addVillage:[vType intValue]];
+        if (vType != minusOne) [t addVillage:[vType intValue]];
         
         t.pColor = [colors[i] intValue];
         
