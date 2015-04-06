@@ -16,7 +16,7 @@
 
 + (BOOL)isGameWithGC
 {
-    return true;
+    return false;
 }
 
 + (BOOL)isGameWithRandomMap

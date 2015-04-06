@@ -11,7 +11,6 @@
 #import "MessageLayer.h"
 #import "Tile.h"
 #import "GameEngine.h"
-#import "GamePlayer.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -254,11 +253,14 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 //code Kayhan has implemented
 - (void)makePlayers
 {
-    GamePlayer* p1 = [[GamePlayer alloc] initWithNumber:1];
+    GamePlayer* p1 = [[GamePlayer alloc] initWithNumber:3];
     [_players addObject:p1];
     
-	GamePlayer* p2 = [[GamePlayer alloc] initWithNumber:2];
+	GamePlayer* p2 = [[GamePlayer alloc] initWithNumber:4];
     [_players addObject:p2];
+
+    GamePlayer* p3 = [[GamePlayer alloc] initWithNumber:2];
+    [_players addObject:p3];
 }
 
 /*- (void)makePlayersGC
@@ -274,6 +276,13 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	}
 }*/
 
+- (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
+{
+    for (GamePlayer* player in _players) {
+        if (player.pColor == pColor) return player;
+    }
+    return nil;
+}
 
 //TODO
 - (GamePlayer*)getCurrentPlayer

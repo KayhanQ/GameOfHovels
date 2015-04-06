@@ -106,9 +106,11 @@
 - (void)assignTilesToPlayers
 {
     NSMutableArray* colors = [NSMutableArray array];
-    for (int i = 0; i <= [_messageLayer.players count]; i++) {
-		[colors addObject:[NSNumber numberWithInt:i]];
+    for (int i = 0; i <= [_messageLayer.players count]-1; i++) {
+        GamePlayer* player = [_messageLayer.players objectAtIndex: i];
+        [colors addObject: [NSNumber numberWithInt:player.pColor]];
     }
+    [colors addObject:[NSNumber numberWithInt:NOCOLOR]];
     
     for (Tile* t in _tilesSprite) {
         if ([t getStructureType] == SEA) continue;
@@ -130,7 +132,7 @@
         if ([t hasVillage]) continue;
         
         enum PlayerColor tColor = t.pColor;
-        GamePlayer* p = _messageLayer.players[tColor-1];
+        GamePlayer* p = [_messageLayer getPlayerForColor:tColor];
         NSMutableArray* connectedTiles = [self getConnectedTilesByColor:t];
         Tile* vTile = [connectedTiles objectAtIndex:arc4random() % connectedTiles.count];
         [vTile addVillage:HOVEL];

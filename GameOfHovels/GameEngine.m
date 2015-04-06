@@ -215,9 +215,9 @@
     
     _alertController = alertController;
     
-    [self. presentViewController:alertController animated:YES completion:nil];
-
-    self
+//    [self. presentViewController:alertController animated:YES completion:nil];
+//
+//    self
     [mapEncoder encodeMap:_map];
     
 }

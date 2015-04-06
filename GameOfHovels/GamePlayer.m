@@ -20,23 +20,8 @@
 
 - (id)initWithNumber:(int)number
 {
-	switch(number)
-	{
-		case 0:
-			_pColor = RED;
-			break;
-		case 1:
-			_pColor = BLUE;
-			break;
-		case 2:
-			_pColor = ORANGE;
-			break;
-		case 3:
-			_pColor = GREY;
-			break;
-		default:
-			_pColor = RED;
-	}
+    _pColor = number;
+
     return self;
 }
 
