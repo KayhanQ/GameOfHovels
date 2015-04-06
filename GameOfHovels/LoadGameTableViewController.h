@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LoadGameTableViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource>
-@property NSArray* dirContents;
+@interface LoadGameTableViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource>{
+}
+@property (strong, nonatomic) NSMutableArray* dirContents;
+
 @end
