@@ -12,7 +12,8 @@
 		C6AEE74E1AD0750F008C9C9E /* Cannon.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE74D1AD0750F008C9C9E /* Cannon.m */; };
 		C6AEE7531AD07524008C9C9E /* Castle.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE7501AD07524008C9C9E /* Castle.m */; };
 		C6AEE7541AD07524008C9C9E /* Tower.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE7521AD07524008C9C9E /* Tower.m */; };
-		C6AFF5011AD1D058000C3A3D /* blankButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AFF5001AD1D058000C3A3D /* blankButton.png */; };
+		C6AF01E01AD30A560022C018 /* castle.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF01DF1AD30A560022C018 /* castle.png */; };
+		C6AF01E21AD3118D0022C018 /* blankButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF01E11AD3118D0022C018 /* blankButton.png */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -152,7 +153,8 @@
 		C6AEE7501AD07524008C9C9E /* Castle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Castle.m; sourceTree = "<group>"; };
 		C6AEE7511AD07524008C9C9E /* Tower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
 		C6AEE7521AD07524008C9C9E /* Tower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tower.m; sourceTree = "<group>"; };
-		C6AFF5001AD1D058000C3A3D /* blankButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blankButton.png; path = ../blankButton.png; sourceTree = "<group>"; };
+		C6AF01DF1AD30A560022C018 /* castle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = castle.png; sourceTree = "<group>"; };
+		C6AF01E11AD3118D0022C018 /* blankButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankButton.png; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -932,8 +934,8 @@
 		F38066491A964F3B009D3C56 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				C6AFF5001AD1D058000C3A3D /* blankButton.png */,
 				F380664A1A964F3B009D3C56 /* button.png */,
+				C6AF01E11AD3118D0022C018 /* blankButton.png */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -968,6 +970,7 @@
 			isa = PBXGroup;
 			children = (
 				F38066511A964F3B009D3C56 /* hovel.png */,
+				C6AF01DF1AD30A560022C018 /* castle.png */,
 				F38066521A964F3B009D3C56 /* town.png */,
 			);
 			path = Hovel;
@@ -1956,11 +1959,12 @@
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
 				F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
-				C6AFF5011AD1D058000C3A3D /* blankButton.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
+				C6AF01E21AD3118D0022C018 /* blankButton.png in Resources */,
 				F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */,
 				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
+				C6AF01E01AD30A560022C018 /* castle.png in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,

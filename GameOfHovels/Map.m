@@ -75,7 +75,7 @@
     _tileHeight = 57;
     _offsetHeight = 40;
     
-    
+        
     _tilesSprite = [SPSprite sprite];
     [self addChild:_tilesSprite];
     

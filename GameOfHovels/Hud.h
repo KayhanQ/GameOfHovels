@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) Map* map;
 @property (nonatomic) GamePlayer* player;
 
-- (id)initWithMap:(Map*)map;
+- (id)initWithMap:(Map*)map world:(SPSprite*)world;
 - (void)update:(Tile*)tile;
 
 

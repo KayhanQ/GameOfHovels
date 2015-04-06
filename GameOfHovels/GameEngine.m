@@ -108,7 +108,7 @@
 
     _map = [[Map alloc] initWithRandomMap];
 	_map.gameEngine = self;
-    _hud = [[Hud alloc] initWithMap:_map];
+    _hud = [[Hud alloc] initWithMap:_map world:_world];
     [_contents addChild:_hud];
 
      _map.hud = _hud;
@@ -123,7 +123,9 @@
     [self addEventListener:@selector(showActionMenu:) atObject:self forType:EVENT_TYPE_SHOW_ACTION_MENU];
     [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
-
+    //[self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+    //[self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
+    
     [self enableScroll];
 
     
