@@ -122,6 +122,7 @@
         _woodField.text = @"";
         _goldField.text = @"";
         _healthField.text = @"";
+        _numTilesInRegion.text = @"";
         
         Tile * villageTile = [_map getVillageTile: tile.village];
        // NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
