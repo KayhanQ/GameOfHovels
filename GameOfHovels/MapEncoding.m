@@ -32,7 +32,7 @@
 //players...
 //format: s1,s2,s3,u,v,c
 
-- (void)encodeMap:(Map *)map
+- (void) encodeMap:(Map *)map
 {
     NSMutableArray* encoding = [NSMutableArray array];
     //array of array of structures per tile
@@ -98,7 +98,6 @@
         [fileManager createFileAtPath: path contents: dataBuffer attributes: nil];
 
     }
-    
 }
 
 - (Map*)decodeMap:(NSMutableArray*)encoding
@@ -126,7 +125,6 @@
         if (vType != minusOne) [t addVillage:[vType intValue]];
         
         t.pColor = [colors[i] intValue];
-        
     }
 
     

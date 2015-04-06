@@ -10,14 +10,13 @@
 
 @interface GamePlayer : NSObject {
     enum PlayerColor {NOCOLOR = 0, RED, BLUE, ORANGE, GREY};
-
 }
 
 @property (nonatomic, readonly) enum PlayerColor pColor;
+@property NSString* playerId;
+@property long randomNumber;
 
-
-
--(id)initWithString:(NSString*)name color:(enum PlayerColor)pColor;
+-(id)initWithNumber:(int)number;
 
 
 

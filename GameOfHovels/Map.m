@@ -106,9 +106,8 @@
 - (void)assignTilesToPlayers
 {
     NSMutableArray* colors = [NSMutableArray array];
-    [colors addObject:[NSNumber numberWithInt:NOCOLOR]];
-    for (GamePlayer* p in _messageLayer.players) {
-        [colors addObject:[NSNumber numberWithInt:p.pColor]];
+    for (int i = 0; i <= [_messageLayer.players count]; i++) {
+		[colors addObject:[NSNumber numberWithInt:i]];
     }
     
     for (Tile* t in _tilesSprite) {
