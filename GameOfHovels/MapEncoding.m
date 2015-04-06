@@ -68,7 +68,14 @@
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString* rootPath = paths[0];
-    NSString* path = [rootPath stringByAppendingPathComponent:@"sg2"];
+    NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+    
+    BOOL isDir;
+    if(![fileManager fileExistsAtPath:path isDirectory:&isDir])
+        if(![fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL])
+            NSLog(@"Error: Create folder failed %@", path);
+    
+    path = [path stringByAppendingPathComponent:@"sg6"];
     path = [path stringByAppendingPathExtension:@"txt"];
     
     NSLog(@"path: %@", path);
@@ -80,7 +87,7 @@
     }
     else {
         NSLog (@"File not found");
-        NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"the cat ate the crumbs"];
+        NSData* dataBuffer = [NSData dataWithBase64EncodedString:@"1,2,3,3,333,444,44444,555,666,777,7888,9999"];
         [fileManager createFileAtPath: path contents: dataBuffer attributes: nil];
 
     }
