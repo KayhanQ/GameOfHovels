@@ -50,9 +50,7 @@
 - (NSMutableArray*)getTilesforVillage:(Village*)v;
 - (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile;
 - (NSMutableArray*)getTilesWithMyVillages;
-
-
-
+-(BOOL)areConnectedByLand:(Tile*)t1 t2:(Tile*)t2;
 
 - (void)showPlayersTeritory;
 
