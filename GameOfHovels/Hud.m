@@ -20,16 +20,22 @@
 
 @implementation Hud {
     
+    SPSprite* sprite;
+    
     SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
     
     SPButton* _endTurnButton;
     
-    NSMutableArray * listOfVillages;
+    NSMutableArray * _listOfVillages;
     
-    Tile * villageTile1, *villageTile2;
+    Tile * _villageTile1, *_villageTile2;
+    SPTextField* _woodField1, *_goldField1,*_healthField1, *_woodField2, *_goldField2, *_healthField2;
+
+    SPImage* _village1Icon, *_village2Icon;
     
-    SPImage *village1Picture;
-    SPTexture * _buttonTexture; //TEST
+    int village1Index, village2Index;
+    SPTexture * _hovelTexture, *_townTexture, *_fortTexture, *_castleTexture;
+    
     
     //unit
     SPTextField* _woodField;
@@ -61,100 +67,23 @@
         //_player = player;
         _map = map;
         
-        listOfVillages = [map getTilesWithMyVillages];
+        sprite = [SPSprite sprite];//background
+        
+        _listOfVillages = [map getTilesWithMyVillages];
+        village1Index = 0;
+        village2Index = 1;
         
         _height = 380;
         _width = 130;
         _yOffsetMinor = 3;
+    
         
-        SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
-        
-        SPSprite* sprite = [SPSprite sprite]; //container for ui elements
-        
-        background.width = _width;
-        background.height = _height + 4;
-        
-        [self addChild:background];
-        
-        _middleX = _width/2;
-        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
-        _buttonTexture = buttonTexture;
-     //   SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
-        
-        
-        //
-        _settingsButton = [SPButton buttonWithUpState:buttonTexture];
-        _settingsButton.y = 0;
-        _settingsButton.height = 20; //Just Some magic number
-        _settingsButton.width = background.width - 10;
-        [sprite addChild:_settingsButton];
-        
-        
-        _village1 = [SPButton buttonWithUpState:buttonTexture];
-        _village1.x = 7;
-        _village1.height = 100; //Just Some magic number
-        _village1.width = background.width - 10;
-        
-        
-        _village2 = [SPButton buttonWithUpState:buttonTexture];
-        _village2.x = 7;
-        _village2.height = 100; //Just Some magic number
-         _village2.width = background.width - 10;
-        
-        //
-        _village1.y = 20;
-        
-        village1Picture = [SPImage imageWithContentsOfFile:@"fort.png"];
-        village1Picture.height = 40;
-        village1Picture.width = 40;
-        [_village1 addChild:village1Picture];
-        
-        [sprite addChild:_village1];
-        
-        
-        
-        _village2.y = _village1.y +90;
-        [sprite addChild:_village2];
-        
-        _leftButton = [SPButton buttonWithUpState:buttonTexture];
-        _leftButton.x = 7;
-        _leftButton.y = _village2.y + 90;
-        _leftButton.width = 50;
-        _leftButton.height = 50;
-        [sprite addChild:_leftButton];
-        [_leftButton addEventListener:@selector(leftButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-        _rightButton = [SPButton buttonWithUpState:buttonTexture];
-        _rightButton.x = _leftButton.x + 70;
-        _rightButton.y = _leftButton.y;
-        _rightButton.width = _leftButton.width;
-        _rightButton.height = _leftButton.height;
-        [sprite addChild:_rightButton];
-        [_rightButton addEventListener:@selector(rightButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
-
-        
-        
-        
-        [self addChild:sprite];
-        
-        
-        _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
-        
-        _endTurnButton.height = 50; //Just Some magic number
-        _endTurnButton.width = 110;
-        
-        [SparrowHelper centerPivot:_endTurnButton];
-        
-        _endTurnButton.x = _middleX;
-        _endTurnButton.y = _height - _endTurnButton.height + 20;
-        
-        [self addChild:_endTurnButton];
-        [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
+        [self initButtons];
         [self initVillageFields];
+        [self initTextures];
+        [self initUITool];
         [self initUnitFields];
-        
+        [self updateUITool];
         
     }
     
@@ -180,17 +109,7 @@
         
         Unit* unit = [tile getUnit];
         
-        _ownerField.text = @"";
-        _homeCoordField.text = @"";
-        _woodField.text = @"";
-        _goldField.text= @"";
-        
-        
         Tile * villageTile = [_map getVillageTile: tile.village];
-        
-        NSLog(@"Home Coordinates: %.01f, %.01f", villageTile.x/54, villageTile.y/40);
-
-        
         NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
         _ownerField.text = ownerFieldString;
         
@@ -206,14 +125,8 @@
     }
     
     else if(tile.hasVillage){ //put village stats here
-        NSLog(@"Has village");
         
         Village* v = tile.village;
-        
-        _ownerField.text = @"";
-        _homeCoordField.text = @"";
-        _upkeepField.text = @"";
-        _unitNameField.text= @"";
         
         NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
         _ownerField.text = ownerFieldString;
@@ -246,14 +159,101 @@
 
 - (void)leftButtonTouched:(SPTouchEvent*) event
 {
-    NSLog(@"leftButton Touched");
-    village1Picture.texture = _buttonTexture;
+    
+    village1Index = (village1Index -1 % [_listOfVillages count]) -1; //CAREFUL ABOUT THIS
+    village2Index= (village2Index -1 % [_listOfVillages count]) -1;
+
+    _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
+    _villageTile2 =[_listOfVillages objectAtIndex:village2Index];
+    
+    [self updateUITool];
+
 }
 
 - (void)rightButtonTouched:(SPTouchEvent*) event
 {
     NSLog(@"rightButton Touched");
+    
+    village1Index = (village1Index +1 % [_listOfVillages count]) -1;
+    village2Index= (village2Index +1 % [_listOfVillages count]) -1;
+    
+
+    
+    _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
+    _villageTile2 =[_listOfVillages objectAtIndex:village2Index];
+    
+    [self updateUITool];
+    
 }
+
+-(SPTexture*) getIcon:(Tile*)tile button:(SPButton*)button {
+    
+    int buildingType;
+    
+    buildingType = [tile getVillageType];
+    
+    SPTexture * returnedTexture;
+    
+    switch (buildingType) {
+        case 1:
+            returnedTexture = _hovelTexture;
+            break;
+            
+        case 2:
+            returnedTexture = _townTexture;
+            break;
+            
+        case 3:
+            returnedTexture = _fortTexture;
+            break;
+            
+        case 4:
+            returnedTexture = _castleTexture;
+            break;
+            
+    }
+    
+    return returnedTexture;
+}
+
+
+-(void) updateUITool
+{
+    
+    if([sprite containsChild:_village1]){
+    
+        _village1Icon.texture = [self getIcon:_villageTile1 button:_village1];
+    Village* v = _villageTile1.village;
+    
+    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
+    _woodField1.text = woodString;
+    
+    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
+    _goldField1.text = goldString;
+    
+    NSString* healthString = [NSString stringWithFormat:@"Health: %d", v.health];
+    _healthField1.text = healthString;
+    
+        
+        if([sprite containsChild:_village2]){
+            //Check to see if village2 even exists
+            _village2Icon.texture =[self getIcon:_villageTile2 button:_village2];
+            Village* v = _villageTile2.village;
+            
+            NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
+            _woodField2.text = woodString;
+            
+            NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
+            _goldField2.text = goldString;
+            
+            NSString* healthString = [NSString stringWithFormat:@"Health: %d", v.health];
+            _healthField2.text = healthString;
+        }
+    }
+    
+
+}
+
 
 - (void)initUnitFields{
     //Unit Info--------- ADD TO METHOD
@@ -299,6 +299,195 @@
     [self addChild:_numTilesInRegion];
 }
 
+-(void) initTextures{
+    
+    _hovelTexture = [SPTexture textureWithContentsOfFile:@"hovel.png"];
+    _townTexture = [SPTexture textureWithContentsOfFile:@"town.png"];
+    _townTexture =[SPTexture textureWithContentsOfFile:@"fort.png"];
+    _castleTexture =[SPTexture textureWithContentsOfFile:@"castle.png"];
+    
+}
 
+-(void) initButtons{
+    
+    
+    SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
+    background.width = _width;
+    background.height = _height + 4;
+    
+    [self addChild:background];
+    
+     //container for ui elements
+    
+
+    _middleX = _width/2;
+    SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
+    //   SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
+    
+    
+    //
+    _settingsButton = [SPButton buttonWithUpState:buttonTexture];
+    _settingsButton.y = 0;
+    _settingsButton.height = 20; //Just Some magic number
+    _settingsButton.width = background.width - 10;
+    [sprite addChild:_settingsButton];
+    
+    _village1 = [SPButton buttonWithUpState:buttonTexture];
+    _village1.x = 7;
+    _village1.height = 100; //Just Some magic number
+    _village1.width = background.width - 10;
+    
+    _village2 = [SPButton buttonWithUpState:buttonTexture];
+    _village2.x = 7;
+    _village2.height = 100; //Just Some magic number
+    _village2.width = background.width - 10;
+    
+    //
+    _village1.y = 20;
+    
+    /*
+    village1Picture = [SPImage imageWithContentsOfFile:@"fort.png"];
+    village1Picture.height = 40;
+    village1Picture.width = 40;
+    [_village1 addChild:village1Picture];
+    */
+    
+    [sprite addChild:_village1];
+ 
+    _village2.y = _village1.y +90;
+    [sprite addChild:_village2];
+    
+    _leftButton = [SPButton buttonWithUpState:buttonTexture];
+    _leftButton.x = 7;
+    _leftButton.y = _village2.y + 90;
+    _leftButton.width = 50;
+    _leftButton.height = 50;
+    [sprite addChild:_leftButton];
+    [_leftButton addEventListener:@selector(leftButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    
+    _rightButton = [SPButton buttonWithUpState:buttonTexture];
+    _rightButton.x = _leftButton.x + 70;
+    _rightButton.y = _leftButton.y;
+    _rightButton.width = _leftButton.width;
+    _rightButton.height = _leftButton.height;
+    [sprite addChild:_rightButton];
+    [_rightButton addEventListener:@selector(rightButtonTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    
+    [self addChild:sprite];
+    
+    
+    _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
+    
+    _endTurnButton.height = 50; //Just Some magic number
+    _endTurnButton.width = 110;
+    
+    [SparrowHelper centerPivot:_endTurnButton];
+    
+    _endTurnButton.x = _middleX;
+    _endTurnButton.y = _height - _endTurnButton.height + 20;
+    
+    [self addChild:_endTurnButton];
+    [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    
+}
+
+-(void) initUITool
+{
+    if([_listOfVillages count] >= 2){
+        _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
+        _villageTile2 = [_listOfVillages objectAtIndex:village2Index];
+        
+        //Init profile pics and info here.
+        
+        _village1Icon = [SPImage imageWithContentsOfFile:@"fort.png"];
+        _village1Icon.texture = [self getIcon:_villageTile1 button:_village1];
+        _village1Icon.height = 40;
+        _village1Icon.width = 40;
+        _village1Icon.x = 10;
+        _village1Icon.y = 25;
+        [_village1 addChild:_village1Icon];
+        
+        _woodField1 = [self newTextField];
+        _woodField1.y = 30;
+        _woodField1.text = @"Wood: ";
+        [_village1 addChild:_woodField1];
+        
+        _goldField1 = [self newTextField];
+        _goldField1.text = @"Gold: ";
+        _goldField1.y = _woodField1.height + _woodField1.y;
+        [_village1 addChild:_goldField1];
+        
+        _healthField1 = [self newTextField];
+        _healthField1.text = @"Health: ";
+        _healthField1.y = _goldField1.height + _goldField1.y;
+        [_village1 addChild:_healthField1];
+        
+        
+        
+        _village2Icon = [SPImage imageWithContentsOfFile:@"fort.png"];
+        _village2Icon.texture = [self getIcon:_villageTile2 button:_village2];
+        _village2Icon.height = 40;
+        _village2Icon.width = 40;
+        _village2Icon.x = 10;
+        _village2Icon.y = 25;
+        [_village2 addChild:_village2Icon];
+  
+        _woodField2 = [self newTextField];
+        _woodField2.y = _woodField1.y;
+         _woodField2.text = @"Wood: ";
+        [_village2 addChild:_woodField2];
+        
+        _goldField2 = [self newTextField];
+         _goldField2.text = @"Gold: ";
+        _goldField2.y = _woodField2.height + _woodField2.y;
+        [_village2 addChild:_goldField2];
+        
+        _healthField2 = [self newTextField];
+        _healthField2.text = @"Health: ";
+        _healthField2.y = _goldField2.height + _goldField2.y;
+        [_village2 addChild:_healthField2];
+        
+        
+        
+        
+    }
+    else if([_listOfVillages count] == 1)
+    {
+        
+        _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
+        [sprite removeChild:_village2];
+        
+        _village1Icon = [SPImage imageWithContentsOfFile:@"fort.png"];
+        _village1Icon.texture = [self getIcon:_villageTile1 button:_village1];
+        _village1Icon.height = 40;
+        _village1Icon.width = 40;
+        _village1Icon.x = 10;
+        _village1Icon.y = 25;
+        [_village1 addChild:_village1Icon];
+        
+        _woodField1 = [self newTextField];
+        _woodField1.y = 30;
+        _woodField1.text = @"Wood: ";
+        [_village1 addChild:_woodField1];
+        
+        _goldField1 = [self newTextField];
+        _goldField1.text = @"Gold: ";
+        _goldField1.y = _woodField1.height + _woodField1.y;
+        [_village1 addChild:_goldField1];
+        
+        _healthField1 = [self newTextField];
+        _healthField1.text = @"Health: ";
+        _healthField1.y = _goldField1.height + _goldField1.y;
+        [_village1 addChild:_healthField1];
+   
+        
+    }
+    
+    else if([_listOfVillages count] ==0){
+        [sprite removeChild:_village1];
+        [sprite removeChild:_village2];
+    }
+    
+}
 
 @end
