@@ -182,44 +182,40 @@
     
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:@"Save Game"
-                                          message:@"Enter Save Game Name"
+                                          message:@"Enter the name of the game."
                                           preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
      {
-         textField.placeholder = NSLocalizedString(@"LoginPlaceholder", @"Login");
+         textField.placeholder = NSLocalizedString(@"Name", @"Name");
+         [[NSNotificationCenter defaultCenter] addObserver:self
+                                                  selector:@selector(alertTextFieldDidChange:)
+                                                      name:UITextFieldTextDidChangeNotification
+                                                    object:textField];
      }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
-     {
-         textField.placeholder = NSLocalizedString(@"PasswordPlaceholder", @"Password");
-         textField.secureTextEntry = YES;
-     }];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:cancelAction];
     
     UIAlertAction *okAction = [UIAlertAction
                                actionWithTitle:NSLocalizedString(@"OK", @"OK action")
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction *action)
                                {
-                                   UITextField *login = alertController.textFields.firstObject;
-                                   UITextField *password = alertController.textFields.lastObject;
+                                   UITextField *saveGameName = alertController.textFields.firstObject;
+                                   [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                                                   name:UITextFieldTextDidChangeNotification
+                                                                                 object:nil];
+                                   [mapEncoder encodeMap:_map];
                                }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
-     {
-         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                  selector:@selector(alertTextFieldDidChange:)
-                                                      name:UITextFieldTextDidChangeNotification
-                                                    object:textField];
-     }];
+    okAction.enabled = NO;
+    [alertController addAction:okAction];
     
     _alertController = alertController;
     
-//    [self. presentViewController:alertController animated:YES completion:nil];
-//
-//    self
-    [mapEncoder encodeMap:_map];
-    
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+
+
 }
 
 - (void)alertTextFieldDidChange:(NSNotification *)notification
@@ -227,9 +223,9 @@
     UIAlertController *alertController = (UIAlertController *)_alertController;
     if (alertController)
     {
-        UITextField *login = alertController.textFields.firstObject;
+        UITextField *gameName = alertController.textFields.firstObject;
         UIAlertAction *okAction = alertController.actions.lastObject;
-        okAction.enabled = login.text.length > 2;
+        okAction.enabled = gameName.text.length > 2;
     }
 }
 
