@@ -198,14 +198,20 @@
     float height = Sparrow.stage.height;
 
     SPPoint* position = event.point;
-    float endX = _world.x + width/2 - position.x;
-    float endY = _world.x + height/2 - position.y;
-
-    SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
-    [tween animateProperty:@"x"      targetValue:endX];
-    [tween animateProperty:@"y"      targetValue:endY];
-    tween.onComplete = ^{ NSLog(@"Translate completed"); };
-    [_gameJuggler addObject:tween];
+    SPPoint* globalPoint = [self localToGlobal:position];
+    
+    _world.pivotX = globalPoint.x;
+    _world.pivotY = globalPoint.y;
+    _world.x = width/2;
+    _world.y = height/2;
+    
+//    SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
+//    [tween animateProperty:@"pivotX"      targetValue:globalPoint.x];
+//    [tween animateProperty:@"pivotY"      targetValue:globalPoint.y];
+//    [tween animateProperty:@"x"      targetValue:endX];
+//    [tween animateProperty:@"y"      targetValue:endY];
+//    tween.onComplete = ^{ NSLog(@"Translate completed"); };
+//    [_gameJuggler addObject:tween];
 }
 
 - (void)saveGame:(GHEvent*)event

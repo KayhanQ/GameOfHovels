@@ -172,13 +172,8 @@
         _currentTile = tileToGoTo;
         
         if (_currentTile != nil) {
-            [_currentTile selectTile];
-        
             SPPoint* localPoint = [SPPoint pointWithX:tileToGoTo.x y:tileToGoTo.y];
-            SPPoint* globalPoint = [_map localToGlobal:localPoint];
-            NSLog(@"global Point x: %f y: %f", globalPoint.x, globalPoint.y);
-            
-            TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:globalPoint];
+            TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
             [self dispatchEvent:event];
         }
     }
