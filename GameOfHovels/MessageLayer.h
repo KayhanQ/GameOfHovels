@@ -79,6 +79,7 @@ typedef enum {
 - (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 
+@property ViewController* vc;
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;
 

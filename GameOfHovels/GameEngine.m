@@ -47,10 +47,20 @@
 {
     if ((self = [super init]))
     {
-        [self setup];
+       // [self setup];
     }
     return self;
 }
+
+- (id)init:(Map*)map
+{
+	if ((self = [super init]))
+	{
+		[self setup:map];
+	}
+	return self;
+}
+
 
 - (void)dealloc
 {
@@ -111,8 +121,8 @@
     
 
     
-    _map = [[Map alloc] initWithRandomMap];
-	_map.gameEngine = self;
+   // _map = [[Map alloc] initWithRandomMap];
+	//_map.gameEngine = self;
     [_world addChild:_map];
     
     _hud = [[Hud alloc] initWithMap:_map];

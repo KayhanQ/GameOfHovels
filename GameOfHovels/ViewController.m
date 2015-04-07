@@ -19,13 +19,21 @@
 
 @implementation ViewController
 
+- (id)init
+{
+	if ((self = [super init]))
+	{
+		[self loadSparrowGame];
+	}
+	return self;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
     NSLog(@"In ViewController");
-    
-    [self loadSparrowGame];
 }
 
 - (void)loadSparrowGame
@@ -34,12 +42,8 @@
     _window = [[UIWindow alloc] initWithFrame:screenBounds];
     
     _viewController = [[SPViewController alloc] init];
-    
-    // Enable some common settings here:
-    //
-    // _viewController.showStats = YES;
+
     _viewController.multitouchEnabled = YES;
-    // _viewController.preferredFramesPerSecond = 60;
     
     [_viewController startWithRoot:[GameEngine class] supportHighResolutions:YES doubleOnPad:YES];
     
