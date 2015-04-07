@@ -16,12 +16,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	
+		//We need a new directory called New_Game_Maps, and to store all of the game maps
+		// that we need in the bundle.
+		//Name these maps "three-way merge", or "castle", or w/e
+		//hardcode the list of map names here.
+	
+	//grab the list of map names and display it in the "cellForRowAtIndexPath" method
+
+	
+	//when one of the (rows)maps is selected,
+		//decodeMap and then call that new init method in GameEngine that takes a map as input
+	
+		//Now we need to tell everyone else that you just selected this map
+		//Map agreement algorithm
+		//Need a new messageType Map selection
+		
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,13 +44,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 #warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 #warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return 0;
 }
 
@@ -47,8 +56,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
-    
+	//grab the list of map names and display it in the "cellForRowAtIndexPath" method
+ 
     return cell;
 }
 */

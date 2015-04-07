@@ -17,6 +17,6 @@
 
 - (id)init;
 - (void)encodeMap:(Map*)map;
-
+-(Map*)decodeMap:(NSData*)encodedData;
 
 @end

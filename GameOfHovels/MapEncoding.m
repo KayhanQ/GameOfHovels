@@ -100,17 +100,19 @@
     }
 }
 
-- (Map*)decodeMap:(NSMutableArray*)encoding
+- (Map*)decodeMap:(NSData*)encoding
 {
+	//??? I didn't change anything here except the method signature (we just input the data from the file to decode.
+	/*
     NSMutableArray* allStructures = [encoding objectAtIndex:0];
     NSMutableArray* units = [encoding objectAtIndex:1];
     NSMutableArray* villages = [encoding objectAtIndex:2];
     NSMutableArray* colors = [encoding objectAtIndex:3];
     
     NSNumber* minusOne = [NSNumber numberWithInt:-1];
-
+*/
     Map* map = [[Map alloc] initWithBasicMap];
-    
+    /*
     for (int i = 0; i < map.tilesSprite.numChildren; i++) {
         Tile* t = (Tile*)[map.tilesSprite childAtIndex:i];
         
@@ -126,7 +128,7 @@
         
         t.pColor = [colors[i] intValue];
     }
-
+*/
     
     return map;
 }
