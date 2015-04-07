@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface NewGameTableViewController : UITableViewController
-
+@property NSArray* listOfMaps;
 @end

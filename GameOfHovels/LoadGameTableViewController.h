@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "GameEngine.h"
 @interface LoadGameTableViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource>{
 }
 @property (strong, nonatomic) NSMutableArray* dirContents;

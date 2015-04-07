@@ -46,12 +46,13 @@
 
 - (id)init
 {
-    if ((self = [super init]))
-    {
-        [self setup];
-    }
-    return self;
+	if ((self = [super init]))
+	{
+		[self setup];
+	}
+	return self;
 }
+
 
 - (void)dealloc
 {
@@ -62,7 +63,6 @@
 
 - (void)setup
 {
-    
     _touching = NO;
     _lastScrollDist = 0;
     _scrollVector = [SPPoint pointWithX:0 y:0];
@@ -83,7 +83,8 @@
     
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
-    
+	
+	NSData* mapData = _messageLayer.mapData;
     //we check if we are using GC networking
     //if not we can manually create our own setup
     if ([GlobalFlags isGameWithGC]) {
@@ -101,18 +102,24 @@
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
-    SPQuad* q = [SPQuad quadWithWidth:1024*2 height:768*2];
-    q.color = 0xB3E8F2;
-    [_contents addChild:q];
-    
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
 
-    
-
-    
-    _map = [[Map alloc] initWithRandomMap];
+    SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
+    q.x = -q.width/2;
+    q.y = -q.height/2;
+    q.color = 0xB3E8F2;
+    [_world addChild:q];
+	
+	if (mapData == nil) {
+		_map = [[Map alloc] initWithRandomMap];
+	}
+	else {
+		MapEncoding* mapEncoder = [[MapEncoding alloc] init];
+		_map = [mapEncoder decodeMap:mapData];
+	}
+	
 	_map.gameEngine = self;
     [_world addChild:_map];
     
@@ -142,6 +149,8 @@
 	[MessageLayer sharedMessageLayer].gameEngine = self;
     
 }
+
+
 
 - (void)addTurnEventListeners
 {

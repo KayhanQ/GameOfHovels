@@ -64,6 +64,13 @@
     return self;
 }
 
+- (void)assignPlayerInfoForLoadGame
+{
+	[self assignTilesToPlayers];
+	[self assignVillagesToRegions];
+	[self refreshTeritory];
+}
+
 - (void)setup
 {
     _messageLayer = [MessageLayer sharedMessageLayer];

@@ -34,7 +34,9 @@
 }
 
 - (void)playerAuthenticated {
-	//Menu 
+	//Menu
+	[[ViewController alloc]init];
+
 	MenuViewController *mvc = [[MenuViewController alloc]init];
 	[self presentViewController:mvc animated:YES completion:nil];
 	//[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];

@@ -8,6 +8,7 @@
 
 #import "LoadGameTableViewController.h"
 #import "MapEncoding.h"
+#import "MessageLayer.h"
 
 @interface LoadGameTableViewController ()
 @end
@@ -121,13 +122,15 @@
 	
 	//get the data out of the file and send it to the mapdecoder
 	NSData* encodedData = [fm contentsAtPath:path];
-	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
-	Map* map = [mapEncoder decodeMap:encodedData];
-	
-    // Kayhan:
-    // there is a map called 'goat' that you can try and load. There is a soldier on the top left tile.
-    
+	[MessageLayer sharedMessageLayer].mapData = encodedData;
+
+	//create a game engine with the map
+	ViewController* vc = [[ViewController alloc]init];
+
+	[self presentViewController:vc animated:YES completion:nil];
+
     // Create the game using the map we just decoded.
+	
 	
 	// write an init method in GameEngine that takes this map as input.
 	
