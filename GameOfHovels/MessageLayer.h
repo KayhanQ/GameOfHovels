@@ -79,6 +79,7 @@ typedef enum {
 - (void)makePlayersGC;
 - (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
+- (GamePlayer*)getMePlayer;
 
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;

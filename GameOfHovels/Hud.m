@@ -9,22 +9,28 @@
 #import <Foundation/Foundation.h>
 #import "Hud.h"
 #import "GHEvent.h"
+#import "TileTouchedEvent.h"
 #import "SparrowHelper.h"
 #import "Tile.h"
 #import "Village.h"
 #import "Map.h"
-
+#import "MessageLayer.h"
 
 @implementation Hud {
     
     SPButton* _endTurnButton;
     SPButton* _saveGameButton;
+    SPButton* _nextVillageButton;
 
     SPTextField* _woodField;
     SPTextField* _goldField;
     SPTextField* _healthField;
     SPTextField* _numTilesInRegion;
 
+    Tile* _currentTile;
+    
+    MessageLayer* _messageLayer;
+    
     int _yOffsetMinor;
     float _middleX;
     float _height;
@@ -40,6 +46,8 @@
         
         _map = map;
         
+        _messageLayer = [MessageLayer sharedMessageLayer];
+
         _height = 380;
         _width = 60;
 
@@ -53,6 +61,9 @@
         _middleX = _width/2;
         
         SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+        
+
+        
         _saveGameButton = [SPButton buttonWithUpState:buttonTexture];
         _saveGameButton.text = @"Save Game";
         [SparrowHelper centerPivot:_saveGameButton];
@@ -68,6 +79,16 @@
         _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
         [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        _nextVillageButton = [SPButton buttonWithUpState:buttonTexture];
+        _nextVillageButton.text = @"Next Village";
+        [SparrowHelper centerPivot:_nextVillageButton];
+        _nextVillageButton.x = _middleX;
+        _nextVillageButton.y = _endTurnButton.y - _endTurnButton.height;
+        [self addChild:_nextVillageButton];
+        [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        
         
         _woodField = [self newTextField];
         _woodField.text = @"Wood: ";
@@ -104,6 +125,7 @@
 
 - (void)update:(Tile *)tile
 {
+    _currentTile = tile;
     Village* v = tile.village;
     
     NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
@@ -123,6 +145,36 @@
     //who is the unit and all its stats, workstate
     //if you click a village then put up how many tiles the village has
 }
+
+- (void)nextVillageTouched:(SPTouchEvent*) event
+{
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+        NSLog(@"Next Village Touched");
+        NSMutableArray* villageTiles = [_map getTilesWithMyVillages];
+        Tile* tileToGoTo = nil;
+        
+        tileToGoTo = [villageTiles objectAtIndex:0];
+        for (int i = 0; i<villageTiles.count-1; i++) {
+            Tile* vTile = [villageTiles objectAtIndex:i];
+            if (_currentTile == vTile) {
+                if (i == villageTiles.count-1) {
+                    tileToGoTo = [villageTiles objectAtIndex:0];
+                    break;
+                }
+                else {
+                    tileToGoTo = [villageTiles objectAtIndex:i+1];
+                    break;
+                }
+            }
+        }
+        _currentTile = tileToGoTo;
+        TileTouchedEvent* event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_SCREEN tile:tileToGoTo];
+        [self dispatchEvent:event];
+    }
+}
+
 
 - (void)endTurnTouched:(SPTouchEvent*) event
 {
