@@ -129,7 +129,8 @@
 
     
 
-    
+    [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_SCREEN];
+
     [self beginTurnWithPlayer:_currentPlayer];
 	[MessageLayer sharedMessageLayer].gameEngine = self;
     
@@ -173,6 +174,18 @@
     
     //We rebegin our turn
     [self beginTurnWithPlayer:_currentPlayer];
+}
+
+- (void)translateScreenToTile:(TileTouchedEvent*)event
+{
+    Tile* tileToGoTo = event.tile;
+    
+    
+    SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
+    [tween animateProperty:@"x"      targetValue:tileToGoTo.x];
+    [tween animateProperty:@"y"      targetValue:tileToGoTo.y];
+    tween.onComplete = ^{ NSLog(@"Tween completed"); };
+    [_gameJuggler addObject:tween];
 }
 
 - (void)saveGame:(GHEvent*)event
