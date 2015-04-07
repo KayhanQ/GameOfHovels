@@ -32,6 +32,8 @@
 - (id)initWithRandomMap;
 - (id)initWithBasicMap;
 
+- (void)assignPlayerInfoForLoadGame;
+
 - (void)beginTurnPhases;
 - (void)buildPhase;
 

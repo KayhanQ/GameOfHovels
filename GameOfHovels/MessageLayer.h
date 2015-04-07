@@ -13,6 +13,7 @@
 #import "GamePlayer.h"
 
 @class GameEngine;
+@class Map;
 
 extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
@@ -79,7 +80,6 @@ typedef enum {
 - (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 
-@property ViewController* vc;
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;
 
@@ -90,5 +90,5 @@ typedef enum {
 @property (nonatomic, readonly) NSError *lastError;
 @property (nonatomic, strong) GKMatch *match;
 @property NSObject *messageLayer;
-
+@property (nonatomic, strong)NSData* mapData;
 @end

@@ -26,7 +26,5 @@
 
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 - (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
--(void)setup:(Map*)map;
-- (id)init:(Map*)map;
 
 @end

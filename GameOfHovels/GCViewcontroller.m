@@ -35,7 +35,7 @@
 
 - (void)playerAuthenticated {
 	//Menu
-	//[MessageLayer sharedMessageLayer].vc = [[ViewController alloc]init];
+	[[ViewController alloc]init];
 
 	MenuViewController *mvc = [[MenuViewController alloc]init];
 	[self presentViewController:mvc animated:YES completion:nil];

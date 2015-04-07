@@ -122,14 +122,12 @@
 	
 	//get the data out of the file and send it to the mapdecoder
 	NSData* encodedData = [fm contentsAtPath:path];
-	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
-	Map* map = [mapEncoder decodeMap:encodedData];
-	
-	//create a game engine with the map
-	GameEngine* ge = [[GameEngine alloc] init:map];
-	[MessageLayer sharedMessageLayer].vc = [[ViewController alloc]init];
+	[MessageLayer sharedMessageLayer].mapData = encodedData;
 
-	[self presentViewController:[MessageLayer sharedMessageLayer].vc animated:YES completion:nil];
+	//create a game engine with the map
+	ViewController* vc = [[ViewController alloc]init];
+
+	[self presentViewController:vc animated:YES completion:nil];
 
     // Create the game using the map we just decoded.
 	
