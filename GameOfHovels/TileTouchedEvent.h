@@ -14,8 +14,6 @@
 
 #define EVENT_TYPE_SHOW_ACTION_MENU @"showActionMenu"
 
-#define EVENT_TYPE_TRANSLATE_SCREEN @"translateScreen"
-
 
 @interface TileTouchedEvent : SPEvent
 

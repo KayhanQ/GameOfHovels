@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Hud.h"
 #import "GHEvent.h"
-#import "TileTouchedEvent.h"
+#import "TranslateWorldEvent.h"
 #import "SparrowHelper.h"
 #import "Tile.h"
 #import "Village.h"
@@ -170,8 +170,17 @@
             }
         }
         _currentTile = tileToGoTo;
-        TileTouchedEvent* event = [[TileTouchedEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_SCREEN tile:tileToGoTo];
-        [self dispatchEvent:event];
+        
+        if (_currentTile != nil) {
+            [_currentTile selectTile];
+        
+            SPPoint* localPoint = [SPPoint pointWithX:tileToGoTo.x y:tileToGoTo.y];
+            SPPoint* globalPoint = [_map localToGlobal:localPoint];
+            NSLog(@"global Point x: %f y: %f", globalPoint.x, globalPoint.y);
+            
+            TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:globalPoint];
+            [self dispatchEvent:event];
+        }
     }
 }
 

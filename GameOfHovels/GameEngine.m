@@ -10,6 +10,7 @@
 #import "Tile.h"
 #import "Map.h"
 #import "TileTouchedEvent.h"
+#import "TranslateWorldEvent.h"
 #import "ActionMenu.h"
 #import "Ritter.h"
 #import "Baum.h"
@@ -100,20 +101,26 @@
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
+    SPQuad* q = [SPQuad quadWithWidth:1024*2 height:768*2];
+    q.color = 0xB3E8F2;
+    [_contents addChild:q];
+    
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
-    SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
-    q.x = -q.width/2;
-    q.y = -q.height/2;
-    q.color = 0xB3E8F2;
-    [_world addChild:q];
+
     
 
     
     _map = [[Map alloc] initWithRandomMap];
 	_map.gameEngine = self;
     [_world addChild:_map];
+    
+    SPQuad* q2 = [SPQuad quadWithWidth:10 height:10];
+    [SparrowHelper centerPivot:q2];
+    q2.color = 0xff0000;
+    [_world addChild:q2];
+    
     
     _hud = [[Hud alloc] initWithMap:_map];
     [_contents addChild:_hud];
@@ -129,7 +136,7 @@
 
     
 
-    [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_SCREEN];
+    [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
 
     [self beginTurnWithPlayer:_currentPlayer];
 	[MessageLayer sharedMessageLayer].gameEngine = self;
@@ -176,15 +183,19 @@
     [self beginTurnWithPlayer:_currentPlayer];
 }
 
-- (void)translateScreenToTile:(TileTouchedEvent*)event
+- (void)translateScreenToTile:(TranslateWorldEvent*)event
 {
-    Tile* tileToGoTo = event.tile;
-    
-    
+    float width = Sparrow.stage.width;
+    float height = Sparrow.stage.height;
+
+    SPPoint* position = event.point;
+    float endX = _world.x + width/2 - position.x;
+    float endY = _world.x + height/2 - position.y;
+
     SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
-    [tween animateProperty:@"x"      targetValue:tileToGoTo.x];
-    [tween animateProperty:@"y"      targetValue:tileToGoTo.y];
-    tween.onComplete = ^{ NSLog(@"Tween completed"); };
+    [tween animateProperty:@"x"      targetValue:endX];
+    [tween animateProperty:@"y"      targetValue:endY];
+    tween.onComplete = ^{ NSLog(@"Translate completed"); };
     [_gameJuggler addObject:tween];
 }
 
