@@ -135,6 +135,80 @@
     
 }
 
+- (void)setup:(Map*)map
+{
+	
+	_touching = NO;
+	_lastScrollDist = 0;
+	_scrollVector = [SPPoint pointWithX:0 y:0];
+	
+	_currentPlayerAction = [[CurrentPlayerAction alloc] init];
+	
+	//if you want access ot the global game juggler here is how
+	_gameJuggler = [SparrowHelper sharedSparrowHelper].gameJuggler;
+	//game engine handles animating it and pausing etc
+	[self addEventListener:@selector(animateJugglers:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
+	
+	
+	[SPAudioEngine start];  // starts up the sound engine
+	[Media initAtlas];      // loads your texture atlas -> see Media.h/Media.m
+	[Media initSound];      // loads all your sounds    -> see Media.h/Media.m
+	[self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
+	
+	
+	//Create the Message Layer
+	_messageLayer = [MessageLayer sharedMessageLayer];
+	
+	//we check if we are using GC networking
+	//if not we can manually create our own setup
+	if ([GlobalFlags isGameWithGC]) {
+		//[_messageLayer makePlayersGC];
+		_currentPlayer = [_messageLayer getCurrentPlayer];
+		_mePlayer = _currentPlayer;
+	}
+	else {
+		[_messageLayer makePlayers];
+		_currentPlayer = [_messageLayer getCurrentPlayer];
+		_mePlayer = _currentPlayer;
+	}
+	
+	
+	_contents = [SPSprite sprite];
+	[self addChild:_contents];
+	
+	_world = [SPSprite sprite];
+	[_contents addChild:_world];
+	
+	SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
+	q.x = -q.width/2;
+	q.y = -q.height/2;
+	q.color = 0xB3E8F2;
+	[_world addChild:q];
+	
+	
+	//Changed this map.
+	_map = map;
+	_map.gameEngine = self;
+	[_world addChild:_map];
+	
+	_hud = [[Hud alloc] initWithMap:_map];
+	[_contents addChild:_hud];
+	
+	_map.hud = _hud;
+	
+	
+	_popupMenuSprite = [SPSprite sprite];
+	[_world addChild:_popupMenuSprite];
+	
+	[self addTurnEventListeners];
+	[self enableScroll];
+	
+	[self beginTurnWithPlayer:_currentPlayer];
+	[MessageLayer sharedMessageLayer].gameEngine = self;
+	
+}
+
+
 - (void)addTurnEventListeners
 {
     [self addEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
