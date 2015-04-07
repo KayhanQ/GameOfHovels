@@ -124,6 +124,9 @@
 	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
 	Map* map = [mapEncoder decodeMap:encodedData];
 	
+    // Kayhan:
+    // there is a map called 'goat' that you can try and load. There is a soldier on the top left tile.
+    
     // Create the game using the map we just decoded.
 	
 	// write an init method in GameEngine that takes this map as input.

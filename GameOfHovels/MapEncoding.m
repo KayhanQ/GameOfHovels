@@ -26,109 +26,117 @@
     return self;
 }
 
-//structures max 3
-//units
-//villages
-//players...
-//format: s1,s2,s3,u,v,c
-
-- (void) encodeMap:(Map *)map
-{
-    NSMutableArray* encoding = [NSMutableArray array];
-    //array of array of structures per tile
-    NSMutableArray* allStructures = [NSMutableArray array];
-    NSMutableArray* units = [NSMutableArray array];
-    NSMutableArray* villages = [NSMutableArray array];
-    NSMutableArray* colors = [NSMutableArray array];
-
-    NSNumber* minusOne = [NSNumber numberWithInt:-1];
-    
-    for (Tile* t in map.tilesSprite) {
-        NSMutableArray* structures = [NSMutableArray array];
-        for (int i = 0; i < 3; i++) [structures addObject:minusOne];
-        NSMutableArray* sTypes = [t getStructureTypes];
-        for (int i = 0; i < sTypes.count-1; i++) {
-            structures[i] = sTypes[i];
-        }
-        [allStructures addObject:structures];
-        
-        if ([t hasUnit]) [units addObject:t.unit];
-        else [units addObject:minusOne];
-        
-        if ([t isVillage]) [villages addObject:t.village];
-        else [villages addObject:minusOne];
-        
-        [colors addObject:[NSNumber numberWithInt: t.pColor]];
-
-    }
-    [encoding addObject:allStructures];
-    [encoding addObject:units];
-    [encoding addObject:villages];
-    [encoding addObject:colors];
-
-    
-    
-    
-    NSString* stringToEncode = @"adlksjfhMEOWalskjdfha, 2,3,q54524562346,346256256,563243 asdflkh LKHD";
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
+- (NSString*)createPath {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString* rootPath = paths[0];
     NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+    return path;
+}
+
+//format: s1,s2,s3,unit,village,color
+//We are not encoding players yet!
+//will this be harcoded???
+- (NSData*)encodeMap:(Map*)map
+{
+    NSMutableArray* encoding = [NSMutableArray array];
+    NSNumber* minusOne = [NSNumber numberWithInt:-1];
+    
+    for (Tile* t in map.tilesSprite) {
+        NSMutableArray* tileArray = [NSMutableArray array];
+        
+        for (int i = 0; i < 3; i++) [tileArray addObject:minusOne];
+        NSMutableArray* sTypes = [t getStructureTypes];
+        for (int i = 0; i < sTypes.count-1; i++) {
+            [tileArray insertObject:sTypes[i] atIndex:i];
+        }
+        
+        if ([t hasUnit]) [tileArray addObject:[NSNumber numberWithInt:t.unit.uType]];
+        else [tileArray addObject:minusOne];
+        
+        if ([t isVillage]) [tileArray addObject:[NSNumber numberWithInt: t.village.vType]];
+        else [tileArray addObject:minusOne];
+        
+        [tileArray addObject:[NSNumber numberWithInt: t.pColor]];
+
+        [encoding addObject:tileArray];
+    }
+
+    NSMutableString* encodedString = [[NSMutableString alloc] init];
+    
+    for (NSMutableArray* tileArray in encoding) {
+        int i = 0;
+        for (NSNumber* number in tileArray) {
+            NSString* numString = [number stringValue];
+            [encodedString appendString: numString];
+            if (i < tileArray.count-1) [encodedString appendString: @","];
+            i++;
+        }
+        [encodedString appendLine:@""];
+    }
+
+    NSLog(@"%@",encodedString);
+    
+    NSData* dataBuffer = [encodedString dataUsingEncoding:NSUTF8StringEncoding];
+
+    return dataBuffer;
+}
+
+- (void)saveMapWithData:(NSData*)data name:(NSString*)saveGameFileName
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString* path = [self createPath];
     
     BOOL isDir;
     if(![fileManager fileExistsAtPath:path isDirectory:&isDir])
         if(![fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL])
             NSLog(@"Error: Create folder failed %@", path);
     
-    path = [path stringByAppendingPathComponent:@"sg9"];
+    path = [path stringByAppendingPathComponent:saveGameFileName];
     path = [path stringByAppendingPathExtension:@"txt"];
     
     NSLog(@"path: %@", path);
     if ([fileManager fileExistsAtPath: path] == YES) {
-        NSLog (@"File exists");
-        NSData* databuffer = [fileManager contentsAtPath:path];
-        NSString* dataString = [[NSString alloc] initWithData:databuffer encoding:NSUTF8StringEncoding];;
-        NSLog(@"data: %@", dataString);
+        NSLog (@"File exists, overwrite");
     }
     else {
-        NSLog (@"File not found");
-        NSData* dataBuffer = [stringToEncode dataUsingEncoding:NSUTF8StringEncoding];
-        [fileManager createFileAtPath: path contents: dataBuffer attributes: nil];
-
+        NSLog (@"File not found, make a new one");
     }
+    
+    
+    [fileManager createFileAtPath: path contents: data attributes: nil];
 }
 
+
+// In this methhod we will also have to tell message layer who the players are after we decode them
 - (Map*)decodeMap:(NSData*)encoding
 {
-	//??? I didn't change anything here except the method signature (we just input the data from the file to decode.
-	/*
-    NSMutableArray* allStructures = [encoding objectAtIndex:0];
-    NSMutableArray* units = [encoding objectAtIndex:1];
-    NSMutableArray* villages = [encoding objectAtIndex:2];
-    NSMutableArray* colors = [encoding objectAtIndex:3];
+    NSString* encodingString = [[NSString alloc] initWithData:encoding encoding:NSUTF8StringEncoding];
+    NSArray *linesArray = [encodingString componentsSeparatedByString: @"\n"];
     
-    NSNumber* minusOne = [NSNumber numberWithInt:-1];
-*/
+    NSMutableArray* encodingArray = [NSMutableArray array];
+    
+    for (NSString* line in linesArray) {
+        NSArray *tileArray = [line componentsSeparatedByString: @","];
+        [encodingArray addObject:tileArray];
+    }
+
     Map* map = [[Map alloc] initWithBasicMap];
-    /*
-    for (int i = 0; i < map.tilesSprite.numChildren; i++) {
-        Tile* t = (Tile*)[map.tilesSprite childAtIndex:i];
-        
-        for (NSNumber* sType in allStructures[i]) {
-            if (sType == minusOne) continue;
-            [t addStructure:[sType intValue]];
+
+    for (int tileIndex = 0; tileIndex < encodingArray.count-1; tileIndex++) {
+        NSArray* tileArray = [encodingArray objectAtIndex:tileIndex];
+        Tile* tile = (Tile*)[map.tilesSprite childAtIndex:tileIndex];
+     
+        for (int i = 0; i<tileArray.count-1; i++) {
+            int data = [[tileArray objectAtIndex:i] intValue];
+            if (data == -1) continue;
+            if (i < 3) [tile addStructure:data];
+            if (i == 3) [tile addUnitWithType:data];
+            if (i == 4) [tile addVillage:data];
+            if (i == 5) [tile setPColor:data];
+
         }
         
-        NSNumber* uType = units[i];
-        if (uType != minusOne) [t addUnitWithType:[uType intValue]];
-        NSNumber* vType = villages[i];
-        if (vType != minusOne) [t addVillage:[vType intValue]];
-        
-        t.pColor = [colors[i] intValue];
     }
-*/
     
     return map;
 }

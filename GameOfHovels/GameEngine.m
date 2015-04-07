@@ -206,7 +206,8 @@
                                    [[NSNotificationCenter defaultCenter] removeObserver:self
                                                                                    name:UITextFieldTextDidChangeNotification
                                                                                  object:nil];
-                                   [mapEncoder encodeMap:_map];
+                                   NSData* data = [mapEncoder encodeMap:_map];
+                                   [mapEncoder saveMapWithData:data name:saveGameName.text];
                                }];
     okAction.enabled = NO;
     [alertController addAction:okAction];
