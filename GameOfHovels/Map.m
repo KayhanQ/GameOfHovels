@@ -74,8 +74,6 @@
         NSMutableArray* connectedTiles = [self getConnectedTilesByColor:t];
         Tile* vTile = [self getTileWithVillageForRegion:connectedTiles];
         vTile.village.player = p;
-        vTile.village.goldPile = 11;
-        vTile.village.woodPile = 100;
         for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
     }
     
