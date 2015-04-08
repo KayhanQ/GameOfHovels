@@ -81,7 +81,7 @@
     [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
-    BOOL* hasMusic = false;
+    BOOL hasMusic = true;
     if (hasMusic) {
         SPSound* sound = [[SPSound alloc] initWithContentsOfFile:@"sound3.caf"];
         //SPSound *sound = [SPSound soundWithContentsOfFile:@"sound.caf"];
@@ -92,8 +92,6 @@
         [_channel play];
     }
 
-    
-    
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
 	
@@ -172,7 +170,7 @@
     [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
     [self addEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
-
+    [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
 }
 
 //unused
@@ -183,14 +181,46 @@
     [self removeEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self removeEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
     [self removeEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
+    [self removeEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
 }
 
-- (void)beginTurnWithPlayer:(GamePlayer*)player;
+- (void)exitGame:(GHEvent*)event
+{
+
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Exit Game"
+                                          message:@"Are you sure you want to exit?\nYou will lose all unsaved data."
+                                          preferredStyle:UIAlertControllerStyleAlert];
+
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:cancelAction];
+    
+    UIAlertAction *yesAction = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"Yes", @"Yes action")
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *action)
+                               {
+                                   [self completeExitFromGame];
+                               }];
+    [alertController addAction:yesAction];
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+
+    
+}
+
+- (void)completeExitFromGame
+{
+    NSLog(@"Exiting");
+    //[Sparrow.currentController dismissViewControllerAnimated:true completion:nil];
+}
+
+- (void)beginTurnWithPlayer:(GamePlayer*)player
 {
     [_map beginTurnPhases];
-    //player can now make inputs again
+    [self addTurnEventListeners];
     _map.touchable = true;
-    
+    [_hud beginTurn];
 }
 
 //This method is important. Change stuff in it depending on what you want to do
@@ -200,7 +230,9 @@
     [self removeActionMenu];
     [self deselectTile:_currentPlayerAction.selectedTile];
     [_map endTurnUpdates];
-    
+    [_hud endTurn];
+    [self removeTurnEventListeners];
+
     //We rebegin our turn
     [self beginTurnWithPlayer:_currentPlayer];
 }
@@ -217,14 +249,6 @@
     _world.pivotY = globalPoint.y;
     _world.x = width/2;
     _world.y = height/2;
-    
-//    SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
-//    [tween animateProperty:@"pivotX"      targetValue:globalPoint.x];
-//    [tween animateProperty:@"pivotY"      targetValue:globalPoint.y];
-//    [tween animateProperty:@"x"      targetValue:endX];
-//    [tween animateProperty:@"y"      targetValue:endY];
-//    tween.onComplete = ^{ NSLog(@"Translate completed"); };
-//    [_gameJuggler addObject:tween];
 }
 
 - (void)saveGame:(GHEvent*)event
@@ -302,11 +326,56 @@
             [_map buildMeadow:tile];
             break;
         }
+        case BUILDROAD:
+        {
+            [_map buildRoad:tile];
+            break;
+        }
+        case UPGRADEUNIT:
+        {
+            [_map upgradeUnitWithTile:tile unitType:tile.unit.uType+1];
+        }
         case MOVEUNIT:
         {
             [_map moveUnitWithTile:tile tile:destTile];
             break;
         }
+        case BUYPEASANT:
+        {
+            [_map buyUnitFromTile:tile tile:destTile unitType:PEASANT];
+            break;
+        }
+        case BUYINFANTRY:
+        {
+            [_map buyUnitFromTile:tile tile:destTile unitType:INFANTRY];
+            break;
+        }
+        case BUYSOLDIER:
+        {
+            [_map buyUnitFromTile:tile tile:destTile unitType:SOLDIER];
+            break;
+        }
+        case BUYRITTER:
+        {
+            [_map buyUnitFromTile:tile tile:destTile unitType:RITTER];
+            break;
+        }
+        case BUYCANNON:
+        {
+            [_map buyUnitFromTile:tile tile:destTile unitType:CANNON];
+            break;
+        }
+        case SHOOTCANNON:
+        {
+            [_map shootCannonFromTile: tile tile:destTile];
+            break;
+        }
+        case BUILDTOWER:
+        {
+            [_map buildTowerFromTile:tile tile:destTile];
+            break;
+        }
+
         default:
             break;
     }

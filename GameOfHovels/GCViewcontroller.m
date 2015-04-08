@@ -35,7 +35,6 @@
 
 - (void)playerAuthenticated {
 	//Menu
-	[[ViewController alloc]init];
 
 	MenuViewController *mvc = [[MenuViewController alloc]init];
 	[self presentViewController:mvc animated:YES completion:nil];

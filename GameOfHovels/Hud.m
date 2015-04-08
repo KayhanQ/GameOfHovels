@@ -19,7 +19,7 @@
 @implementation Hud {
     
     SPSprite* _uiElementsSprite;
-    SPButton*_quitButton;
+    SPButton*_exitButton;
     SPButton* _endTurnButton;
     SPButton* _saveGameButton;
     SPButton* _nextVillageButton;
@@ -67,14 +67,14 @@
         _middleX = _width/2;
 
         
-        _quitButton = [self newButton];
-        _quitButton.text = @"Exit Game";
-        _quitButton.y = _height - _quitButton.height;
-        [_quitButton addEventListener:@selector(quitTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        _exitButton = [self newButton];
+        _exitButton.text = @"Exit Game";
+        _exitButton.y = _height - _exitButton.height;
+        [_exitButton addEventListener:@selector(exitTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
         _saveGameButton = [self newButton];
         _saveGameButton.text = @"Save Game";
-        _saveGameButton.y = _quitButton.y - _saveGameButton.height;
+        _saveGameButton.y = _exitButton.y - _saveGameButton.height;
         [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
         _endTurnButton = [self newButton];
@@ -213,6 +213,22 @@
     }
 }
 
+- (void)endTurn
+{
+    _saveGameButton.enabled = false;
+    _saveGameButton.touchable = false;
+    _endTurnButton.enabled = false;
+    _endTurnButton.touchable = false;
+}
+
+- (void)beginTurn
+{
+    _saveGameButton.enabled = true;
+    _saveGameButton.touchable = true;
+    _endTurnButton.enabled = true;
+    _endTurnButton.touchable = true;
+}
+
 - (void)saveGameTouched:(SPTouchEvent*) event
 {
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
@@ -224,12 +240,14 @@
     }
 }
 
-- (void)quitTouched:(SPTouchEvent*) event
+- (void)exitTouched:(SPTouchEvent*) event
 {
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if (touch)
     {
-        NSLog(@"Quit Touched");
+        NSLog(@"Exit Touched");
+        GHEvent *event = [[GHEvent alloc] initWithType:EVENT_TYPE_EXIT_GAME];
+        [self dispatchEvent:event];
     }
 }
 

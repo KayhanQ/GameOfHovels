@@ -607,8 +607,6 @@
     }
 }
 
-
-
 //makes a region neutral by removing units and village pointers and towers
 - (void)makeRegionNeutral:(NSMutableArray*)region
 {
@@ -683,9 +681,9 @@
     [self incomePhase];
     [self paymentPhase];
     [self buildPhase];
-    
-    
 }
+
+//send message to players about tree growing
 - (void)treeGrowthPhase
 {
     NSLog(@"Tree Growth Phase");
@@ -718,8 +716,6 @@
         }
     }
 }
-
-
 
 - (void)incomePhase
 {

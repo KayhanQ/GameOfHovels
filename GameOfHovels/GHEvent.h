@@ -10,6 +10,7 @@
 
 #define EVENT_TYPE_TURN_ENDED @"turnEnded"
 #define EVENT_TYPE_SAVE_GAME @"saveGame"
+#define EVENT_TYPE_EXIT_GAME @"exitGame"
 
 @interface GHEvent : SPEvent
 

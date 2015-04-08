@@ -12,6 +12,7 @@
 #import "Tile.h"
 #import "GameEngine.h"
 #import "Map.h"
+#import "GlobalFlags.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -75,19 +76,22 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	})];
 }
 
--(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber{
-	NSLog(@"[createAndAddPlayer");
-	GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
-	[p setPlayerId: playerId];
-	[p setRandomNumber:randomNumber];
-	if([_players count] == 0){
-		[_players addObject:p];
-	}
-	for(int i = 0; i < [_players count]; i++){
-		if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
-			[_players insertObject:p atIndex:i];
-		}
-	}
+//This method was breaking the game sometimes
+-(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber {
+    if ([GlobalFlags isGameWithGC]) {
+        NSLog(@"[createAndAddPlayer");
+        GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
+        [p setPlayerId: playerId];
+        [p setRandomNumber:randomNumber];
+        if([_players count] == 0){
+            [_players addObject:p];
+        }
+        for(int i = 0; i < [_players count]; i++){
+            if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
+                [_players insertObject:p atIndex:i];
+            }
+        }
+    }
 }
 
 - (BOOL)allRandomNumbersAreReceived
