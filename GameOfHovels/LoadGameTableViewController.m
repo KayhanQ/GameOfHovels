@@ -7,23 +7,31 @@
 //
 
 #import "LoadGameTableViewController.h"
-#import "TableViewCell.h"
-@interface LoadGameTableViewController ()
+#import "MapEncoding.h"
+#import "MessageLayer.h"
 
+@interface LoadGameTableViewController ()
 @end
 
 @implementation LoadGameTableViewController
+@synthesize dirContents;
+
+-(NSString*) createPath {
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString* rootPath = paths[0];
+	NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+	return path;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	NSString* rootPath = paths[0];
-	NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+	if (!dirContents) {
+		NSString* path = [self createPath];
+		NSFileManager *fm = [NSFileManager defaultManager];
+		dirContents = [fm contentsOfDirectoryAtPath:path error:nil];
+	}
 
-	
-	NSFileManager *fm = [NSFileManager defaultManager];
-	self.dirContents = [fm contentsOfDirectoryAtPath:path error:nil];
 	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -46,15 +54,19 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-	NSLog(@"what up: %d",[self.dirContents count]);
-    return [self.dirContents count];
+	NSLog(@"what up: %d",[dirContents count]);
+    return [dirContents count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	static NSString *CellIdentifier = @"thisCell";
+//	static NSString *CellIdentifier = @"aCell";
 	
-	TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	
+	if (cell == nil) {
+		cell = [[UITableViewCell alloc]init];
+	}
 
 	cell.textLabel.text = [self.dirContents objectAtIndex:indexPath.row];
 	
@@ -102,17 +114,27 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-//	NSPredicate *fltr = [NSPredicate predicateWithFormat:[dirContents objectAtIndex:i]];
-	//NSArray *allFiles = [self.dirContents filteredArrayUsingPredicate:fltr];
+	//Get the cell
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString* path = [self createPath];
+	path = [path stringByAppendingPathComponent:cell.textLabel.text];
+	
+	//get the data out of the file and send it to the mapdecoder
+	NSData* encodedData = [fm contentsAtPath:path];
+	[MessageLayer sharedMessageLayer].mapData = encodedData;
 
-	// Navigation logic may go here, for example:
-    // Create the next view controller.
-//    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:<#@"Nib name"#> bundle:nil];
-    
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-//    [self.navigationController pushViewController:detailViewController animated:YES];
+	//create a game engine with the map
+	ViewController* vc = [[ViewController alloc]init];
+
+	[self presentViewController:vc animated:YES completion:nil];
+
+    // Create the game using the map we just decoded.
+	
+	
+	// write an init method in GameEngine that takes this map as input.
+	
+	//Create and present a "ViewController" with the game
 }
 
 

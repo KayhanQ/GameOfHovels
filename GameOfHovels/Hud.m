@@ -10,12 +10,13 @@
 #import <Foundation/Foundation.h>
 #import "Hud.h"
 #import "GHEvent.h"
+#import "TranslateWorldEvent.h"
 #import "SparrowHelper.h"
 #import "Tile.h"
 #import "Village.h"
 #import "GameEngine.h"
 #import "Map.h"
-
+#import "MessageLayer.h"
 
 @implementation Hud {
     
@@ -25,11 +26,14 @@
     SPButton* _endTurnButton;
 
     SPButton* _saveGameButton;
-    
+
     NSMutableArray * _listOfVillages;
     
     Tile * _villageTile1, *_villageTile2;
     SPTextField* _woodField1, *_goldField1,*_healthField1, *_homeCoordField1, *_woodField2, *_goldField2, *_healthField2, *_homeCoordField2;
+
+    SPButton* _nextVillageButton;
+
 
     SPImage* _village1Icon, *_village2Icon;
     
@@ -46,11 +50,16 @@
     //village
     SPTextField* _healthField;
     SPTextField* _numTilesInRegion;
+
     SPTextField* _homeCoordField;
     //universal
     SPTextField* _ownerField;
     
     SPTextField* _tileNumberField;
+
+    Tile* _currentTile;
+    
+    MessageLayer* _messageLayer;
     
     int _yOffsetMinor;
     float _middleX;
@@ -78,6 +87,8 @@
         village1Index = 0;
         village2Index = 1;
         
+        _messageLayer = [MessageLayer sharedMessageLayer];
+
         _height = 380;
         _width = 130;
         _yOffsetMinor = 3;
@@ -90,7 +101,57 @@
         [self initUnitFields];
         [self updateUITool];
         
+        SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
+        background.color = 0xcccccc;
+        [self addChild:background];
+        
+        _middleX = _width/2;
+        
+        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+        
 
+        
+        _saveGameButton = [SPButton buttonWithUpState:buttonTexture];
+        _saveGameButton.text = @"Save Game";
+        [SparrowHelper centerPivot:_saveGameButton];
+        _saveGameButton.x = _middleX;
+        _saveGameButton.y = _height - _saveGameButton.height;
+        [self addChild:_saveGameButton];
+        [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+
+        _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
+        _endTurnButton.text = @"End Turn";
+        [SparrowHelper centerPivot:_endTurnButton];
+        _endTurnButton.x = _middleX;
+        _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
+        [self addChild:_endTurnButton];
+        [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        _nextVillageButton = [SPButton buttonWithUpState:buttonTexture];
+        _nextVillageButton.text = @"Next Village";
+        [SparrowHelper centerPivot:_nextVillageButton];
+        _nextVillageButton.x = _middleX;
+        _nextVillageButton.y = _endTurnButton.y - _endTurnButton.height;
+        [self addChild:_nextVillageButton];
+        [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        
+        
+        _woodField = [self newTextField];
+        _woodField.text = @"Wood: ";
+        _woodField.y = 200;
+        [self addChild:_woodField];
+        
+        _goldField = [self newTextField];
+        _goldField.text = @"Gold: ";
+        _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
+        [self addChild:_goldField];
+        
+        _healthField = [self newTextField];
+        _healthField.text = @"Village Health: ";
+        _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
+        [self addChild:_healthField];
+        
         _numTilesInRegion = [self newTextField];
         _numTilesInRegion.text = @"Numb Tiles: ";
         _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
@@ -112,6 +173,16 @@
 
 - (void)update:(Tile *)tile
 {
+
+    _currentTile = tile;
+    Village* v = tile.village;
+    
+    NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
+    _woodField.text = woodString;
+    
+    NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
+    _goldField.text = goldString;
+
     
     if(tile.hasUnit){ // put unit stats here: unit type, unit upkeep, owning village
         
@@ -173,6 +244,39 @@
     //who is the unit and all its stats, workstate
     //if you click a village then put up how many tiles the village has
 }
+
+- (void)nextVillageTouched:(SPTouchEvent*) event
+{
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+        NSMutableArray* villageTiles = [_map getTilesWithMyVillages];
+        Tile* tileToGoTo = nil;
+        
+        tileToGoTo = [villageTiles objectAtIndex:0];
+        for (int i = 0; i<villageTiles.count-1; i++) {
+            Tile* vTile = [villageTiles objectAtIndex:i];
+            if (_currentTile == vTile) {
+                if (i == villageTiles.count-1) {
+                    tileToGoTo = [villageTiles objectAtIndex:0];
+                    break;
+                }
+                else {
+                    tileToGoTo = [villageTiles objectAtIndex:i+1];
+                    break;
+                }
+            }
+        }
+        _currentTile = tileToGoTo;
+        
+        if (_currentTile != nil) {
+            SPPoint* localPoint = [SPPoint pointWithX:tileToGoTo.x y:tileToGoTo.y];
+            TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
+            [self dispatchEvent:event];
+        }
+    }
+}
+
 
 - (void)endTurnTouched:(SPTouchEvent*) event
 {

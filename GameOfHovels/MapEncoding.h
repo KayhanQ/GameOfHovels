@@ -16,7 +16,8 @@
 
 
 - (id)init;
-- (void)encodeMap:(Map*)map;
-
+- (NSData*)encodeMap:(Map*)map;
+- (void)saveMapWithData:(NSData*)data name:(NSString*)saveGameFileName;
+- (Map*)decodeMap:(NSData*)encodedData;
 
 @end

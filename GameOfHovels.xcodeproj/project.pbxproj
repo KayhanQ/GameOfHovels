@@ -34,6 +34,7 @@
 		C6AF02781AD4A0A80022C018 /* soldier.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026D1AD4A0A80022C018 /* soldier.png */; };
 		C6AF02791AD4A0A80022C018 /* soldier.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026E1AD4A0A80022C018 /* soldier.xml */; };
 		C6AF027A1AD4A0A80022C018 /* tower.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026F1AD4A0A80022C018 /* tower.png */; };
+		C6AF02DC1AD4D4C70022C018 /* TranslateWorldEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AF02DB1AD4D4C70022C018 /* TranslateWorldEvent.m */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -199,6 +200,8 @@
 		C6AF026D1AD4A0A80022C018 /* soldier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soldier.png; sourceTree = "<group>"; };
 		C6AF026E1AD4A0A80022C018 /* soldier.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = soldier.xml; sourceTree = "<group>"; };
 		C6AF026F1AD4A0A80022C018 /* tower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tower.png; sourceTree = "<group>"; };
+		C6AF02DA1AD4D4C70022C018 /* TranslateWorldEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslateWorldEvent.h; sourceTree = "<group>"; };
+		C6AF02DB1AD4D4C70022C018 /* TranslateWorldEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TranslateWorldEvent.m; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -720,6 +723,8 @@
 				FCC1E8331AACE51E009A42DC /* GameNavigationController.m */,
 				C6AF02331AD32B380022C018 /* LoadGameTableViewController.h */,
 				C6AF02341AD32B380022C018 /* LoadGameTableViewController.m */,
+				C6AF02DA1AD4D4C70022C018 /* TranslateWorldEvent.h */,
+				C6AF02DB1AD4D4C70022C018 /* TranslateWorldEvent.m */,
 				F38065C11A96441B009D3C56 /* AppDelegate.h */,
 				F38065C21A96441B009D3C56 /* AppDelegate.m */,
 				F38065C41A96441B009D3C56 /* ViewController.h */,
@@ -2106,6 +2111,7 @@
 				F38066001A964C1A009D3C56 /* BasicSprite.m in Sources */,
 				F38065FA1A9649CA009D3C56 /* GameEngine.m in Sources */,
 				C69BA93D1ABB721300F33BFC /* Sea.m in Sources */,
+				C6AF02DC1AD4D4C70022C018 /* TranslateWorldEvent.m in Sources */,
 				F38066241A964C7E009D3C56 /* Structure.m in Sources */,
 				F380660A1A964C53009D3C56 /* Tile.m in Sources */,
 				F380666D1A966399009D3C56 /* Hud.m in Sources */,

@@ -11,11 +11,13 @@
 #import "MessageLayer.h"
 #import "Tile.h"
 #import "GameEngine.h"
+#import "Map.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 @synthesize gameEngine = _gameEngine;
+@synthesize mapData = _mapData;
 
 + (instancetype)sharedMessageLayer
 {
@@ -261,6 +263,12 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 
     GamePlayer* p3 = [[GamePlayer alloc] initWithNumber:2];
     [_players addObject:p3];
+}
+
+//TODO
+- (GamePlayer*)getMePlayer
+{
+    return [_players objectAtIndex:0];
 }
 
 /*- (void)makePlayersGC

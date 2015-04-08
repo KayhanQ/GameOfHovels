@@ -10,6 +10,7 @@
 #import "Tile.h"
 #import "Map.h"
 #import "TileTouchedEvent.h"
+#import "TranslateWorldEvent.h"
 #import "ActionMenu.h"
 #import "Ritter.h"
 #import "Baum.h"
@@ -45,12 +46,13 @@
 
 - (id)init
 {
-    if ((self = [super init]))
-    {
-        [self setup];
-    }
-    return self;
+	if ((self = [super init]))
+	{
+		[self setup];
+	}
+	return self;
 }
+
 
 - (void)dealloc
 {
@@ -61,7 +63,6 @@
 
 - (void)setup
 {
-    
     _touching = NO;
     _lastScrollDist = 0;
     _scrollVector = [SPPoint pointWithX:0 y:0];
@@ -82,7 +83,8 @@
     
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
-    
+	
+	NSData* mapData = _messageLayer.mapData;
     //we check if we are using GC networking
     //if not we can manually create our own setup
     if ([GlobalFlags isGameWithGC]) {
@@ -103,15 +105,32 @@
     _world = [SPSprite sprite];
     [_contents addChild:_world];
     
+
     SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
     q.x = -q.width/2;
     q.y = -q.height/2;
     q.color = 0xB3E8F2;
     [_world addChild:q];
-    
-    _map = [[Map alloc] initWithRandomMap];
+	
+	if (mapData == nil) {
+		_map = [[Map alloc] initWithRandomMap];
+	}
+	else {
+		MapEncoding* mapEncoder = [[MapEncoding alloc] init];
+		_map = [mapEncoder decodeMap:mapData];
+	}
+	
 	_map.gameEngine = self;
+    [_world addChild:_map];
+    
+    SPQuad* q2 = [SPQuad quadWithWidth:10 height:10];
+    [SparrowHelper centerPivot:q2];
+    q2.color = 0xff0000;
+    [_world addChild:q2];
+    
+    
     _hud = [[Hud alloc] initWithMap:_map world:_world];
+
     [_contents addChild:_hud];
 
      _map.hud = _hud;
@@ -128,11 +147,14 @@
 
     
 
-    
+    [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
+
     [self beginTurnWithPlayer:_currentPlayer];
 	[MessageLayer sharedMessageLayer].gameEngine = self;
     
 }
+
+
 
 - (void)addTurnEventListeners
 {
@@ -175,6 +197,28 @@
     [self beginTurnWithPlayer:_currentPlayer];
 }
 
+- (void)translateScreenToTile:(TranslateWorldEvent*)event
+{
+    float width = Sparrow.stage.width;
+    float height = Sparrow.stage.height;
+
+    SPPoint* position = event.point;
+    SPPoint* globalPoint = [self localToGlobal:position];
+    
+    _world.pivotX = globalPoint.x;
+    _world.pivotY = globalPoint.y;
+    _world.x = width/2;
+    _world.y = height/2;
+    
+//    SPTween *tween = [SPTween tweenWithTarget:_world time:0.5];
+//    [tween animateProperty:@"pivotX"      targetValue:globalPoint.x];
+//    [tween animateProperty:@"pivotY"      targetValue:globalPoint.y];
+//    [tween animateProperty:@"x"      targetValue:endX];
+//    [tween animateProperty:@"y"      targetValue:endY];
+//    tween.onComplete = ^{ NSLog(@"Translate completed"); };
+//    [_gameJuggler addObject:tween];
+}
+
 - (void)saveGame:(GHEvent*)event
 {
     NSLog(@"saving game");
@@ -182,44 +226,41 @@
     
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:@"Save Game"
-                                          message:@"Enter Save Game Name"
+                                          message:@"Enter the name of the game."
                                           preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
      {
-         textField.placeholder = NSLocalizedString(@"LoginPlaceholder", @"Login");
+         textField.placeholder = NSLocalizedString(@"Name", @"Name");
+         [[NSNotificationCenter defaultCenter] addObserver:self
+                                                  selector:@selector(alertTextFieldDidChange:)
+                                                      name:UITextFieldTextDidChangeNotification
+                                                    object:textField];
      }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
-     {
-         textField.placeholder = NSLocalizedString(@"PasswordPlaceholder", @"Password");
-         textField.secureTextEntry = YES;
-     }];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:cancelAction];
     
     UIAlertAction *okAction = [UIAlertAction
                                actionWithTitle:NSLocalizedString(@"OK", @"OK action")
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction *action)
                                {
-                                   UITextField *login = alertController.textFields.firstObject;
-                                   UITextField *password = alertController.textFields.lastObject;
+                                   UITextField *saveGameName = alertController.textFields.firstObject;
+                                   [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                                                   name:UITextFieldTextDidChangeNotification
+                                                                                 object:nil];
+                                   NSData* data = [mapEncoder encodeMap:_map];
+                                   [mapEncoder saveMapWithData:data name:saveGameName.text];
                                }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
-     {
-         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                  selector:@selector(alertTextFieldDidChange:)
-                                                      name:UITextFieldTextDidChangeNotification
-                                                    object:textField];
-     }];
+    okAction.enabled = NO;
+    [alertController addAction:okAction];
     
     _alertController = alertController;
     
-//    [self. presentViewController:alertController animated:YES completion:nil];
-//
-//    self
-    [mapEncoder encodeMap:_map];
-    
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+
+
 }
 
 - (void)alertTextFieldDidChange:(NSNotification *)notification
@@ -227,9 +268,9 @@
     UIAlertController *alertController = (UIAlertController *)_alertController;
     if (alertController)
     {
-        UITextField *login = alertController.textFields.firstObject;
+        UITextField *gameName = alertController.textFields.firstObject;
         UIAlertAction *okAction = alertController.actions.lastObject;
-        okAction.enabled = login.text.length > 2;
+        okAction.enabled = gameName.text.length > 2;
     }
 }
 

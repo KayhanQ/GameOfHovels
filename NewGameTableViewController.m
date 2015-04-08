@@ -7,6 +7,9 @@
 //
 
 #import "NewGameTableViewController.h"
+#import "MapEncoding.h"
+#import "ViewController.h"
+#import "GameEngine.h"
 
 @interface NewGameTableViewController ()
 
@@ -16,12 +19,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	NSString * resourcePath = [[NSBundle mainBundle] resourcePath];
+	NSString * mapsPath = [resourcePath stringByAppendingPathComponent:@"maps"];
+	NSError * error;
+	_listOfMaps = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsPath error:&error];
+	
+
+		//We need a new directory called New_Game_Maps, and to store all of the game maps
+		// that we need in the bundle.
+		//Name these maps "three-way merge", or "castle", or w/e
+		//hardcode the list of map names here.
+	
+	//grab the list of map names and display it in the "cellForRowAtIndexPath" method
+
+	
+	//when one of the (rows)maps is selected,
+		//decodeMap and then call that new init method in GameEngine that takes a map as input
+	
+		//Now we need to tell everyone else that you just selected this map
+		//Map agreement algorithm
+		//Need a new messageType Map selection
+		
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,34 +51,29 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return [_listOfMaps count];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+	
+	//Get the cell
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	
+	if (cell == nil) {
+		cell = [[UITableViewCell alloc]init];
+	}
+
+	cell.textLabel.text = [_listOfMaps objectAtIndex:indexPath.row];
+	//grab the list of map names and display it in the "cellForRowAtIndexPath" method
+ 
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
 /*
 // Override to support editing the table view.
@@ -87,21 +101,35 @@
 }
 */
 
-/*
+
 #pragma mark - Table view delegate
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:<#@"Nib name"#> bundle:nil];
-    
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
+	//Get the cell
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString * resourcePath = [[NSBundle mainBundle] resourcePath];
+	NSString* mapsPath = [resourcePath stringByAppendingPathComponent:@"maps"];
+	NSString* path = [mapsPath stringByAppendingPathComponent:cell.textLabel.text];
+	
+	//get the data out of the file and send it to the mapdecoder
+	NSData* encodedData = [fm contentsAtPath:path];
+	[MessageLayer sharedMessageLayer].mapData = encodedData;
+
+	//create a game engine with the map
+	ViewController* vc = [[ViewController alloc]init];
+	
+	[self presentViewController:vc animated:YES completion:nil];
+	
+	// Create the game using the map we just decoded.
+	
+	
+	// write an init method in GameEngine that takes this map as input.
+	
+	//Create and present a "ViewController" with the game
 }
-*/
+
 
 /*
 #pragma mark - Navigation

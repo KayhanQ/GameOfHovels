@@ -13,11 +13,13 @@
 
 @implementation MenuViewController
 
+//send maps
 - (IBAction)newGame:(id)sender {
 	NewGameTableViewController *ngvc = [[NewGameTableViewController alloc] init];
 	[self presentViewController:ngvc animated:YES completion:nil];
 }
 
+//load maps
 - (IBAction)loadGame:(id)sender {
 	LoadGameTableViewController *lgvc = [[LoadGameTableViewController alloc] init];
 	[self presentViewController:lgvc animated:YES completion:nil];
