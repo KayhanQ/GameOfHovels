@@ -642,21 +642,28 @@
 -(void)village1Touched:(SPTouchEvent*) event
 {
     
-   // _world.x = _villageTile1.x - 300;
-   // _world.y =_villageTile1.y- 300;
-    
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+    SPPoint* localPoint = [SPPoint pointWithX:_villageTile1.x y:_villageTile1.y];
+    TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
+    [self dispatchEvent:event];
+    }
 }
 
 
 -(void)village2Touched:(SPTouchEvent*) event
 {
     
-   // _world.x = _villageTile2.x - 300;
-    //_world.y =_villageTile2.y - 300;
     
-   // _world.x = _center.x + _villageTile2.x;
-    //_world.y = _center.y + _villageTile2.y;
-  
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+    
+    SPPoint* localPoint = [SPPoint pointWithX:_villageTile2.x y:_villageTile2.y];
+    TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
+    [self dispatchEvent:event];
+    }
 }
 
 @end
