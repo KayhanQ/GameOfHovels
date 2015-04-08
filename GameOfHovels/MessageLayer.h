@@ -80,6 +80,7 @@ typedef enum {
 - (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 - (GamePlayer*)getMePlayer;
+- (BOOL)isMyTurn;
 
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;

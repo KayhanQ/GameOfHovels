@@ -265,12 +265,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     [_players addObject:p3];
 }
 
-//TODO
-- (GamePlayer*)getMePlayer
-{
-    return [_players objectAtIndex:0];
-}
-
 /*- (void)makePlayersGC
 {
 	for (int i = 0; i < [_players count]; i++)
@@ -298,6 +292,17 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     return [_players objectAtIndex:0];
 }
 
+//TODO
+- (GamePlayer*)getMePlayer
+{
+    return [_players objectAtIndex:0];
+}
+
+- (BOOL)isMyTurn
+{
+    if ([self getCurrentPlayer] == [self getMePlayer]) return true;
+    return false;
+}
 
 - (void)sendRandomNumber {
 	NSLog(@"sendRandomNumber");

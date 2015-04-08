@@ -193,6 +193,7 @@
         _currentTile = tileToGoTo;
         
         if (_currentTile != nil) {
+            [self update:_currentTile];
             SPPoint* localPoint = [SPPoint pointWithX:tileToGoTo.x y:tileToGoTo.y];
             TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
             [self dispatchEvent:event];

@@ -39,6 +39,7 @@
     NSMutableArray* _players;
     SPJuggler* _gameJuggler;
     
+    SPSoundChannel* _channel;
     CurrentPlayerAction* _currentPlayerAction;
     
     UIAlertController* _alertController;
@@ -79,6 +80,18 @@
     [Media initAtlas];      // loads your texture atlas -> see Media.h/Media.m
     [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
+    
+    BOOL* hasMusic = false;
+    if (hasMusic) {
+        SPSound* sound = [[SPSound alloc] initWithContentsOfFile:@"sound3.caf"];
+        //SPSound *sound = [SPSound soundWithContentsOfFile:@"sound.caf"];
+        // create sound channel
+        _channel = [sound createChannel];
+        _channel.volume = 0.6f;
+        _channel.loop = true;
+        [_channel play];
+    }
+
     
     
     //Create the Message Layer
