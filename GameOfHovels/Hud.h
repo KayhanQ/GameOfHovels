@@ -14,7 +14,6 @@
 @interface Hud : BasicSprite {
     
     
-    
 }
 
 @property (nonatomic, readonly) Map* map;
@@ -22,7 +21,6 @@
 
 - (id)initWithMap:(Map*)map world:(SPSprite*)world;
 - (void)update:(Tile*)tile;
-
-
+- (void)updateUITool;
 
 @end

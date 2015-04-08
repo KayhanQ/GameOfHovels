@@ -157,6 +157,7 @@
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 {
     [_map beginTurnPhases];
+    [_hud updateUITool];
     //player can now make inputs again
     _map.touchable = true;
     

@@ -212,6 +212,7 @@
 - (void)removeVillage
 {
     [_villageSprite removeAllChildren];
+    
     _village = nil;
 }
 

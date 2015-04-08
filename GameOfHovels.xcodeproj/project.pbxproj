@@ -20,6 +20,20 @@
 		C6AF02351AD32B380022C018 /* LoadGameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AF02341AD32B380022C018 /* LoadGameTableViewController.m */; };
 		C6AF02451AD32C210022C018 /* NewGameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AF02431AD32C210022C018 /* NewGameTableViewController.m */; };
 		C6AF02461AD32C210022C018 /* NewGameTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02441AD32C210022C018 /* NewGameTableViewController.xib */; };
+		C6AF02601AD4996C0022C018 /* hudpanel.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF025F1AD4996C0022C018 /* hudpanel.png */; };
+		C6AF02621AD4998E0022C018 /* endturn.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02611AD4998E0022C018 /* endturn.png */; };
+		C6AF02641AD499940022C018 /* blankButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02631AD499940022C018 /* blankButton.png */; };
+		C6AF02701AD4A0A80022C018 /* cannon.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02651AD4A0A80022C018 /* cannon.png */; };
+		C6AF02711AD4A0A80022C018 /* cannon.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02661AD4A0A80022C018 /* cannon.xml */; };
+		C6AF02721AD4A0A80022C018 /* infantry.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02671AD4A0A80022C018 /* infantry.png */; };
+		C6AF02731AD4A0A80022C018 /* infantry.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02681AD4A0A80022C018 /* infantry.xml */; };
+		C6AF02741AD4A0A80022C018 /* knight.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF02691AD4A0A80022C018 /* knight.png */; };
+		C6AF02751AD4A0A80022C018 /* knight.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026A1AD4A0A80022C018 /* knight.xml */; };
+		C6AF02761AD4A0A80022C018 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026B1AD4A0A80022C018 /* peasant.png */; };
+		C6AF02771AD4A0A80022C018 /* peasant.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026C1AD4A0A80022C018 /* peasant.xml */; };
+		C6AF02781AD4A0A80022C018 /* soldier.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026D1AD4A0A80022C018 /* soldier.png */; };
+		C6AF02791AD4A0A80022C018 /* soldier.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026E1AD4A0A80022C018 /* soldier.xml */; };
+		C6AF027A1AD4A0A80022C018 /* tower.png in Resources */ = {isa = PBXBuildFile; fileRef = C6AF026F1AD4A0A80022C018 /* tower.png */; };
 		F35D38271AAF2A3300E97F78 /* Peasant.m in Sources */ = {isa = PBXBuildFile; fileRef = F35D38261AAF2A3300E97F78 /* Peasant.m */; };
 		F35D38291AAF2BF700E97F78 /* peasant.png in Resources */ = {isa = PBXBuildFile; fileRef = F35D38281AAF2BF700E97F78 /* peasant.png */; };
 		F38065C01A96441B009D3C56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F38065BF1A96441B009D3C56 /* main.m */; };
@@ -171,6 +185,20 @@
 		C6AF02421AD32C210022C018 /* NewGameTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewGameTableViewController.h; sourceTree = "<group>"; };
 		C6AF02431AD32C210022C018 /* NewGameTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewGameTableViewController.m; sourceTree = "<group>"; };
 		C6AF02441AD32C210022C018 /* NewGameTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewGameTableViewController.xib; sourceTree = "<group>"; };
+		C6AF025F1AD4996C0022C018 /* hudpanel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hudpanel.png; sourceTree = "<group>"; };
+		C6AF02611AD4998E0022C018 /* endturn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endturn.png; sourceTree = "<group>"; };
+		C6AF02631AD499940022C018 /* blankButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankButton.png; sourceTree = "<group>"; };
+		C6AF02651AD4A0A80022C018 /* cannon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cannon.png; sourceTree = "<group>"; };
+		C6AF02661AD4A0A80022C018 /* cannon.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cannon.xml; sourceTree = "<group>"; };
+		C6AF02671AD4A0A80022C018 /* infantry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infantry.png; sourceTree = "<group>"; };
+		C6AF02681AD4A0A80022C018 /* infantry.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = infantry.xml; sourceTree = "<group>"; };
+		C6AF02691AD4A0A80022C018 /* knight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knight.png; sourceTree = "<group>"; };
+		C6AF026A1AD4A0A80022C018 /* knight.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = knight.xml; sourceTree = "<group>"; };
+		C6AF026B1AD4A0A80022C018 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
+		C6AF026C1AD4A0A80022C018 /* peasant.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = peasant.xml; sourceTree = "<group>"; };
+		C6AF026D1AD4A0A80022C018 /* soldier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soldier.png; sourceTree = "<group>"; };
+		C6AF026E1AD4A0A80022C018 /* soldier.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = soldier.xml; sourceTree = "<group>"; };
+		C6AF026F1AD4A0A80022C018 /* tower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tower.png; sourceTree = "<group>"; };
 		F35D38251AAF2A2500E97F78 /* Peasant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peasant.h; sourceTree = "<group>"; };
 		F35D38261AAF2A3300E97F78 /* Peasant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peasant.m; sourceTree = "<group>"; };
 		F35D38281AAF2BF700E97F78 /* peasant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peasant.png; sourceTree = "<group>"; };
@@ -895,6 +923,9 @@
 		F380663E1A964EF9009D3C56 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C6AF025F1AD4996C0022C018 /* hudpanel.png */,
+				C6AF02631AD499940022C018 /* blankButton.png */,
+				C6AF02611AD4998E0022C018 /* endturn.png */,
 				F38066421A964F3B009D3C56 /* Graphics */,
 				F380663F1A964F30009D3C56 /* audio */,
 			);
@@ -918,6 +949,17 @@
 				F38066661A9657DB009D3C56 /* tileset.png */,
 				F38066671A9657DB009D3C56 /* tileset.xml */,
 				F380665B1A964F7A009D3C56 /* atlas.png */,
+				C6AF02651AD4A0A80022C018 /* cannon.png */,
+				C6AF02661AD4A0A80022C018 /* cannon.xml */,
+				C6AF02671AD4A0A80022C018 /* infantry.png */,
+				C6AF02681AD4A0A80022C018 /* infantry.xml */,
+				C6AF02691AD4A0A80022C018 /* knight.png */,
+				C6AF026A1AD4A0A80022C018 /* knight.xml */,
+				C6AF026B1AD4A0A80022C018 /* peasant.png */,
+				C6AF026C1AD4A0A80022C018 /* peasant.xml */,
+				C6AF026D1AD4A0A80022C018 /* soldier.png */,
+				C6AF026E1AD4A0A80022C018 /* soldier.xml */,
+				C6AF026F1AD4A0A80022C018 /* tower.png */,
 				F380665C1A964F7A009D3C56 /* atlas.xml */,
 				F380665D1A964F7A009D3C56 /* background.jpg */,
 				F38066431A964F3B009D3C56 /* Structures */,
@@ -1973,30 +2015,44 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6AF02641AD499940022C018 /* blankButton.png in Resources */,
 				C6AF02461AD32C210022C018 /* NewGameTableViewController.xib in Resources */,
 				F38065C91A96441B009D3C56 /* Main.storyboard in Resources */,
 				F38066561A964F3B009D3C56 /* button.png in Resources */,
+				C6AF02711AD4A0A80022C018 /* cannon.xml in Resources */,
 				C6AF022F1AD32B070022C018 /* MenuViewController.xib in Resources */,
 				F38066531A964F3B009D3C56 /* baum.png in Resources */,
 				F380665F1A964F7A009D3C56 /* atlas.xml in Resources */,
+				C6AF02731AD4A0A80022C018 /* infantry.xml in Resources */,
+				C6AF02791AD4A0A80022C018 /* soldier.xml in Resources */,
+				C6AF02751AD4A0A80022C018 /* knight.xml in Resources */,
+				C6AF02771AD4A0A80022C018 /* peasant.xml in Resources */,
+				C6AF02761AD4A0A80022C018 /* peasant.png in Resources */,
+				C6AF027A1AD4A0A80022C018 /* tower.png in Resources */,
 				F38066541A964F3B009D3C56 /* meadow.png in Resources */,
+				C6AF02701AD4A0A80022C018 /* cannon.png in Resources */,
+				C6AF02781AD4A0A80022C018 /* soldier.png in Resources */,
+				C6AF02721AD4A0A80022C018 /* infantry.png in Resources */,
 				F38066551A964F3B009D3C56 /* tile_grass.png in Resources */,
 				F38066601A964F7A009D3C56 /* background.jpg in Resources */,
 				F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */,
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
 				F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */,
+				C6AF02741AD4A0A80022C018 /* knight.png in Resources */,
 				F38066581A964F3B009D3C56 /* fort.png in Resources */,
 				F35D38291AAF2BF700E97F78 /* peasant.png in Resources */,
 				F38065CE1A96441B009D3C56 /* LaunchScreen.xib in Resources */,
 				C6AF01E21AD3118D0022C018 /* blankButton.png in Resources */,
 				F3A2835F1AC2261A00AE8BB5 /* archer.png in Resources */,
+				C6AF02621AD4998E0022C018 /* endturn.png in Resources */,
 				F3D8ADF91ABB072E00920E99 /* road.png in Resources */,
 				C6AF01E01AD30A560022C018 /* castle.png in Resources */,
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,
 				F38066591A964F3B009D3C56 /* hovel.png in Resources */,
+				C6AF02601AD4996C0022C018 /* hudpanel.png in Resources */,
 				F38065CB1A96441B009D3C56 /* Images.xcassets in Resources */,
 				F380665A1A964F3B009D3C56 /* town.png in Resources */,
 			);

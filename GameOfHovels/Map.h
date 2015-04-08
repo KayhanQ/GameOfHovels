@@ -52,7 +52,7 @@
 - (NSMutableArray*)getTilesWithMyVillages;
 -(BOOL)areConnectedByLand:(Tile*)t1 t2:(Tile*)t2;
 
-- (void)showPlayersTeritory;
+//- (void)showPlayersTeritory;
 
 - (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile;
 - (void)takeOverTile:(Tile*)unitTile tile:(Tile*)destTile;

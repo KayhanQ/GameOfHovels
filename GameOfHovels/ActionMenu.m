@@ -90,7 +90,7 @@
 
 - (void)arrangeButtons
 {
-    int xGap = 20;
+//    int xGap = 20;
     float index = 0;
     float count = _buttonSprite.numChildren;
     float angle = 2*PI/count;
