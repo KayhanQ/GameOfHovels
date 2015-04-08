@@ -101,62 +101,13 @@
         [self initUnitFields];
         [self updateUITool];
         
-        SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
-        background.color = 0xcccccc;
-        [self addChild:background];
+        //SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
+        //background.color = 0xcccccc;
+        //[self addChild:background];
         
         _middleX = _width/2;
-        
-        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-        
 
-        
-        _saveGameButton = [SPButton buttonWithUpState:buttonTexture];
-        _saveGameButton.text = @"Save Game";
-        [SparrowHelper centerPivot:_saveGameButton];
-        _saveGameButton.x = _middleX;
-        _saveGameButton.y = _height - _saveGameButton.height;
-        [self addChild:_saveGameButton];
-        [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
-        _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
-        _endTurnButton.text = @"End Turn";
-        [SparrowHelper centerPivot:_endTurnButton];
-        _endTurnButton.x = _middleX;
-        _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
-        [self addChild:_endTurnButton];
-        [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-        _nextVillageButton = [SPButton buttonWithUpState:buttonTexture];
-        _nextVillageButton.text = @"Next Village";
-        [SparrowHelper centerPivot:_nextVillageButton];
-        _nextVillageButton.x = _middleX;
-        _nextVillageButton.y = _endTurnButton.y - _endTurnButton.height;
-        [self addChild:_nextVillageButton];
-        [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-        
-        
-        _woodField = [self newTextField];
-        _woodField.text = @"Wood: ";
-        _woodField.y = 200;
-        [self addChild:_woodField];
-        
-        _goldField = [self newTextField];
-        _goldField.text = @"Gold: ";
-        _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
-        [self addChild:_goldField];
-        
-        _healthField = [self newTextField];
-        _healthField.text = @"Village Health: ";
-        _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
-        [self addChild:_healthField];
-        
-        _numTilesInRegion = [self newTextField];
-        _numTilesInRegion.text = @"Numb Tiles: ";
-        _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
-        [self addChild:_numTilesInRegion];
-    }
+         }
     
     return self;
 }

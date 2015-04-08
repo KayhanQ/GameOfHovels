@@ -33,7 +33,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 {
 	if( (self=[super init])) {
 		_enableGameCenter = YES;
-
+        
 		// Set ourselves as player 1 and the game to active
 		self.isPlayer1 = YES;
 		[self setGameState:kGameStateActive];
