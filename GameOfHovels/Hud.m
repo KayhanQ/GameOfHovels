@@ -22,7 +22,7 @@
     
     SPSprite* _uiElementsSprite;
     SPButton*_exitButton;
-
+    
     SPSprite* sprite;
     SPPoint * _center;
     SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
