@@ -20,15 +20,13 @@
 
 @implementation Hud {
     
-<<<<<<< HEAD
     SPSprite* _uiElementsSprite;
     SPButton*_exitButton;
-=======
+
     SPSprite* sprite;
     SPPoint * _center;
     SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
     
->>>>>>> origin/master
     SPButton* _endTurnButton;
     
     SPButton* _saveGameButton;
@@ -84,42 +82,6 @@
         _map = map;
         
         sprite = [SPSprite sprite];//background
-        
-<<<<<<< HEAD
-        SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
-        background.color = 0xcccccc;
-        background.alpha = 0.4;
-        [self addChild:background];
-        
-        _uiElementsSprite = [SPSprite sprite];
-        [self addChild:_uiElementsSprite];
-        
-        _middleX = _width/2;
-
-        
-        _exitButton = [self newButton];
-        _exitButton.text = @"Exit Game";
-        _exitButton.y = _height - _exitButton.height;
-        [_exitButton addEventListener:@selector(exitTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-        _saveGameButton = [self newButton];
-        _saveGameButton.text = @"Save Game";
-        _saveGameButton.y = _exitButton.y - _saveGameButton.height;
-        [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
-        _endTurnButton = [self newButton];
-        _endTurnButton.text = @"End Turn";
-        _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
-        [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-        
-        _nextVillageButton = [self newButton];
-        _nextVillageButton.text = @"Next Village";
-        _nextVillageButton.y = _endTurnButton.y - _endTurnButton.height;
-        [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-=======
-        _center.y = _world.height/2;
-        _center.x = _world.width/2;
->>>>>>> origin/master
         
         _listOfVillages = [map getTilesWithMyVillages];
         village1Index = 0;
@@ -289,7 +251,6 @@
     [self updateUITool];
 }
 
-<<<<<<< HEAD
 - (void)endTurn
 {
     _saveGameButton.enabled = false;
@@ -305,8 +266,6 @@
     _endTurnButton.enabled = true;
     _endTurnButton.touchable = true;
 }
-=======
->>>>>>> origin/master
 
 - (void)saveGameTouched:(SPTouchEvent*) event
 {
@@ -317,10 +276,6 @@
         [self dispatchEvent:event];
     }
 }
-
-<<<<<<< HEAD
-- (void)exitTouched:(SPTouchEvent*) event
-=======
 
 - (void)leftButtonTouched:(SPTouchEvent*) event
 {
@@ -793,7 +748,6 @@
 }
 
 - (void)quitTouched:(SPTouchEvent*) event
->>>>>>> origin/master
 {
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if (touch)
