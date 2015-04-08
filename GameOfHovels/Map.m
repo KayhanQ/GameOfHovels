@@ -612,7 +612,10 @@
 //makes a region neutral by removing units and village pointers and towers
 - (void)makeRegionNeutral:(NSMutableArray*)region
 {
-    for (Tile* t in region) [t makeNeutral];
+    for (Tile* t in region) {
+        if ([t getStructureType] == SEA) continue;
+        [t makeNeutral];
+    }
 }
 
 - (void)chopBaum:(Tile*)tile

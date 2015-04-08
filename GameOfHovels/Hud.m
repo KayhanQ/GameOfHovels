@@ -18,6 +18,8 @@
 
 @implementation Hud {
     
+    SPSprite* _uiElementsSprite;
+    SPButton*_quitButton;
     SPButton* _endTurnButton;
     SPButton* _saveGameButton;
     SPButton* _nextVillageButton;
@@ -48,7 +50,7 @@
         
         _messageLayer = [MessageLayer sharedMessageLayer];
 
-        _height = 380;
+        _height = Sparrow.stage.height;
         _width = 60;
 
         _yOffsetMinor = 3;
@@ -56,70 +58,88 @@
         
         SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
         background.color = 0xcccccc;
+        background.alpha = 0.4;
         [self addChild:background];
         
+        _uiElementsSprite = [SPSprite sprite];
+        [self addChild:_uiElementsSprite];
+        
         _middleX = _width/2;
-        
-        SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-        
 
         
-        _saveGameButton = [SPButton buttonWithUpState:buttonTexture];
+        _quitButton = [self newButton];
+        _quitButton.text = @"Exit Game";
+        _quitButton.y = _height - _quitButton.height;
+        [_quitButton addEventListener:@selector(quitTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+        
+        _saveGameButton = [self newButton];
         _saveGameButton.text = @"Save Game";
-        [SparrowHelper centerPivot:_saveGameButton];
-        _saveGameButton.x = _middleX;
-        _saveGameButton.y = _height - _saveGameButton.height;
-        [self addChild:_saveGameButton];
+        _saveGameButton.y = _quitButton.y - _saveGameButton.height;
         [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
-        _endTurnButton = [SPButton buttonWithUpState:buttonTexture];
+        _endTurnButton = [self newButton];
         _endTurnButton.text = @"End Turn";
-        [SparrowHelper centerPivot:_endTurnButton];
-        _endTurnButton.x = _middleX;
         _endTurnButton.y = _saveGameButton.y - _endTurnButton.height;
-        [self addChild:_endTurnButton];
         [_endTurnButton addEventListener:@selector(endTurnTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
-        _nextVillageButton = [SPButton buttonWithUpState:buttonTexture];
+        _nextVillageButton = [self newButton];
         _nextVillageButton.text = @"Next Village";
-        [SparrowHelper centerPivot:_nextVillageButton];
-        _nextVillageButton.x = _middleX;
         _nextVillageButton.y = _endTurnButton.y - _endTurnButton.height;
-        [self addChild:_nextVillageButton];
         [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
         
         
-        _woodField = [self newTextField];
-        _woodField.text = @"Wood: ";
-        _woodField.y = 200;
-        [self addChild:_woodField];
-        
-        _goldField = [self newTextField];
-        _goldField.text = @"Gold: ";
-        _goldField.y = _woodField.y + _woodField.height + _yOffsetMinor;
-        [self addChild:_goldField];
-        
         _healthField = [self newTextField];
         _healthField.text = @"Village Health: ";
-        _healthField.y = _goldField.y + _goldField.height + _yOffsetMinor;
-        [self addChild:_healthField];
         
         _numTilesInRegion = [self newTextField];
         _numTilesInRegion.text = @"Numb Tiles: ";
-        _numTilesInRegion.y = _healthField.y + _healthField.height + _yOffsetMinor;
-        [self addChild:_numTilesInRegion];
+        
+        _woodField = [self newTextField];
+        _woodField.text = @"Wood: ";
+        
+        _goldField = [self newTextField];
+        _goldField.text = @"Gold: ";
+        
+
+        
+        [self arrangeUIElements];
     }
     return self;
+}
+
+- (void)arrangeUIElements
+{
+    float lastY = _height;
+    int i = 0;
+    for (SPDisplayObject* element in _uiElementsSprite) {
+        element.x = _middleX;
+        element.y = lastY - element.height/2;
+        if (i == 4) element.y -= 20;
+        lastY = element.y;
+        i++;
+    }
+}
+
+- (SPButton*)newButton
+{
+    SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+    SPButton* button = [SPButton buttonWithUpState:buttonTexture];
+    [SparrowHelper centerPivot:button];
+    button.x = _middleX;
+    button.scale = 0.4;
+    [_uiElementsSprite addChild:button];
+    return button;
 }
 
 - (SPTextField*)newTextField
 {
     SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
     t.x = _middleX;
-    t.border = true;
+    t.border = false;
     t.fontSize = 5;
     [SparrowHelper centerPivot:t];
+    [_uiElementsSprite addChild:t];
     return t;
 }
 
@@ -153,6 +173,8 @@
     {
         NSMutableArray* villageTiles = [_map getTilesWithMyVillages];
         Tile* tileToGoTo = nil;
+        
+        if (villageTiles == nil) return;
         
         tileToGoTo = [villageTiles objectAtIndex:0];
         for (int i = 0; i<villageTiles.count-1; i++) {
@@ -200,4 +222,14 @@
         [self dispatchEvent:event];
     }
 }
+
+- (void)quitTouched:(SPTouchEvent*) event
+{
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+        NSLog(@"Quit Touched");
+    }
+}
+
 @end
