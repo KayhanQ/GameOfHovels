@@ -30,13 +30,14 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString* rootPath = paths[0];
     NSString* path = [rootPath stringByAppendingPathComponent:@"Saved_Games"];
+    NSLog(@"%@",path);
     return path;
 }
 
-//format: p1ID, p1Color, p2ID, p2Color, p3ID, p3Color
-//format: unit,village,color,s1,s2,s3
-//We are not encoding players yet!
-//will this be harcoded???
+//format: p1ID, p1Color, p2ID, p2Color, p3ID, p3Color...
+//v1Wood,v2Wood...
+//v1Gold,v2Gold...
+//unit,village,color,s1,s2,s3...
 - (NSData*)encodeMap:(Map*)map
 {
     NSMutableArray* encoding = [NSMutableArray array];
@@ -49,6 +50,15 @@
 		[playerDataArray addObject: [NSNumber numberWithInt:player.pColor]];
 	}
 
+    NSMutableArray* villageWoodArray = [NSMutableArray array];
+    NSMutableArray* villageGoldArray = [NSMutableArray array];
+
+    for (Tile* t in map.tilesSprite) {
+        if ([t isVillage]) [villageWoodArray addObject:[NSNumber numberWithInt:t.village.woodPile]];
+    }
+    for (Tile* t in map.tilesSprite) {
+        if ([t isVillage]) [villageGoldArray addObject:[NSNumber numberWithInt:t.village.goldPile]];
+    }
     for (Tile* t in map.tilesSprite) {
         NSMutableArray* tileArray = [NSMutableArray array];
         
@@ -60,7 +70,6 @@
         
         [tileArray addObject:[NSNumber numberWithInt: t.pColor]];
         
-        int i = 0;
         for (NSNumber* number in [t getStructureTypes]) {
             [tileArray addObject:number];
         }
@@ -79,6 +88,25 @@
 	}
     [encodedString appendLine:@""];
 
+    i = 0;
+    for (NSNumber* number in villageWoodArray) {
+        NSString* numString = [number stringValue];
+        [encodedString appendString: numString];
+        if (i < villageWoodArray.count-1) [encodedString appendString: @","];
+        i++;
+    }
+    [encodedString appendLine:@""];
+    
+    i = 0;
+    for (NSNumber* number in villageGoldArray) {
+        NSString* numString = [number stringValue];
+        [encodedString appendString: numString];
+        if (i < villageGoldArray.count-1) [encodedString appendString: @","];
+        i++;
+    }
+    [encodedString appendLine:@""];
+    
+    i = 0;
     for (NSMutableArray* tileArray in encoding) {
         int i = 0;
         for (NSNumber* number in tileArray) {
@@ -132,11 +160,13 @@
     NSMutableArray* encodingArray = [NSMutableArray array];
 	
 	NSMutableArray* players = [NSMutableArray array];
+    NSArray* villageWoodArray;
+    NSArray* villageGoldArray;
+
 	int i = 0;
     for (NSString* line in linesArray) {
 		if (i == 0) {
 			NSArray *playersDataArray = [line componentsSeparatedByString: @","];
-
 			for (int j = 0; j<playersDataArray.count-1; j+=2) {
 				NSNumber* colorNum = [playersDataArray objectAtIndex:j+1];
 				NSNumber* idNum = [playersDataArray objectAtIndex:j];
@@ -146,7 +176,13 @@
 			}
 			
 		}
-		else {
+        else if (i == 1) {
+            villageWoodArray = [line componentsSeparatedByString: @","];
+        }
+        else if (i == 2) {
+            villageGoldArray = [line componentsSeparatedByString: @","];
+        }
+		else if (i >= 3) {
 			NSArray *tileArray = [line componentsSeparatedByString: @","];
 			[encodingArray addObject:tileArray];
 		}
@@ -188,7 +224,16 @@
         }
     }
 	
-	[map assignPlayerInfoForLoadGame];
+    [map assignPlayerInfoForLoadGame];
+
+    int vIndex = 0;
+    for (Tile*t in map.tilesSprite) {
+        if ([t isVillage]) {
+            t.village.woodPile = [[villageWoodArray objectAtIndex:vIndex] intValue];
+            t.village.goldPile = [[villageGoldArray objectAtIndex:vIndex] intValue];
+            vIndex++;
+        }
+    }
 	
     return map;
 }

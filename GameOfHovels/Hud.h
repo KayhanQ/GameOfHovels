@@ -23,4 +23,6 @@
 - (void)update:(Tile*)tile;
 - (void)updateUITool;
 
+- (void)quitTouched:(SPTouchEvent*) event;
+
 @end

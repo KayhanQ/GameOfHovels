@@ -204,9 +204,35 @@
 //adds a physical village to the tile
 -(void)addVillage:(enum VillageType) vType
 {
-    Hovel* h = [[Hovel alloc] initWithTile:self];
-    [_villageSprite addChild:h];
-    _village = h;
+    Village* newVillage;
+    switch (vType) {
+        case HOVEL:
+        {
+            newVillage = [[Hovel alloc] initWithTile:self];
+            break;
+        }
+        case TOWN:
+        {
+            newVillage = [[Town alloc] initWithTile:self];
+            break;
+        }
+        case FORT:
+        {
+            newVillage = [[Fort alloc] initWithTile:self];
+            break;
+        }
+        case CASTLE:
+        {
+            newVillage = [[Castle alloc] initWithTile:self];
+            break;
+        }
+        default:
+        {
+            return;
+        }
+    }
+    [_villageSprite addChild:newVillage];
+    _village = newVillage;
 }
 
 - (void)removeVillage

@@ -23,6 +23,7 @@
     SPSprite* sprite;
     SPPoint * _center;
     SPButton* _village1, *_village2, *_leftButton, *_rightButton, *_settingsButton;
+
     SPButton* _endTurnButton;
 
     SPButton* _saveGameButton;
@@ -32,7 +33,7 @@
     Tile * _villageTile1, *_villageTile2;
     SPTextField* _woodField1, *_goldField1,*_healthField1, *_homeCoordField1, *_woodField2, *_goldField2, *_healthField2, *_homeCoordField2;
 
-    SPButton* _nextVillageButton;
+    SPButton* _nextVillageButton, *_quitButton;
 
 
     SPImage* _village1Icon, *_village2Icon;
@@ -91,6 +92,7 @@
 
         _height = 380;
         _width = 130;
+
         _yOffsetMinor = 3;
     
         
@@ -101,24 +103,31 @@
         [self initUnitFields];
         [self updateUITool];
         
-        //SPQuad* background = [SPQuad quadWithWidth:_width height: _height];
-        //background.color = 0xcccccc;
-        //[self addChild:background];
-        
         _middleX = _width/2;
 
          }
-    
+
     return self;
+}
+
+- (SPButton*)newButton
+{
+    SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
+    SPButton* button = [SPButton buttonWithUpState:buttonTexture];
+    [SparrowHelper centerPivot:button];
+    button.x = _middleX;
+    button.scale = 0.4;
+    return button;
 }
 
 - (SPTextField*)newTextField
 {
     SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
     t.x = _middleX;
-    //t.border = true;
     t.fontSize = 12;
+
     [SparrowHelper centerPivot:t];
+    //[_uiElementsSprite addChild:t];
     return t;
 }
 
@@ -150,7 +159,7 @@
        // NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
        // _ownerField.text = ownerFieldString;
         
-        NSString* homeCoordString = [NSString stringWithFormat:@"Home Coordinates: %.01f, %.01f",villageTile.x/54, villageTile.y/40];
+        NSString* homeCoordString = [NSString stringWithFormat:@"Home Coord: %.01f, %.01f",villageTile.x/54, villageTile.y/40];
         _homeCoordField.text = homeCoordString;
         
         NSString* unitNameString = [NSString stringWithFormat:@"Unit Type: %u", unit.uType];
@@ -204,6 +213,8 @@
         NSMutableArray* villageTiles = [_map getTilesWithMyVillages];
         Tile* tileToGoTo = nil;
         
+        if (villageTiles == nil) return;
+        
         tileToGoTo = [villageTiles objectAtIndex:0];
         for (int i = 0; i<villageTiles.count-1; i++) {
             Tile* vTile = [villageTiles objectAtIndex:i];
@@ -251,6 +262,7 @@
         [self dispatchEvent:event];
     }
 }
+
 
 - (void)leftButtonTouched:(SPTouchEvent*) event
 {
@@ -556,17 +568,18 @@
     [sprite addChild:_saveGameButton];
     [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
-    /*
-    SPTexture* saveButtonTexture = [SPTexture textureWithContentsOfFile:@"button.png"];
-    _saveGameButton = [SPButton buttonWithUpState:saveButtonTexture];
-    _saveGameButton.text = @"Save Game";
+    SPTexture* quitGameTexutre = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
+    _quitButton = [SPButton buttonWithUpState:quitGameTexutre];
+    _quitButton.text = @"Quit";
+    _quitButton.height = 30; //Just Some magic number
+    _quitButton.width = background.width - 40;
+    _quitButton.x = 420;
+    SPRectangle * quitbounds= [SPRectangle rectangleWithX:-30 y:-10 width:_quitButton.width height:_quitButton.height];
+    _quitButton.textBounds = quitbounds;
     
-    [SparrowHelper centerPivot:_saveGameButton];
-    _saveGameButton.x = _middleX;
-    _saveGameButton.y = _height - _saveGameButton.height;
-    [self addChild:_saveGameButton];
-    [_saveGameButton addEventListener:@selector(saveGameTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    */
+    [sprite addChild:_quitButton];
+    [_quitButton addEventListener:@selector(quitTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    
 }
 
 -(void) initUITool
@@ -718,6 +731,15 @@
     SPPoint* localPoint = [SPPoint pointWithX:_villageTile2.x y:_villageTile2.y];
     TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
     [self dispatchEvent:event];
+    }
+}
+
+- (void)quitTouched:(SPTouchEvent*) event
+{
+    SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
+    if (touch)
+    {
+        NSLog(@"Quit Touched");
     }
 }
 
