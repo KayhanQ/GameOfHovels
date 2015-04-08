@@ -272,6 +272,18 @@
     [_villageSprite addChild: newVillage];
 }
 
+- (Village*)getVillage
+{
+    return _village;
+}
+
+- (enum VillageType)getVillageType
+{
+    Village* v = [self getVillage];
+    return v.vType;
+}
+
+
 - (void)mergeVillageBySwallowing:(Village*)v
 {
     [_village transferSuppliesFrom:v];
