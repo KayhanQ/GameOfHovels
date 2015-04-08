@@ -45,8 +45,6 @@
 - (void)mergeVillageBySwallowing:(Village*)v;
 - (BOOL)hasVillage;
 - (BOOL)isVillage;
-- (enum VillageType)getVillageType;
-- (Village*)getVillage;
 
 
 - (void)addUnitWithType:(enum UnitType)uType;
