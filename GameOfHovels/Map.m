@@ -54,21 +54,40 @@
 {
     if (self=[super init]) {
         [self setup];
-        if ([GlobalFlags isGameWithRandomMap]) {
-            [self assignTilesToPlayers];
-            [self assignVillagesToRegions];
-            [self addTrees];
-            [self addMeadows];
-        }
+        [self randomlyColorTiles];
+        [self makeVillageOnRegions];
+        [self addTrees];
+        [self addMeadows];
     }
     return self;
 }
 
 - (void)assignPlayerInfoForLoadGame
 {
-	[self assignTilesToPlayers];
-	[self assignVillagesToRegions];
+    for (Tile* t in _tilesSprite) {
+        if ([t getStructureType] == SEA) continue;
+        if (t.pColor == NOCOLOR) continue;
+        if ([t hasVillage]) continue;
+        
+        enum PlayerColor tColor = t.pColor;
+        GamePlayer* p = [_messageLayer getPlayerForColor:tColor];
+        NSMutableArray* connectedTiles = [self getConnectedTilesByColor:t];
+        Tile* vTile = [self getTileWithVillageForRegion:connectedTiles];
+        vTile.village.player = p;
+        vTile.village.goldPile = 11;
+        vTile.village.woodPile = 100;
+        for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
+    }
+    
 	[self refreshTeritory];
+}
+
+- (Tile*)getTileWithVillageForRegion:(NSMutableArray*)region
+{
+    for (Tile* t in region) {
+        if ([t isVillage]) return t;
+    }
+    return nil;
 }
 
 - (void)setup
@@ -110,7 +129,7 @@
     }
 }
 
-- (void)assignTilesToPlayers
+- (void)randomlyColorTiles
 {
     NSMutableArray* colors = [NSMutableArray array];
     for (int i = 0; i <= [_messageLayer.players count]-1; i++) {
@@ -131,7 +150,7 @@
     }
 }
 
-- (void)assignVillagesToRegions
+- (void)makeVillageOnRegions
 {
     for (Tile* t in _tilesSprite) {
         if ([t getStructureType] == SEA) continue;

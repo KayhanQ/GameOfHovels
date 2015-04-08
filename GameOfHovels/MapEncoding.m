@@ -34,7 +34,7 @@
 }
 
 //format: p1ID, p1Color, p2ID, p2Color, p3ID, p3Color
-//format: s1,s2,s3,unit,village,color
+//format: unit,village,color,s1,s2,s3
 //We are not encoding players yet!
 //will this be harcoded???
 - (NSData*)encodeMap:(Map*)map
@@ -52,12 +52,6 @@
     for (Tile* t in map.tilesSprite) {
         NSMutableArray* tileArray = [NSMutableArray array];
         
-        for (int i = 0; i < 3; i++) [tileArray addObject:minusOne];
-        NSMutableArray* sTypes = [t getStructureTypes];
-        for (int i = 0; i < sTypes.count-1; i++) {
-            [tileArray insertObject:sTypes[i] atIndex:i];
-        }
-        
         if ([t hasUnit]) [tileArray addObject:[NSNumber numberWithInt:t.unit.uType]];
         else [tileArray addObject:minusOne];
         
@@ -65,7 +59,12 @@
         else [tileArray addObject:minusOne];
         
         [tileArray addObject:[NSNumber numberWithInt: t.pColor]];
-
+        
+        int i = 0;
+        for (NSNumber* number in [t getStructureTypes]) {
+            [tileArray addObject:number];
+        }
+        
         [encoding addObject:tileArray];
     }
 
@@ -78,7 +77,8 @@
 		if (i < playerDataArray.count-1) [encodedString appendString: @","];
 		i++;
 	}
-	
+    [encodedString appendLine:@""];
+
     for (NSMutableArray* tileArray in encoding) {
         int i = 0;
         for (NSNumber* number in tileArray) {
@@ -161,14 +161,30 @@
         NSArray* tileArray = [encodingArray objectAtIndex:tileIndex];
         Tile* tile = (Tile*)[map.tilesSprite childAtIndex:tileIndex];
 		
-	 
-        for (int i = 0; i<tileArray.count-1; i++) {
-            int data = [[tileArray objectAtIndex:i] intValue];
-            if (data == -1) continue;
-            if (i < 3 && i>0) [tile addStructure:data];
-            if (i == 3) [tile addUnitWithType:data];
-            if (i == 4) [tile addVillage:data];
-            if (i == 5) [tile setPColor:data];
+        NSLog(@"count: %d", tileArray.count);
+
+        int i = 0;
+        for (NSNumber* number in tileArray) {
+            int data = [number intValue];
+            if (data == -1) {
+                i++;
+                continue;
+            }
+            if (i == 0) [tile addUnitWithType:data];
+            if (i == 1) [tile addVillage:data];
+            if (i == 2) {
+                if ([[tileArray objectAtIndex:3] intValue] != SEA) {
+                    [tile setPColor:data];
+                }
+            }
+            if (i >= 3) {
+                if ([[tileArray objectAtIndex:i] intValue] == SEA || [[tileArray objectAtIndex:i] intValue] == GRASS) {
+                    i++;
+                    continue;
+                }
+                [tile addStructure:data];
+            }
+            i++;
         }
     }
 	

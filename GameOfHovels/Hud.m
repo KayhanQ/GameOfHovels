@@ -151,7 +151,6 @@
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if (touch)
     {
-        NSLog(@"Next Village Touched");
         NSMutableArray* villageTiles = [_map getTilesWithMyVillages];
         Tile* tileToGoTo = nil;
         
