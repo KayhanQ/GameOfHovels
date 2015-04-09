@@ -21,23 +21,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	self.window = [UIWindow new];
-	self.window.backgroundColor = [UIColor cyanColor];
+	self.window.backgroundColor = [UIColor whiteColor];
 	viewController = [[GCViewcontroller alloc] initWithNibName:nil bundle:nil];
 	[MessageLayer sharedMessageLayer].nav = [[GameNavigationController alloc] initWithRootViewController:viewController];
 
 	self.window.rootViewController = [MessageLayer sharedMessageLayer].nav;
 	[_window makeKeyAndVisible];
 	self.window.frame = [UIScreen mainScreen].bounds;
-/*
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-	self.window.backgroundColor = [UIColor greenColor];
-	self.window.rootViewController = [MessageLayer sharedMessageLayer].nav;
-	[_window makeKeyAndVisible];
-
-	viewController = [[GCViewcontroller alloc] initWithNibName:nil bundle:nil];
-	//[MessageLayer sharedMessageLayer].nav = [[GameNavigationController alloc] initWithRootViewController:viewController];
-	//[_window addSubview:viewController];*/
     return YES;
 }
 

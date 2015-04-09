@@ -27,6 +27,8 @@
                                                      name:LocalPlayerIsAuthenticated object:nil];
     }
     else {
+        //This is only to test local play
+        [[MessageLayer sharedMessageLayer] makePlayers];
         ViewController *vc = [[ViewController alloc]init];
         [[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
     }
