@@ -11,7 +11,7 @@
 #import "ViewController.h"
 #import "ActionMenu.h"
 #import "GamePlayer.h"
-
+#import "GameNavigationController.h"
 @class GameEngine;
 @class Map;
 
@@ -24,7 +24,7 @@ typedef enum {
 	kMessageTypeRandomNumber = 0,
 	kMessageTypeGameBegin,
 	kMessageTypeMove,
-	kMessageTypeGameOver
+	kMessageTypeGameOver,
 } MessageType;
 
 typedef struct {
@@ -77,13 +77,14 @@ typedef enum {
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile*)tile destTile:(Tile*)destTile;
 - (void)makePlayers;
 - (void)makePlayersGC;
+- (void)sendData:(NSData*)data;
 - (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 - (GamePlayer*)getMePlayer;
 
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;
-
+@property (nonatomic, strong) GameNavigationController* nav;
 @property BOOL isPlayer1, receivedAllRandomNumbers, receivedRandom, matchHasStarted, enableGameCenter, matchStarted;
 @property GameState gameState;
 @property uint32_t ourRandom;

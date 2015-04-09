@@ -9,19 +9,20 @@
 #import "MenuViewController.h"
 #import "MessageLayer.h"
 #import "LoadGameTableViewController.h"
-#import "NewGameTableViewController.h"
+#import "MapEncoding.h"
 
 @implementation MenuViewController
 
 //send maps
 - (IBAction)newGame:(id)sender {
-	NewGameTableViewController *ngvc = [[NewGameTableViewController alloc] init];
-	[self presentViewController:ngvc animated:YES completion:nil];
+	ViewController* vc = [[ViewController alloc]init];
+	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
+	[vc waitingForOtherPlayers];
 }
 
 //load maps
 - (IBAction)loadGame:(id)sender {
 	LoadGameTableViewController *lgvc = [[LoadGameTableViewController alloc] init];
-	[self presentViewController:lgvc animated:YES completion:nil];
+	[[MessageLayer sharedMessageLayer].nav pushViewController:lgvc animated:false];
 }
 @end

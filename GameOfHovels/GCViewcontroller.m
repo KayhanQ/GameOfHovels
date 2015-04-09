@@ -28,18 +28,18 @@
     }
     else {
         ViewController *vc = [[ViewController alloc]init];
-        [self presentViewController:vc animated:YES completion:nil];
+        [[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
     }
 
 }
 
 - (void)playerAuthenticated {
 	//Menu
-	[[ViewController alloc]init];
-
 	MenuViewController *mvc = [[MenuViewController alloc]init];
-	[self presentViewController:mvc animated:YES completion:nil];
-	//[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
+	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:mvc];
+
+	
+	[[MessageLayer sharedMessageLayer].nav pushViewController:mvc animated:YES];
 }
 
 @end

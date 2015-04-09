@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController
-
+-(void)acceptOrRejectMap;
+-(void)
+waitingForOtherPlayers;
+@property UIAlertController* alertController;
 
 @end
 

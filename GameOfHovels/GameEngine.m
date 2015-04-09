@@ -81,57 +81,28 @@
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
     
-    //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
 	
-	NSData* mapData = _messageLayer.mapData;
-    //we check if we are using GC networking
-    //if not we can manually create our own setup
-    if ([GlobalFlags isGameWithGC]) {
-		//[_messageLayer makePlayersGC];
-		_currentPlayer = [_messageLayer getCurrentPlayer];
-		_mePlayer = _currentPlayer;
-    }
-    else {
-        [_messageLayer makePlayers];
-        _currentPlayer = [_messageLayer getCurrentPlayer];
-        _mePlayer = _currentPlayer;
-    }
+	_currentPlayer = [_messageLayer getCurrentPlayer];
+	_mePlayer = [_messageLayer getMePlayer];
 
-    
+	
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
     _world = [SPSprite sprite];
     [_contents addChild:_world];
-    
-
+	
     SPQuad* q = [SPQuad quadWithWidth:Sparrow.stage.width*8 height:Sparrow.stage.height*8];
     q.x = -q.width/2;
     q.y = -q.height/2;
     q.color = 0xB3E8F2;
     [_world addChild:q];
 	
-	if (mapData == nil) {
-		_map = [[Map alloc] initWithRandomMap];
-	}
-	else {
-		MapEncoding* mapEncoder = [[MapEncoding alloc] init];
-		_map = [mapEncoder decodeMap:mapData];
-	}
+    [self initializeMap];
 	
-	_map.gameEngine = self;
-    [_world addChild:_map];
-    
-    SPQuad* q2 = [SPQuad quadWithWidth:10 height:10];
-    [SparrowHelper centerPivot:q2];
-    q2.color = 0xff0000;
-    [_world addChild:q2];
-    
-    
     _hud = [[Hud alloc] initWithMap:_map];
     [_contents addChild:_hud];
-    
     _map.hud = _hud;
 
     
@@ -140,16 +111,30 @@
     
     [self addTurnEventListeners];
     [self enableScroll];
-
-    
-
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
-
     [self beginTurnWithPlayer:_currentPlayer];
-	[MessageLayer sharedMessageLayer].gameEngine = self;
+
     
 }
 
+- (void)initializeMap
+{
+	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
+	
+	if (_messageLayer.mapData == nil) {
+		_map = [[Map alloc] initWithRandomMap];
+	}
+	else {
+		_map = [mapEncoder decodeMap:_messageLayer.mapData];
+	}
+	
+	_map.gameEngine = self;
+	[_world addChild:_map];
+
+	[MessageLayer sharedMessageLayer].gameEngine = self;
+	[MessageLayer sharedMessageLayer].mapData = [mapEncoder encodeMap:_map];
+	[[MessageLayer sharedMessageLayer] sendData:[MessageLayer sharedMessageLayer].mapData];
+}
 
 
 - (void)addTurnEventListeners

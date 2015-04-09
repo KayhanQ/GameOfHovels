@@ -11,5 +11,6 @@
 @interface LoadGameTableViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource>{
 }
 @property (strong, nonatomic) NSMutableArray* dirContents;
+@property NSArray* listOfMaps;
 
 @end

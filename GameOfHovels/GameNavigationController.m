@@ -7,7 +7,6 @@
 //
 
 #import "GameNavigationController.h"
-#import "GameNavigationController.h"
 #import "MessageLayer.h"
 
 @implementation GameNavigationController
@@ -29,11 +28,10 @@
     MessageLayer *messageLayer =
     [MessageLayer sharedMessageLayer];
     
-    [self.topViewController presentViewController:
-     messageLayer.authenticationViewController
-                                         animated:YES
-                                       completion:nil];
+    [super pushViewController:messageLayer.authenticationViewController animated:YES];
 }
+
+
 
 - (void)dealloc
 {

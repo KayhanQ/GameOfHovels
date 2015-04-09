@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
+#import "GameNavigationController.h"
+#import "MessageLayer.h"
 @interface AppDelegate ()
 
 @end
@@ -18,8 +19,25 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+
+	self.window = [UIWindow new];
+	self.window.backgroundColor = [UIColor cyanColor];
 	viewController = [[GCViewcontroller alloc] initWithNibName:nil bundle:nil];
+	[MessageLayer sharedMessageLayer].nav = [[GameNavigationController alloc] initWithRootViewController:viewController];
+
+	self.window.rootViewController = [MessageLayer sharedMessageLayer].nav;
+	[_window makeKeyAndVisible];
+	self.window.frame = [UIScreen mainScreen].bounds;
+/*
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+	self.window.backgroundColor = [UIColor greenColor];
+	self.window.rootViewController = [MessageLayer sharedMessageLayer].nav;
+	[_window makeKeyAndVisible];
+
+	viewController = [[GCViewcontroller alloc] initWithNibName:nil bundle:nil];
+	//[MessageLayer sharedMessageLayer].nav = [[GameNavigationController alloc] initWithRootViewController:viewController];
+	//[_window addSubview:viewController];*/
     return YES;
 }
 

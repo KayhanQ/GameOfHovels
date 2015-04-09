@@ -1,5 +1,6 @@
 
 
+
 //
 //  MessageLayer.m
 //  GameOfHovels
@@ -12,6 +13,8 @@
 #import "Tile.h"
 #import "GameEngine.h"
 #import "Map.h"
+#import "MenuViewController.h"
+#import "MapEncoding.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -126,52 +129,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	}
 }
 
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-	Message *message = (Message *) [data bytes];
-	MessageMove * messageMove = (MessageMove *) [data bytes];
-	MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
-	
-	switch(message->messageType){
-		case kMessageTypeRandomNumber:
-			[self didReceivePlayerOrderingRandomNumber:data fromPlayer:playerID];
-			break;
-		case kMessageTypeGameBegin:
-			[self setGameState:kGameStateActive];
-			break;
-		case kMessageTypeMove:
-			[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
-			break;
-		case kMessageTypeGameOver:
-			NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
-			/* End Game */
-			if (messageGameOver->player1Won) {
-				//[self endScene:kEndReasonLose];
-			} else {
-				//[self endScene:kEndReasonWin];
-			}
-			break;
-	}
-}
-
-- (void)tryStartGame {
-	NSLog(@"tryStartGame");
-	if (self.isPlayer1 && self.gameState == kGameStateWaitingForStart) {
-		[self setGameState:kGameStateActive];
-		[self sendGameBegin];
-	}
-}
-
-- (void)matchStarted {
-	NSLog(@"Match started");
-	if (self.receivedRandom) {
-		self.gameState = kGameStateWaitingForStart;
-	} else {
-		self.gameState = kGameStateWaitingForRandomNumber;
-	}
-	[self sendRandomNumber];
-	[self tryStartGame];
-}
-
 - (void)sendData:(NSData *)data {
 	NSLog(@"sendData");
 	NSError *error;
@@ -180,6 +137,58 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		NSLog(@"Error sending init packet");
 		[self matchEnded];
 	}
+}
+
+
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+	Message *message = (Message *) [data bytes];
+	MessageMove * messageMove = (MessageMove *) [data bytes];
+	MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
+
+		switch(message->messageType){
+			case kMessageTypeRandomNumber:
+				[self didReceivePlayerOrderingRandomNumber:data fromPlayer:playerID];
+				break;
+			case kMessageTypeGameBegin:
+				[self setGameState:kGameStateActive];
+				break;
+			case kMessageTypeMove:
+				[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
+				break;
+			case kMessageTypeGameOver:
+				NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
+				/* End Game */
+				if (messageGameOver->player1Won) {
+					//[self endScene:kEndReasonLose];
+				} else {
+					//[self endScene:kEndReasonWin];
+				}
+				break;
+			default:
+				_mapData = data;
+				ViewController *vc = [[ViewController alloc]init];
+				[self.nav pushViewController:vc animated:false];
+		}
+	
+}
+
+- (void)tryStartGame {
+	NSLog(@"tryStartGame");
+	if (self.isPlayer1 && self.gameState == kGameStateWaitingForStart) {
+		[self setGameState:kGameStateActive];
+		//
+		[self sendGameBegin];
+	}
+}
+
+- (void)matchStarted {
+	if (self.receivedRandom) {
+		self.gameState = kGameStateWaitingForStart;
+	} else {
+		self.gameState = kGameStateWaitingForRandomNumber;
+	}
+	[self sendRandomNumber];
+	[self tryStartGame];
 }
 
 
@@ -353,7 +362,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[[GKMatchmakerViewController alloc] initWithMatchRequest:request];
 	mmvc.matchmakerDelegate = self;
 	
-	[viewController presentViewController:mmvc animated:YES completion:nil];
+	[[MessageLayer sharedMessageLayer].nav presentViewController:mmvc animated:YES completion:nil];
 }
 
 // FOUND MATCH
@@ -364,8 +373,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	if (!_matchHasStarted && match.expectedPlayerCount == 0) {
 		NSLog(@"Ready to start match!");
 		[self matchStarted];
-		ViewController *vc = [[ViewController alloc]init];
-		[viewController presentViewController:vc animated:YES completion:nil];
 	}
 }
 

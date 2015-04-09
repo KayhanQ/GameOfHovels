@@ -31,6 +31,12 @@
 		NSFileManager *fm = [NSFileManager defaultManager];
 		dirContents = [fm contentsOfDirectoryAtPath:path error:nil];
 	}
+	
+	NSString * resourcePath = [[NSBundle mainBundle] resourcePath];
+	NSString * mapsPath = [resourcePath stringByAppendingPathComponent:@"maps"];
+	NSError * error;
+	_listOfMaps = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsPath error:&error];
+
 
 	
     // Uncomment the following line to preserve selection between presentations.
@@ -49,13 +55,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 	NSLog(@"what up: %d",[dirContents count]);
-    return [dirContents count];
+    return [dirContents count] + [_listOfMaps count];
 }
 
 
@@ -68,46 +74,15 @@
 		cell = [[UITableViewCell alloc]init];
 	}
 
-	cell.textLabel.text = [self.dirContents objectAtIndex:indexPath.row];
+	if(indexPath.row < [dirContents count]){
+		cell.textLabel.text = [self.dirContents objectAtIndex:indexPath.row];
+	}
+	else{
+		cell.textLabel.text = [_listOfMaps objectAtIndex:(indexPath.row -[dirContents count])];
+	}
 	
     return cell;
 }
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 
 #pragma mark - Table view delegate
 
@@ -127,7 +102,7 @@
 	//create a game engine with the map
 	ViewController* vc = [[ViewController alloc]init];
 
-	[self presentViewController:vc animated:YES completion:nil];
+	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
 
     // Create the game using the map we just decoded.
 	
@@ -137,15 +112,5 @@
 	//Create and present a "ViewController" with the game
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
