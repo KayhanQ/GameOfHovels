@@ -332,6 +332,7 @@
             case TOOWNUNIT:
             {
                 if (unit.uType + destTile.unit.uType > 5) return false;
+                if (![destTile.village canSupportUnit:unit.uType + destTile.unit.uType]) return false;
                 break;
             }
             case TOENEMYTILE:
