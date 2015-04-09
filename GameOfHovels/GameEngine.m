@@ -142,6 +142,7 @@
     
     _hud = [[Hud alloc] initWithMap:_map world:_world];
 
+
     [_contents addChild:_hud];
 
      _map.hud = _hud;
