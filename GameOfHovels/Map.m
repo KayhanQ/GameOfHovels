@@ -252,11 +252,12 @@
 
 - (void)upgradeUnitWithTile:(Tile *)tile unitType:(enum UnitType)uType
 {
+    tile.village.goldPile -= tile.unit.upgradeCost;
+    [tile upgradeUnit:uType];
     //Subtract Gold
     if ([self isMyTurn]) {
-        tile.village.goldPile -= tile.unit.upgradeCost;
+        [_messageLayer sendMoveWithType:UPGRADEUNIT tile:tile destTile:nil];
     }
-    [tile upgradeUnit:uType];
 }
 
 
