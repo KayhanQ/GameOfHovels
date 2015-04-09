@@ -379,7 +379,9 @@
     _actionMenu = [[ActionMenu alloc] initWithTile:tile];
     [_popupMenuSprite addChild:_actionMenu];
     [_map addEventListener:@selector(cancelActionMenu:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    if (_actionMenu.buttonSprite.numChildren == 0) [self removeActionMenu];
+    if (_actionMenu.buttonSprite.numChildren == 0) {
+        [self removeActionMenu];
+    }
 }
 
 - (void)actionMenuAction:(ActionMenuEvent*) event
@@ -495,6 +497,7 @@
 - (void)tileTouched:(TileTouchedEvent*) event
 {
     NSLog(@"Tile touched");
+    for (Tile* t in _map.tilesSprite) [t deselectTile];
     Tile* tile = event.tile;
     Tile* selectedTile = _currentPlayerAction.selectedTile;
     [selectedTile deselectTile];
