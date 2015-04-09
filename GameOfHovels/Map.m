@@ -254,7 +254,7 @@
 {
     tile.village.goldPile -= tile.unit.upgradeCost;
     [tile upgradeUnit:uType];
-    //Subtract Gold
+
     if ([self isMyTurn]) {
         [_messageLayer sendMoveWithType:UPGRADEUNIT tile:tile destTile:nil];
     }
@@ -467,7 +467,9 @@
             }
             case TOOWNUNIT:
             {
-                [self upgradeUnitWithTile:destTile unitType: unit.uType + destTile.unit.uType];
+                //[self upgradeUnitWithTile:destTile unitType: unit.uType + destTile.unit.uType];
+                destTile.village.goldPile -= destTile.unit.upgradeCost;
+                [destTile upgradeUnit:unit.uType + destTile.unit.uType];
                 mergingUnits = true;
                 break;
             }
@@ -784,7 +786,9 @@
                         int num = arc4random() % 10;
                         if (num==0) {
                             [nTile addStructure:BAUM];
-                            [_messageLayer sendMoveWithType:GROWBAUM tile:nTile destTile:nil];
+                            if ([_messageLayer isMyTurn]) {
+                                [_messageLayer sendMoveWithType:GROWBAUM tile:nTile destTile:nil];
+                            }
                         }
                     }
                 }
@@ -801,7 +805,9 @@
             if ([t hasTombstone]) {
                 [t removeStructure];
                 [t addStructure:BAUM];
-                [_messageLayer sendMoveWithType:GROWBAUM tile:t destTile:nil];
+                if ([_messageLayer isMyTurn]) {
+                    [_messageLayer sendMoveWithType:GROWBAUM tile:t destTile:nil];
+                }
             }
         }
     }
@@ -861,7 +867,9 @@
 {
     for (Tile* t in [self getTilesforVillage:villageTile.village]){
         if([t hasUnit]){
-            [t removeUnit];
+            if ([_messageLayer isMyTurn]) {
+                [_messageLayer sendMoveWithType:ADDTOMBSTONE tile:t destTile:nil];
+            }
             [t addStructure:TOMBSTONE];
         }
     }

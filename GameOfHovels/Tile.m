@@ -317,6 +317,7 @@
         }
         case TOMBSTONE: {
             [self removeAllStructures];
+            [self removeUnit];
             Tombstone* r = [[Tombstone alloc] initWithTile:self];
             [_structuresSprite addChild:r];
             break;

@@ -26,6 +26,7 @@ typedef enum {
 	kMessageTypeMove,
     kMessageTypeGameState,
 	kMessageTypeGameOver,
+    kMessageTypeGameExited,
     kMessageTypeTurnEnded
 } MessageType;
 
@@ -42,6 +43,9 @@ typedef struct {
     Message message;
 } MessageTurnEnded;
 
+typedef struct {
+    Message message;
+} MessageGameExited;
 
 typedef struct {
 	Message message;
@@ -89,6 +93,7 @@ typedef enum {
 - (BOOL)isMyTurn;
 - (void)reorderColorsOfPlayers;
 - (void)sendEndTurnMessage;
+- (void)sendGameExitedMessage;
 
 @property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;

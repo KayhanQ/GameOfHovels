@@ -170,10 +170,9 @@
 
 - (void)exitGame:(GHEvent*)event
 {
-
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:@"Exit Game"
-                                          message:@"Are you sure you want to exit?\nYou will lose all unsaved data."
+                                          message:@"Are you sure you want to exit?\nThis will end the game for everyone."
                                           preferredStyle:UIAlertControllerStyleAlert];
 
     
@@ -185,18 +184,38 @@
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction *action)
                                {
+                                   [_messageLayer sendGameExitedMessage];
                                    [self completeExitFromGame];
                                }];
     [alertController addAction:yesAction];
     [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+}
 
+- (void)playerExitedGame
+{
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Game Ended"
+                                          message:@"Another Player has left the game."
+                                          preferredStyle:UIAlertControllerStyleAlert];
     
+    
+    UIAlertAction *yesAction = [UIAlertAction
+                                actionWithTitle:NSLocalizedString(@"Ok", @"Ok action")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction *action)
+                                {
+                                    [self completeExitFromGame];
+                                }];
+    [alertController addAction:yesAction];
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)completeExitFromGame
 {
     NSLog(@"Exiting");
     [_channel stop];
+    [_messageLayer.nav popViewControllerAnimated:false];
+    
     //[Sparrow.currentController dismissViewControllerAnimated:true completion:nil];
 }
 
@@ -225,7 +244,6 @@
     [_hud endTurn];
     [self removeTurnEventListeners];
 
-    //We rebegin our turn
     [_messageLayer sendEndTurnMessage];
 }
 
@@ -376,6 +394,11 @@
         case GROWBAUM:
         {
             [_map growBaum:tile];
+            break;
+        }
+        case ADDTOMBSTONE:
+        {
+            [tile addStructure:TOMBSTONE];
             break;
         }
         default:

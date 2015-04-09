@@ -162,6 +162,11 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 			case kMessageTypeGameBegin:
 				[self setGameState:kGameStateActive];
 				break;
+            case kMessageTypeGameExited:
+            {
+                [_gameEngine playerExitedGame];
+                break;
+            }
 			case kMessageTypeMove:
 				[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
 				break;
@@ -210,6 +215,14 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageTurnEnded)];
     [self sendData:data];
     [self incrementCurrentPlayer];
+}
+- (void)sendGameExitedMessage
+{
+    NSLog(@"send GAME EXITED MESSAGE");
+    MessageGameExited message;
+    message.message.messageType = kMessageTypeGameExited;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameExited)];
+    [self sendData:data];
 }
 
 - (void)reorderColorsOfPlayers {
