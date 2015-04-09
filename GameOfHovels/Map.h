@@ -53,9 +53,6 @@
 - (NSMutableArray*)getTilesForEnemyUnitsProtectingTile:(Tile*)tile;
 - (NSMutableArray*)getTilesWithMyVillages;
 
-
-
-
 - (void)showPlayersTeritory;
 
 - (void)moveUnitWithTile:(Tile*)unitTile tile:(Tile*)destTile;
@@ -67,5 +64,6 @@
 - (void)buildMarket:(Tile*)tile;
 - (void)buildRoad:(Tile*)tile;
 - (void)buildTowerFromTile:(Tile*)villageTile tile:(Tile*)destTile;
+- (void)growBaum:(Tile*)tile;
 
 @end

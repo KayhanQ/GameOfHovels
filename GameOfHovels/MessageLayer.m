@@ -20,8 +20,11 @@
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
+@synthesize areHost = _areHost;
 @synthesize gameEngine = _gameEngine;
 @synthesize mapData = _mapData;
+@synthesize mePlayer = _mePlayer;
+@synthesize currentPlayer = _currentPlayer;
 
 + (instancetype)sharedMessageLayer
 {
@@ -33,11 +36,12 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	return sharedMessageLayer;
 }
 
--(id) init
+- (id)init
 {
 	if( (self=[super init])) {
 		_enableGameCenter = YES;
-
+        _areHost = false;
+        
 		// Set ourselves as player 1 and the game to active
 		self.isPlayer1 = YES;
 		[self setGameState:kGameStateActive];
@@ -73,35 +77,36 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		NSLog(@"[GKLocalPlayer localPlayer].playerID=%@", [GKLocalPlayer localPlayer].playerID);
 		
 		//for some reason [GKLocalPlayer localPlayer].playerID returns null, but ONLY ON SIMULATOR
-		if([GKLocalPlayer localPlayer].playerID != nil){
-			[self createAndAddPlayer:[GKLocalPlayer localPlayer].playerID randomNumber:self.ourRandom];
+		if([GKLocalPlayer localPlayer].playerID != nil) {
+			_mePlayer = [self createAndAddPlayer:[GKLocalPlayer localPlayer].playerID randomNumber:self.ourRandom];
 		}
 	})];
 }
 
-//This method was breaking the game sometimes
--(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber {
-    if ([GlobalFlags isGameWithGC]) {
-        NSLog(@"[createAndAddPlayer");
-        GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
-        [p setPlayerId: playerId];
-        [p setRandomNumber:randomNumber];
-        if([_players count] == 0){
-            [_players addObject:p];
-        }
-        for(int i = 0; i < [_players count]; i++){
-            if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
-                [_players insertObject:p atIndex:i];
+- (GamePlayer*)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber {
+    NSLog(@"createAndAddPlayer");
+    GamePlayer* newPlayer = [[GamePlayer alloc] initWithNumber:[_players count] + 1];
+    [newPlayer setPlayerId: playerId];
+    [newPlayer setRandomNumber:randomNumber];
+    [_players addObject:newPlayer];
+    
+    for (int i = 0; i < _players.count; i++) {
+        GamePlayer* current1 = [_players objectAtIndex:i];
+        for (int j = 0; j < _players.count; j++) {
+            GamePlayer* current2 = [_players objectAtIndex: j];
+            if (current1.randomNumber < current2.randomNumber) {
+                [_players exchangeObjectAtIndex:i withObjectAtIndex:j];
             }
         }
     }
+    return newPlayer;
 }
 
 - (BOOL)allRandomNumbersAreReceived
 {
 	NSLog(@"Players Count = %d", [_players count]);
 	NSLog(@"Expected Players Count = %d", self.match.expectedPlayerCount);
-
+    
 	if ([_players count] == self.match.expectedPlayerCount) {
 		return YES;
 	}
@@ -120,6 +125,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		self.ourRandom = arc4random();
 		[self sendRandomNumber];
 	} else {
+        [self createAndAddPlayer:playerID randomNumber:messageInit->randomNumber];
 		if ([self allRandomNumbersAreReceived]) {
 			_receivedAllRandomNumbers = YES;
 		}
@@ -169,19 +175,32 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 				}
 				break;
 			default:
+            {
+                //this is super dangerous but it is how we do
 				_mapData = data;
 				ViewController *vc = [[ViewController alloc]init];
 				[self.nav pushViewController:vc animated:false];
+            }
 		}
 	
 }
 
+- (void)reorderColorsOfPlayers {
+    for (int i = 0; i<_players.count; i++) {
+        GamePlayer* p = [_players objectAtIndex:i];
+        p.pColor = i+1;
+        NSLog(@"id %@, col %d",p.playerId,p.pColor);
+    }
+}
+
 - (void)tryStartGame {
 	NSLog(@"tryStartGame");
-	if (self.isPlayer1 && self.gameState == kGameStateWaitingForStart) {
-		[self setGameState:kGameStateActive];
-		//
-		[self sendGameBegin];
+	if (self.gameState == kGameStateWaitingForStart) {
+        if (_areHost) {
+            _currentPlayer = [_players objectAtIndex:0];
+            [self setGameState:kGameStateActive];
+            [self sendGameBegin];
+        }
 	}
 }
 
@@ -255,6 +274,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 //We receive which move occured and encode and send it to all players
 - (void)sendMoveWithType:(enum ActionType)aType tile:(Tile *)tile destTile:(Tile *)destTile
 {
+    NSLog(@"send Move With Type");
 	MessageMove message;
 	message.message.messageType = kMessageTypeMove;
 	message.aType=aType;
@@ -299,21 +319,10 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     return nil;
 }
 
-//TODO
-- (GamePlayer*)getCurrentPlayer
-{
-    return [_players objectAtIndex:0];
-}
-
-//TODO
-- (GamePlayer*)getMePlayer
-{
-    return [_players objectAtIndex:0];
-}
 
 - (BOOL)isMyTurn
 {
-    if ([self getCurrentPlayer] == [self getMePlayer]) return true;
+    if (_currentPlayer == _mePlayer) return true;
     return false;
 }
 
@@ -336,7 +345,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 }
 
 - (void)sendGameOver:(BOOL)player1Won {
-	
+    NSLog(@"Send Game Over");
 	MessageGameOver message;
 	message.message.messageType = kMessageTypeGameOver;
 	message.player1Won = player1Won;

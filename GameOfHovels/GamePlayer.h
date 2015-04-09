@@ -12,7 +12,7 @@
     enum PlayerColor {NOCOLOR = 0, RED, BLUE, ORANGE, GREY};
 }
 
-@property (nonatomic, readonly) enum PlayerColor pColor;
+@property (nonatomic) enum PlayerColor pColor;
 @property NSString* playerId;
 @property long randomNumber;
 

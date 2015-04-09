@@ -16,6 +16,7 @@
 //send maps
 - (IBAction)newGame:(id)sender {
 	ViewController* vc = [[ViewController alloc]init];
+    [MessageLayer sharedMessageLayer].areHost = true;
 	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
 	[vc waitingForOtherPlayers];
 }
@@ -23,6 +24,7 @@
 //load maps
 - (IBAction)loadGame:(id)sender {
 	LoadGameTableViewController *lgvc = [[LoadGameTableViewController alloc] init];
+    [MessageLayer sharedMessageLayer].areHost = true;
 	[[MessageLayer sharedMessageLayer].nav pushViewController:lgvc animated:false];
 }
 @end

@@ -118,11 +118,8 @@
         }
         [encodedString appendLine:@""];
     }
-
-    NSLog(@"%@",encodedString);
     
     NSData* dataBuffer = [encodedString dataUsingEncoding:NSUTF8StringEncoding];
-
     return dataBuffer;
 }
 
@@ -198,8 +195,6 @@
         NSArray* tileArray = [encodingArray objectAtIndex:tileIndex];
         Tile* tile = (Tile*)[map.tilesSprite childAtIndex:tileIndex];
 		
-        NSLog(@"count: %d", tileArray.count);
-
         int i = 0;
         for (NSNumber* number in tileArray) {
             int data = [number intValue];

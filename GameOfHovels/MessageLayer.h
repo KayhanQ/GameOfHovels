@@ -24,6 +24,7 @@ typedef enum {
 	kMessageTypeRandomNumber = 0,
 	kMessageTypeGameBegin,
 	kMessageTypeMove,
+    kMessageTypeGameState,
 	kMessageTypeGameOver,
 } MessageType;
 
@@ -78,11 +79,13 @@ typedef enum {
 - (void)makePlayers;
 - (void)makePlayersGC;
 - (void)sendData:(NSData*)data;
-- (GamePlayer*)getCurrentPlayer;
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
-- (GamePlayer*)getMePlayer;
 - (BOOL)isMyTurn;
+- (void)reorderColorsOfPlayers;
 
+@property (nonatomic) GamePlayer* mePlayer;
+@property (nonatomic) GamePlayer* currentPlayer;
+@property BOOL areHost;
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;
 @property (nonatomic, strong) GameNavigationController* nav;

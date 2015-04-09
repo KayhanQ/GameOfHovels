@@ -21,9 +21,6 @@
     SPSprite* _world;
 }
 
-@property GamePlayer* mePlayer;
-@property GamePlayer* currentPlayer;
-
 - (void)beginTurnWithPlayer:(GamePlayer*)player;
 - (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 

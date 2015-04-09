@@ -699,6 +699,12 @@
     }
 }
 
+- (void)growBaum:(Tile *)tile
+{
+    [tile removeAllStructures];
+    [tile addStructure:BAUM];
+}
+
 - (void)updateHud:(Tile*)tile
 {
     [_hud update:tile];
@@ -707,7 +713,7 @@
 //call your phases
 - (void)beginTurnPhases
 {
-    [self treeGrowthPhase];
+    //[self treeGrowthPhase];
     [self tombstonePhase];
     [self incomePhase];
     [self paymentPhase];
@@ -727,7 +733,10 @@
                 for (Tile* nTile in [tile getNeighbours]) {
                     if ([nTile canHaveTree]) {
                         int num = arc4random() % 10;
-                        if (num==0) [nTile addStructure:BAUM];
+                        if (num==0) {
+                            [nTile addStructure:BAUM];
+                            [_messageLayer sendMoveWithType:GROWBAUM tile:nTile destTile:nil];
+                        }
                     }
                 }
             }
@@ -743,6 +752,7 @@
             if ([t hasTombstone]) {
                 [t removeStructure];
                 [t addStructure:BAUM];
+                [_messageLayer sendMoveWithType:GROWBAUM tile:t destTile:nil];
             }
         }
     }
@@ -892,7 +902,7 @@
 {
     NSMutableArray* tiles = [NSMutableArray array];
     for (Tile* t in _tilesSprite) {
-        if ([t isVillage] && t.village.player == [_messageLayer getCurrentPlayer]) {
+        if ([t isVillage] && t.village.player == _messageLayer.mePlayer) {
             [tiles addObject:t];
         }
     }

@@ -93,10 +93,9 @@
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
 	
-	_currentPlayer = [_messageLayer getCurrentPlayer];
-	_mePlayer = [_messageLayer getMePlayer];
-
-	
+    GamePlayer * mP = _messageLayer.mePlayer;
+    GamePlayer * cP =_messageLayer.currentPlayer;
+    
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
@@ -121,11 +120,12 @@
     
     [self enableScroll];
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
-    [self beginTurnWithPlayer:_currentPlayer];
+    [self beginTurnWithPlayer:_messageLayer.currentPlayer];
 }
 
 - (void)initializeMap
 {
+    [[MessageLayer sharedMessageLayer] reorderColorsOfPlayers];
 	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
 	
 	if (_messageLayer.mapData == nil) {
@@ -139,8 +139,11 @@
 	[_world addChild:_map];
 
 	[MessageLayer sharedMessageLayer].gameEngine = self;
-	[MessageLayer sharedMessageLayer].mapData = [mapEncoder encodeMap:_map];
-	[[MessageLayer sharedMessageLayer] sendData:[MessageLayer sharedMessageLayer].mapData];
+    //Send the map to other players only if you are the host
+    if ([MessageLayer sharedMessageLayer].areHost) {
+        [MessageLayer sharedMessageLayer].mapData = [mapEncoder encodeMap:_map];
+        [[MessageLayer sharedMessageLayer] sendData:[MessageLayer sharedMessageLayer].mapData];
+    }
 }
 
 
@@ -199,9 +202,13 @@
 - (void)beginTurnWithPlayer:(GamePlayer*)player
 {
     [_map beginTurnPhases];
-    [self addTurnEventListeners];
-    _map.touchable = true;
-    [_hud beginTurn];
+    
+    NSLog(@"is your turn %hhd",[_messageLayer isMyTurn]);
+    if ([_messageLayer isMyTurn]) {
+        [self addTurnEventListeners];
+        _map.touchable = true;
+        [_hud beginTurn];
+    }
 }
 
 //This method is important. Change stuff in it depending on what you want to do
@@ -215,7 +222,7 @@
     [self removeTurnEventListeners];
 
     //We rebegin our turn
-    [self beginTurnWithPlayer:_currentPlayer];
+    [self beginTurnWithPlayer:_messageLayer.currentPlayer];
 }
 
 - (void)translateScreenToTile:(TranslateWorldEvent*)event
@@ -360,6 +367,11 @@
         case BUILDTOWER:
         {
             [_map buildTowerFromTile:tile tile:destTile];
+            break;
+        }
+        case GROWBAUM:
+        {
+            [_map growBaum:tile];
             break;
         }
         default:

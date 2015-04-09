@@ -99,9 +99,10 @@
 	NSData* encodedData = [fm contentsAtPath:path];
 	[MessageLayer sharedMessageLayer].mapData = encodedData;
 
+    NSLog(@"Table View Touched");
 	//create a game engine with the map
 	ViewController* vc = [[ViewController alloc]init];
-
+    [MessageLayer sharedMessageLayer].areHost = true;
 	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
 
     // Create the game using the map we just decoded.
