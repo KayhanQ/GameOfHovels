@@ -61,6 +61,7 @@
 - (BOOL)canBeSelected;
 - (BOOL)canHaveTree;
 - (BOOL)canHaveMeadow;
+- (BOOL)canHaveMarket;
 - (BOOL)canHaveRoad;
 
 - (BOOL)canHaveUnit;

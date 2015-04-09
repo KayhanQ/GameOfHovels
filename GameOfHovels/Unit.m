@@ -113,6 +113,11 @@
             if (_turnsInWS==3) _workstateCompleted = true;
             break;
         }
+        case BUILDINGMARKET:
+        {
+            if (_turnsInWS==4) _workstateCompleted = true;
+            break;
+        }
         case BUILDINGROAD:
         {
             if (_turnsInWS==2) _workstateCompleted = true;

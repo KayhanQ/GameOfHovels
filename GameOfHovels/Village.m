@@ -80,10 +80,8 @@
     return false;
 }
 
-//unused method
-- (BOOL)canSupportUnit:(Unit*)unit
+- (BOOL)canSupportUnit:(enum UnitType)uType
 {
-    enum UnitType uType = unit.uType;
     BOOL canSupport = false;
     
     switch (_vType) {
@@ -100,6 +98,11 @@
         case FORT:
         {
             if (uType <= 4) canSupport = true;
+            break;
+        }
+        case CASTLE:
+        {
+            if (uType <= 5) canSupport = true;
             break;
         }
         default:

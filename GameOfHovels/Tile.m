@@ -15,6 +15,7 @@
 #import "Sea.h"
 #import "Baum.h"
 #import "Meadow.h"
+#import "Market.h"
 #import "Road.h"
 #import "Tombstone.h"
 #import "Tower.h"
@@ -303,6 +304,11 @@
             [_structuresSprite addChild:m];
             break;
         }
+        case MARKET: {
+            Market* m = [[Market alloc] initWithTile:self];
+            [_structuresSprite addChild:m];
+            break;
+        }
         case ROAD: {
             Road* r = [[Road alloc] initWithTile:self];
             [_structuresSprite addChild:r atIndex:1];
@@ -506,6 +512,12 @@
 - (BOOL)canHaveMeadow
 {
     if ([self getStructureType] == GRASS || [self getStructureType] == ROAD) return true;
+    return false;
+}
+
+- (BOOL)canHaveMarket
+{
+    if ([self getStructureType] == GRASS) return true;
     return false;
 }
 

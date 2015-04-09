@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "BasicSprite.h"
+#import "Unit.h"
 
 @class GamePlayer;
-@class Unit;
 
 @interface Village : BasicSprite {
     
@@ -32,7 +32,7 @@
 - (BOOL)isSameAs:(Village*)v;
 - (BOOL)isHigherThan:(Village*)v;
 - (void)transferSuppliesFrom:(Village*)village;
-- (BOOL)canSupportUnit:(Unit*)unit;
+- (BOOL)canSupportUnit:(enum UnitType)uType;
 - (BOOL)canBeConqueredByUnit:(Unit*)unit;
 - (BOOL)canBuildTower;
 - (BOOL)canUpgrade;
