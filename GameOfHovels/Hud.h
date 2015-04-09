@@ -20,7 +20,8 @@
 
 - (id)initWithMap:(Map*)map;
 - (void)update:(Tile*)tile;
-
+- (void)endTurn;
+- (void)beginTurn;
 
 
 @end
