@@ -71,7 +71,12 @@
         if (unit != nil) {
             if (unit.uType == PEASANT && [tile canHaveMeadow]) [self makeButton:BUILDMEADOW];
             if (unit.uType == PEASANT && [tile canHaveRoad]) [self makeButton:BUILDROAD];
-            if (unit.uType != CANNON) [self makeButton:UPGRADEUNIT];
+            if (unit.uType == PEASANT && [tile canHaveMarket]) [self makeButton:BUILDMARKET];
+            if (unit.uType != CANNON) {
+                if ([tile.village canSupportUnit:unit.uType+1]) {
+                    [self makeButton:UPGRADEUNIT];
+                }
+            }
             if (unit.uType == CANNON) [self makeButton:SHOOTCANNON];
         }
 
