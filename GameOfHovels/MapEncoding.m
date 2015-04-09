@@ -187,7 +187,8 @@
 		i++;
     }
 
-	[MessageLayer sharedMessageLayer].players = players;
+    //IMPORTANT WE SET THE PLAYERS???
+	//[MessageLayer sharedMessageLayer].players = players;
 	
     Map* map = [[Map alloc] initWithBasicMap];
 

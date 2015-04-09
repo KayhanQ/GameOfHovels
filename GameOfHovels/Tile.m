@@ -33,6 +33,7 @@
 
 #import "Media.h"
 #import "GamePlayer.h"
+#import "MessageLayer.h"
 
 #import "SparrowHelper.h"
 
@@ -589,16 +590,26 @@
     _selectionLayer.alpha = 0;
 }
 
+- (BOOL)isMyTile
+{
+    if (_village.player == [MessageLayer sharedMessageLayer].mePlayer) {
+        return true;
+    }
+    return false;
+}
+
 - (void)onTouch:(SPTouchEvent*)event
 {
     SPTouch *touchBegan = [[event touchesWithTarget:self andPhase:SPTouchPhaseBegan] anyObject];
     if (touchBegan) {
         if ([self hasUnit] || [self isVillage]) {
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.25
-                                                      target:self
-                                                    selector:@selector(showActionMenu:)
-                                                    userInfo:nil
-                                                     repeats:NO];
+            if ([self isMyTile]) {
+                _timer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                                                          target:self
+                                                        selector:@selector(showActionMenu:)
+                                                        userInfo:nil
+                                                         repeats:NO];
+            }
         }
     }
     

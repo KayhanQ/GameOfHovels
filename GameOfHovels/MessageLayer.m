@@ -191,13 +191,14 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
         p.pColor = i+1;
         NSLog(@"id %@, col %d",p.playerId,p.pColor);
     }
+    _currentPlayer = [_players objectAtIndex:0];
+
 }
 
 - (void)tryStartGame {
 	NSLog(@"tryStartGame");
 	if (self.gameState == kGameStateWaitingForStart) {
         if (_areHost) {
-            _currentPlayer = [_players objectAtIndex:0];
             [self setGameState:kGameStateActive];
             [self sendGameBegin];
         }
@@ -311,7 +312,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	}
 }*/
 
-- (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
+- (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor
 {
     for (GamePlayer* player in _players) {
         if (player.pColor == pColor) return player;

@@ -125,6 +125,7 @@
 
 - (void)initializeMap
 {
+    //reorder the colors if you are the host
     [[MessageLayer sharedMessageLayer] reorderColorsOfPlayers];
 	MapEncoding* mapEncoder = [[MapEncoding alloc] init];
 	
@@ -208,6 +209,9 @@
         [self addTurnEventListeners];
         _map.touchable = true;
         [_hud beginTurn];
+    }
+    else {
+        [_hud endTurn];
     }
 }
 

@@ -71,6 +71,9 @@
         
         enum PlayerColor tColor = t.pColor;
         GamePlayer* p = [_messageLayer getPlayerForColor:tColor];
+        if (p == nil) {
+            NSLog(@"this should not be nil");
+        }
         NSMutableArray* connectedTiles = [self getConnectedTilesByColor:t];
         Tile* vTile = [self getTileWithVillageForRegion:connectedTiles];
         vTile.village.player = p;
