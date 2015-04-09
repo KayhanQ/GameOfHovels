@@ -164,17 +164,6 @@
     return u.uType;
 }
 
-- (Village*)getVillage
-{
-    return _village;
-}
-
-- (enum VillageType)getVillageType
-{
-    Village* v = [self getVillage];
-    return v.vType;
-}
-
 
 //upgrades to whatever uType is
 - (void)upgradeUnit:(enum UnitType)uType
