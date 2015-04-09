@@ -21,7 +21,7 @@
     SPSprite* _world;
 }
 
-- (void)beginTurnWithPlayer:(GamePlayer*)player;
+- (void)beginTurn;
 - (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 
 @end

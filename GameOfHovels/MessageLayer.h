@@ -26,6 +26,7 @@ typedef enum {
 	kMessageTypeMove,
     kMessageTypeGameState,
 	kMessageTypeGameOver,
+    kMessageTypeTurnEnded
 } MessageType;
 
 typedef struct {
@@ -36,6 +37,11 @@ typedef struct {
 	Message message;
 	uint32_t randomNumber;
 } MessageRandomNumber;
+
+typedef struct {
+    Message message;
+} MessageTurnEnded;
+
 
 typedef struct {
 	Message message;
@@ -82,6 +88,7 @@ typedef enum {
 - (GamePlayer*)getPlayerForColor:(enum PlayerColor)pColor;
 - (BOOL)isMyTurn;
 - (void)reorderColorsOfPlayers;
+- (void)sendEndTurnMessage;
 
 @property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;

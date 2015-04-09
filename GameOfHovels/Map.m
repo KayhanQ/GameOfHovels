@@ -795,7 +795,7 @@
 //Any tombstones on tiles owned by the player are replaced by trees
 - (void)tombstonePhase
 {
-    for (Tile* vTile in [self getTilesWithMyVillages]) {
+    for (Tile* vTile in [self getTilesWithCurrentPlayerVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasTombstone]) {
                 [t removeStructure];
@@ -808,7 +808,7 @@
 
 - (void)incomePhase
 {
-    for (Tile* vTile in [self getTilesWithMyVillages]) {
+    for (Tile* vTile in [self getTilesWithCurrentPlayerVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             switch([t getStructureType]){
                 case MEADOW:
@@ -839,7 +839,7 @@
 // are replaced by tombstones.
 - (void)paymentPhase
 {
-    for (Tile* vTile in [self getTilesWithMyVillages]) {
+    for (Tile* vTile in [self getTilesWithCurrentPlayerVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if([t hasUnit]) {
                 vTile.village.goldPile -= t.unit.upkeepCost;
@@ -868,7 +868,7 @@
 
 - (void)buildPhase
 {
-    for (Tile* vTile in [self getTilesWithMyVillages]) {
+    for (Tile* vTile in [self getTilesWithCurrentPlayerVillages]) {
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if ([t hasUnit]) {
                 if (t.unit.workstateCompleted) {
@@ -945,12 +945,22 @@
     }
 }
 
-//How is current player represented
 - (NSMutableArray*)getTilesWithMyVillages
 {
     NSMutableArray* tiles = [NSMutableArray array];
     for (Tile* t in _tilesSprite) {
         if ([t isVillage] && t.village.player == _messageLayer.mePlayer) {
+            [tiles addObject:t];
+        }
+    }
+    return tiles;
+}
+
+- (NSMutableArray*)getTilesWithCurrentPlayerVillages
+{
+    NSMutableArray* tiles = [NSMutableArray array];
+    for (Tile* t in _tilesSprite) {
+        if ([t isVillage] && t.village.player == _messageLayer.currentPlayer) {
             [tiles addObject:t];
         }
     }

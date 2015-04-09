@@ -122,7 +122,7 @@
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
     //you are always able to exit a game
     [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
-    [self beginTurnWithPlayer:_messageLayer.currentPlayer];
+    [self beginTurn];
 }
 
 - (void)initializeMap
@@ -200,7 +200,7 @@
     //[Sparrow.currentController dismissViewControllerAnimated:true completion:nil];
 }
 
-- (void)beginTurnWithPlayer:(GamePlayer*)player
+- (void)beginTurn
 {
     [_map beginTurnPhases];
     
@@ -226,7 +226,7 @@
     [self removeTurnEventListeners];
 
     //We rebegin our turn
-    [self beginTurnWithPlayer:_messageLayer.currentPlayer];
+    [_messageLayer sendEndTurnMessage];
 }
 
 - (void)translateScreenToTile:(TranslateWorldEvent*)event

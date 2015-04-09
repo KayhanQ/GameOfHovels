@@ -165,6 +165,13 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 			case kMessageTypeMove:
 				[_gameEngine playOtherPlayersMove:messageMove->aType tileIndex:messageMove->tileIndex destTileIndex:messageMove->destTileIndex];
 				break;
+            case kMessageTypeTurnEnded:
+            {
+                NSLog(@"Turn Ended Message Received");
+                [self incrementCurrentPlayer];
+                [_gameEngine beginTurn];
+                break;
+            }
 			case kMessageTypeGameOver:
 				NSLog(@"Received game over with player 1 won: %d", messageGameOver->player1Won);
 				/* End Game */
@@ -182,7 +189,27 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 				[self.nav pushViewController:vc animated:false];
             }
 		}
-	
+}
+
+- (void)incrementCurrentPlayer
+{
+    for (GamePlayer* p in _players) {
+        if (_currentPlayer == p) {
+            int nextIndex = ([_players indexOfObject:p] + 1) % _players.count;
+            _currentPlayer = [_players objectAtIndex:nextIndex];
+            break;
+        }
+    }
+}
+
+- (void)sendEndTurnMessage
+{
+    NSLog(@"send end turn message");
+    MessageTurnEnded message;
+    message.message.messageType = kMessageTypeTurnEnded;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageTurnEnded)];
+    [self sendData:data];
+    [self incrementCurrentPlayer];
 }
 
 - (void)reorderColorsOfPlayers {
