@@ -120,6 +120,8 @@
     
     [self enableScroll];
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
+    //you are always able to exit a game
+    [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
     [self beginTurnWithPlayer:_messageLayer.currentPlayer];
 }
 
@@ -155,7 +157,6 @@
     [self addEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self addEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
     [self addEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
-    [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
 }
 
 - (void)removeTurnEventListeners
@@ -165,7 +166,6 @@
     [self removeEventListener:@selector(actionMenuAction:) atObject:self forType:EVENT_TYPE_ACTION_MENU_ACTION];
     [self removeEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
     [self removeEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
-    [self removeEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
 }
 
 - (void)exitGame:(GHEvent*)event

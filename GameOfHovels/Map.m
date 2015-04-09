@@ -199,9 +199,9 @@
         if (destTile.village == unitTile.village) return;
         if ([self distanceFromTile:unitTile toTile:destTile] > 2) return;
         if (unitTile.village.woodPile <= 1) return;
-        unitTile.village.woodPile--;
     }
-    
+    unitTile.village.woodPile--;
+
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
     Village* enemyPlayersVillage = destTile.village;
     BOOL areAttackingVillage = [destTile isVillage];
@@ -214,6 +214,10 @@
         if (![destTile isVillage]) {
             [self takeOverEnemyVillageTileWithNeighbours:nTiles enemyVillage:enemyPlayersVillage];
         }
+    }
+    
+    if ([_messageLayer isMyTurn]) {
+        [_messageLayer sendMoveWithType:SHOOTCANNON tile:unitTile destTile:destTile];
     }
 }
 
@@ -285,9 +289,37 @@
     
     if ([self isMyTurn]) {
         villageTile.village.goldPile -= destTile.unit.buyCostGold;
-        villageTile.village.goldPile -= destTile.unit.buyCostWood;
+        villageTile.village.woodPile -= destTile.unit.buyCostWood;
         [self updateHud:villageTile];
-        //[_messageLayer sendMoveWithType:BUYUNIT tile:villageTile destTile:destTile];
+        switch (uType) {
+            case PEASANT:
+            {
+                [_messageLayer sendMoveWithType:BUYPEASANT tile:villageTile destTile:destTile];
+                break;
+            }
+            case INFANTRY:
+            {
+                [_messageLayer sendMoveWithType:BUYINFANTRY tile:villageTile destTile:destTile];
+                break;
+            }
+            case SOLDIER:
+            {
+                [_messageLayer sendMoveWithType:BUYSOLDIER tile:villageTile destTile:destTile];
+                break;
+            }
+            case RITTER:
+            {
+                [_messageLayer sendMoveWithType:BUYRITTER tile:villageTile destTile:destTile];
+                break;
+            }
+            case CANNON:
+            {
+                [_messageLayer sendMoveWithType:BUYCANNON tile:villageTile destTile:destTile];
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
@@ -598,8 +630,14 @@
 - (void)convertRegionAfterTileTakenFrom:(Village*)enemyPlayersVillage region:(NSMutableArray*)region
 {
     if (region.count >= 4) {
-        //make new hovel on a random Tile
-        Tile* hovelTile = [region objectAtIndex: arc4random() % region.count];
+        //make new hovel on a random Tile, it's not actually random.
+        int randInt = 0;
+        for (Tile* t in region) {
+            if ([t getStructureType] == BAUM) randInt++;
+        }
+        if (randInt > region.count-1) randInt = region.count-1;
+        
+        Tile* hovelTile = [region objectAtIndex: randInt];
         [hovelTile removeUnit];
         [hovelTile removeAllStructures];
         [hovelTile addVillage:HOVEL];
@@ -623,8 +661,8 @@
 - (void)chopBaum:(Tile*)tile
 {
     [tile removeStructure];
+    tile.village.woodPile++;
     if ([self isMyTurn]) {
-        tile.village.woodPile++;
         [self updateHud: tile];
     }
 }
@@ -639,6 +677,7 @@
         else if (u.workState == BUILDINGMEADOW) {
             if (u.workstateCompleted) {
                 [tile addStructure:MEADOW];
+                [_messageLayer sendMoveWithType:BUILDMEADOW tile:tile destTile:nil];
                 [u setWorkState:NOWORKSTATE];
             }
         }
@@ -658,6 +697,7 @@
         else if (u.workState == BUILDINGMARKET) {
             if (u.workstateCompleted) {
                 [tile addStructure:MARKET];
+                [_messageLayer sendMoveWithType:BUILDMARKET tile:tile destTile:nil];
                 [u setWorkState:NOWORKSTATE];
             }
         }
@@ -677,6 +717,7 @@
         else if (u.workState == BUILDINGROAD) {
             if (u.workstateCompleted) {
                 [tile addStructure:ROAD];
+                [_messageLayer sendMoveWithType:BUILDROAD tile:tile destTile:nil];
                 [u setWorkState:NOWORKSTATE];
             }
         }
@@ -696,9 +737,10 @@
     
     [destTile addStructure:TOWER];
     
+    Tower* tower = (Tower*)[destTile getStructure];
+    villageTile.village.woodPile -= tower.buyCostWood;
     if ([self isMyTurn]) {
-        Tower* tower = (Tower*)[destTile getStructure];
-        villageTile.village.woodPile -= tower.buyCostWood;
+        [_messageLayer sendMoveWithType:BUILDTOWER tile:villageTile destTile:destTile];
     }
 }
 
@@ -706,6 +748,9 @@
 {
     [tile removeAllStructures];
     [tile addStructure:BAUM];
+    if ([_messageLayer isMyTurn]) {
+        [_messageLayer sendMoveWithType:GROWBAUM tile:tile destTile:nil];
+    }
 }
 
 - (void)updateHud:(Tile*)tile
@@ -716,7 +761,7 @@
 //call your phases
 - (void)beginTurnPhases
 {
-    //[self treeGrowthPhase];
+    [self treeGrowthPhase];
     [self tombstonePhase];
     [self incomePhase];
     [self paymentPhase];
