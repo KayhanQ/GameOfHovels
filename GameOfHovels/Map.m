@@ -627,30 +627,41 @@
 
 - (void)buildMeadow:(Tile*)tile
 {
-    Unit* u = tile.unit;
-    if (u.workState == NOWORKSTATE) {
-        [u setWorkState:BUILDINGMEADOW];
-    }
-    else if (u.workState == BUILDINGMEADOW) {
-        if (u.workstateCompleted) {
-            [tile addStructure:MEADOW];
-            [u setWorkState:NOWORKSTATE];
+    if ([self isMyTurn]) {
+        Unit* u = tile.unit;
+        if (u.workState == NOWORKSTATE) {
+            [u setWorkState:BUILDINGMEADOW];
         }
+        else if (u.workState == BUILDINGMEADOW) {
+            if (u.workstateCompleted) {
+                [tile addStructure:MEADOW];
+                [u setWorkState:NOWORKSTATE];
+            }
+        }
+    }
+    else {
+        [tile addStructure:MEADOW];
     }
 }
 
 - (void)buildRoad:(Tile *)tile
 {
-    Unit* u = tile.unit;
-    if (u.workState == NOWORKSTATE) {
-        [u setWorkState:BUILDINGROAD];
-    }
-    else if (u.workState == BUILDINGROAD) {
-        if (u.workstateCompleted) {
-            [tile addStructure:ROAD];
-            [u setWorkState:NOWORKSTATE];
+    if ([self isMyTurn]) {
+        Unit* u = tile.unit;
+        if (u.workState == NOWORKSTATE) {
+            [u setWorkState:BUILDINGROAD];
+        }
+        else if (u.workState == BUILDINGROAD) {
+            if (u.workstateCompleted) {
+                [tile addStructure:ROAD];
+                [u setWorkState:NOWORKSTATE];
+            }
         }
     }
+    else {
+        [tile addStructure:ROAD];
+    }
+
 }
 
 - (void)buildTowerFromTile:(Tile*)villageTile tile:(Tile*)destTile
