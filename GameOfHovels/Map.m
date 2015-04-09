@@ -391,7 +391,7 @@
     
     if ([self isMyTurn] && ![self isMovePossible:unitTile tile:destTile moveTypes:moveTypes]) {
         NSLog(@"move impossible");
-        [Media playSound:@"sound.caf"];
+        //[Media playSound:@"sound.caf"];
         return;
     }
 
@@ -644,6 +644,25 @@
     }
 }
 
+- (void)buildMarket:(Tile*)tile
+{
+    if ([self isMyTurn]) {
+        Unit* u = tile.unit;
+        if (u.workState == NOWORKSTATE) {
+            [u setWorkState:BUILDINGMARKET];
+        }
+        else if (u.workState == BUILDINGMARKET) {
+            if (u.workstateCompleted) {
+                [tile addStructure:MARKET];
+                [u setWorkState:NOWORKSTATE];
+            }
+        }
+    }
+    else {
+        [tile addStructure:MARKET];
+    }
+}
+
 - (void)buildRoad:(Tile *)tile
 {
     if ([self isMyTurn]) {
@@ -738,6 +757,11 @@
                     vTile.village.goldPile += 2;
                     break;
                 }
+                case MARKET:
+                {
+                    vTile.village.goldPile += 4;
+                    break;
+                }
                 default:
                 {
                     vTile.village.goldPile += 1;
@@ -793,6 +817,11 @@
                         case BUILDINGMEADOW:
                         {
                             [self buildMeadow:t];
+                            break;
+                        }
+                        case BUILDINGMARKET:
+                        {
+                            [self buildMarket:t];
                             break;
                         }
                         case BUILDINGROAD:
