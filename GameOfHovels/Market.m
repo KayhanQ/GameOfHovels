@@ -23,9 +23,9 @@
         //custom code here
         
         
-        SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"meadow.png"];
+        SPTexture* baseTexture = [SPTexture textureWithContentsOfFile:@"market.png"];
         SPImage* baseImage = [SPImage imageWithTexture:baseTexture];
-        baseImage.scale = 0.35;
+        baseImage.scale = 0.25;
         
         [self addChild:baseImage];
         
