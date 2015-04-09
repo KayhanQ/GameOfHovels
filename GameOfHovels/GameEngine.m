@@ -81,11 +81,9 @@
     [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
-    BOOL hasMusic = true;
+    BOOL hasMusic = false;
     if (hasMusic) {
         SPSound* sound = [[SPSound alloc] initWithContentsOfFile:@"sound3.caf"];
-        //SPSound *sound = [SPSound soundWithContentsOfFile:@"sound.caf"];
-        // create sound channel
         _channel = [sound createChannel];
         _channel.volume = 0.6f;
         _channel.loop = true;
@@ -121,12 +119,9 @@
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
     
-    [self addTurnEventListeners];
     [self enableScroll];
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
     [self beginTurnWithPlayer:_currentPlayer];
-
-    
 }
 
 - (void)initializeMap
@@ -159,7 +154,6 @@
     [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
 }
 
-//unused
 - (void)removeTurnEventListeners
 {
     [self removeEventListener:@selector(tileTouched:) atObject:self forType:EVENT_TYPE_TILE_TOUCHED];
@@ -198,6 +192,7 @@
 - (void)completeExitFromGame
 {
     NSLog(@"Exiting");
+    [_channel stop];
     //[Sparrow.currentController dismissViewControllerAnimated:true completion:nil];
 }
 
@@ -317,9 +312,15 @@
             [_map buildRoad:tile];
             break;
         }
+        case BUILDMARKET:
+        {
+            [_map buildMarket:tile];
+            break;
+        }
         case UPGRADEUNIT:
         {
             [_map upgradeUnitWithTile:tile unitType:tile.unit.uType+1];
+            break;
         }
         case MOVEUNIT:
         {
@@ -361,7 +362,6 @@
             [_map buildTowerFromTile:tile tile:destTile];
             break;
         }
-
         default:
             break;
     }
@@ -450,6 +450,11 @@
             [_map buildMeadow:tile];
             break;
         }
+        case BUILDMARKET:
+        {
+            [_map buildMarket:tile];
+            break;
+        }
         case BUILDROAD:
         {
             [_map buildRoad:tile];
@@ -458,6 +463,7 @@
         case UPGRADEUNIT:
         {
             [_map upgradeUnitWithTile:tile unitType:tile.unit.uType+1];
+            break;
         }
         default:
             break;
@@ -488,10 +494,6 @@
 
 - (void)tileTouched:(TileTouchedEvent*) event
 {
-    //return if it's not your turn
-    if (_mePlayer != _currentPlayer) {
-        return;
-    }
     NSLog(@"Tile touched");
     Tile* tile = event.tile;
     Tile* selectedTile = _currentPlayerAction.selectedTile;
