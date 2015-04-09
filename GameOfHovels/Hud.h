@@ -24,5 +24,15 @@
 - (void)updateUITool;
 
 - (void)quitTouched:(SPTouchEvent*) event;
+- (void)endTurn;
+- (void)beginTurn;
+
+-(SPTexture*) getIcon:(Tile*)tile button:(SPButton*)button;
+- (void)initUnitFields;
+-(void) initVillageFields;
+-(void) initTextures;
+-(void) initButtons;
+-(void) initUITool;
+
 
 @end

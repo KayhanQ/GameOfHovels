@@ -12,6 +12,7 @@
 #import "Tile.h"
 #import "GameEngine.h"
 #import "Map.h"
+#import "GlobalFlags.h"
 
 @implementation MessageLayer
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -75,19 +76,22 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	})];
 }
 
--(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber{
-	NSLog(@"[createAndAddPlayer");
-	GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
-	[p setPlayerId: playerId];
-	[p setRandomNumber:randomNumber];
-	if([_players count] == 0){
-		[_players addObject:p];
-	}
-	for(int i = 0; i < [_players count]; i++){
-		if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
-			[_players insertObject:p atIndex:i];
-		}
-	}
+//This method was breaking the game sometimes
+-(void)createAndAddPlayer:(NSString*)playerId randomNumber:(int)randomNumber {
+    if ([GlobalFlags isGameWithGC]) {
+        NSLog(@"[createAndAddPlayer");
+        GamePlayer* p = [[GamePlayer alloc] initWithNumber:[_players count]];
+        [p setPlayerId: playerId];
+        [p setRandomNumber:randomNumber];
+        if([_players count] == 0){
+            [_players addObject:p];
+        }
+        for(int i = 0; i < [_players count]; i++){
+            if(randomNumber < [[_players objectAtIndex:i] randomNumber]){
+                [_players insertObject:p atIndex:i];
+            }
+        }
+    }
 }
 
 - (BOOL)allRandomNumbersAreReceived
@@ -265,12 +269,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     [_players addObject:p3];
 }
 
-//TODO
-- (GamePlayer*)getMePlayer
-{
-    return [_players objectAtIndex:0];
-}
-
 /*- (void)makePlayersGC
 {
 	for (int i = 0; i < [_players count]; i++)
@@ -298,6 +296,17 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     return [_players objectAtIndex:0];
 }
 
+//TODO
+- (GamePlayer*)getMePlayer
+{
+    return [_players objectAtIndex:0];
+}
+
+- (BOOL)isMyTurn
+{
+    if ([self getCurrentPlayer] == [self getMePlayer]) return true;
+    return false;
+}
 
 - (void)sendRandomNumber {
 	NSLog(@"sendRandomNumber");

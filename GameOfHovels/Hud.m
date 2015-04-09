@@ -28,14 +28,17 @@
 
     SPButton* _saveGameButton;
 
+    SPSprite* _uiElementsSprite;
+    SPButton*_exitButton;
+
     NSMutableArray * _listOfVillages;
     
     Tile * _villageTile1, *_villageTile2;
     SPTextField* _woodField1, *_goldField1,*_healthField1, *_homeCoordField1, *_woodField2, *_goldField2, *_healthField2, *_homeCoordField2;
 
     SPButton* _nextVillageButton, *_quitButton;
-
-
+    
+    
     SPImage* _village1Icon, *_village2Icon;
     
     int village1Index, village2Index;
@@ -68,6 +71,7 @@
     float _width;
 }
 
+
 @synthesize player = _player;
 
 -(id)initWithMap:(Map *)map world:(SPSprite*)world
@@ -81,20 +85,7 @@
         
         sprite = [SPSprite sprite];//background
         
-        _center.y = _world.height/2;
-        _center.x = _world.width/2;
-        
-        _listOfVillages = [map getTilesWithMyVillages];
-        village1Index = 0;
-        village2Index = 1;
-        
-        _messageLayer = [MessageLayer sharedMessageLayer];
 
-        _height = 380;
-        _width = 130;
-
-        _yOffsetMinor = 3;
-    
         
         [self initButtons];
         [self initVillageFields];
@@ -105,8 +96,8 @@
         
         _middleX = _width/2;
 
-         }
 
+         }
     return self;
 }
 
@@ -125,7 +116,6 @@
     SPTextField* t = [SPTextField textFieldWithWidth:_width height:15 text:@""];
     t.x = _middleX;
     t.fontSize = 12;
-
     [SparrowHelper centerPivot:t];
     //[_uiElementsSprite addChild:t];
     return t;
@@ -133,7 +123,6 @@
 
 - (void)update:(Tile *)tile
 {
-
     _currentTile = tile;
     Village* v = tile.village;
     
@@ -142,7 +131,6 @@
     
     NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
     _goldField.text = goldString;
-
     
     if(tile.hasUnit){ // put unit stats here: unit type, unit upkeep, owning village
         
@@ -158,6 +146,61 @@
         Tile * villageTile = [_map getVillageTile: tile.village];
        // NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
        // _ownerField.text = ownerFieldString;
+        
+        NSString* homeCoordString = [NSString stringWithFormat:@"Home Coord: %.01f, %.01f",villageTile.x/54, villageTile.y/40];
+        _homeCoordField.text = homeCoordString;
+        
+        NSString* unitNameString = [NSString stringWithFormat:@"Unit Type: %u", unit.uType];
+        _unitNameField.text = unitNameString;
+        
+        NSString* upkeepString = [NSString stringWithFormat:@"Upkeep: %d", unit.upkeepCost];
+        _upkeepField.text = upkeepString;
+        
+        
+        
+    }
+    
+    else if(tile.hasVillage){ //put village stats here
+        
+        Village* v = tile.village;
+        
+        int tCount = [_map getTilesforVillage:v].count;
+        NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Numb Tiles: %d", tCount];
+        _numTilesInRegion.text = _numTilesInRegionString;
+        
+        
+        _unitNameField.text = @"";
+        _upkeepField.text = @"";
+        _homeCoordField.text = @"";
+        
+        //NSString* homeCoordString = [NSString stringWithFormat:@"Coordinates: %.01f, %.01f", tile.x/54, tile.y/40];
+        //_homeCoordField.text = homeCoordString;
+        
+        NSString* woodString = [NSString stringWithFormat:@"Wood: %d", v.woodPile];
+        _woodField.text = woodString;
+        
+        NSString* goldString = [NSString stringWithFormat:@"Gold: %d", v.goldPile];
+        _goldField.text = goldString;
+        
+        NSString* healthString = [NSString stringWithFormat:@"Health: %d", v.health];
+        _healthField.text = healthString;
+        
+    }
+
+    if(tile.hasUnit){ // put unit stats here: unit type, unit upkeep, owning village
+        
+        NSLog(@"Has unit");
+        
+        Unit* unit = [tile getUnit];
+        
+        _woodField.text = @"";
+        _goldField.text = @"";
+        _healthField.text = @"";
+        _numTilesInRegion.text = @"";
+        
+        Tile * villageTile = [_map getVillageTile: tile.village];
+        // NSString* ownerFieldString = [NSString stringWithFormat:@"Owned By Player: %d", tile.pColor];
+        // _ownerField.text = ownerFieldString;
         
         NSString* homeCoordString = [NSString stringWithFormat:@"Home Coord: %.01f, %.01f",villageTile.x/54, villageTile.y/40];
         _homeCoordField.text = homeCoordString;
@@ -252,6 +295,22 @@
     [self updateUITool];
 }
 
+- (void)endTurn
+{
+    _saveGameButton.enabled = false;
+    _saveGameButton.touchable = false;
+    _endTurnButton.enabled = false;
+    _endTurnButton.touchable = false;
+}
+
+- (void)beginTurn
+{
+    _saveGameButton.enabled = true;
+    _saveGameButton.touchable = true;
+    _endTurnButton.enabled = true;
+    _endTurnButton.touchable = true;
+}
+
 
 - (void)saveGameTouched:(SPTouchEvent*) event
 {
@@ -262,7 +321,6 @@
         [self dispatchEvent:event];
     }
 }
-
 
 - (void)leftButtonTouched:(SPTouchEvent*) event
 {
@@ -279,7 +337,7 @@
             
             village2Index = (village1Index)-1 % [_listOfVillages count];
             if(village2Index < 0) village2Index += [_listOfVillages count];
-                
+
             NSLog(@"The first village index: %d. The second: %d, total: %d", village1Index, village2Index, [_listOfVillages count] );
             _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
             _villageTile2 =[_listOfVillages objectAtIndex:village2Index];
@@ -291,28 +349,27 @@
 
 - (void)rightButtonTouched:(SPTouchEvent*) event
 {
-    
      [self updateUITool];
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if(touch){
-    NSLog(@"rightButton Touched");
-    
-        if([_listOfVillages count] > 0){
+        NSLog(@"rightButton Touched");
         
-    village1Index = abs((village1Index +1) % [_listOfVillages count]);
-    village2Index= abs((village1Index +1) % [_listOfVillages count]);
-    
-   NSLog(@"The first village index: %d. The second: %d, total: %d", village1Index, village2Index, [_listOfVillages count] );
-    _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
-    _villageTile2 =[_listOfVillages objectAtIndex:village2Index];
-    
-    [self updateUITool];
+        if([_listOfVillages count] > 0){
+            
+            village1Index = abs((village1Index +1) % [_listOfVillages count]);
+            village2Index= abs((village1Index +1) % [_listOfVillages count]);
+            
+            NSLog(@"The first village index: %d. The second: %d, total: %d", village1Index, village2Index, [_listOfVillages count] );
+            _villageTile1 = [_listOfVillages objectAtIndex:village1Index];
+            _villageTile2 =[_listOfVillages objectAtIndex:village2Index];
+            
+            [self updateUITool];
         }
     }
 }
 
--(SPTexture*) getIcon:(Tile*)tile button:(SPButton*)button {
-    
+-(SPTexture*)getIcon:(Tile*)tile button:(SPButton*)button
+{
     int buildingType;
     
     buildingType = [tile getVillageType];
@@ -339,7 +396,6 @@
             
         default:
             returnedTexture = _destroyedTexture;
-             NSLog(@"SOMETHING WENT WRONG");
             break;
     }
     
@@ -368,7 +424,6 @@
         
     NSString* homeCoordString1 = [NSString stringWithFormat:@"Coordinates: %.01f, %.01f", _villageTile1.x/54, _villageTile1.y/40];
     _homeCoordField1.text = homeCoordString1;
-    
         
         if([sprite containsChild:_village2] && [_listOfVillages count] > 1){
             //Check to see if village2 even exists
@@ -398,12 +453,11 @@
         
         [sprite removeChild:_village1];
     }
-    
-
 }
 
 
-- (void)initUnitFields{
+- (void)initUnitFields
+{
     //Unit Info--------- ADD TO METHOD
     _upkeepField = [self newTextField];
     _upkeepField.y = _woodField.y + _woodField.height + _yOffsetMinor;
@@ -424,7 +478,8 @@
     
 }
 
--(void) initVillageFields{
+-(void) initVillageFields
+{
     //Village Info------- ADD TO METHOD
     _woodField = [self newTextField];
     _woodField.y = 290;
@@ -443,18 +498,19 @@
     [self addChild:_numTilesInRegion];
 }
 
--(void) initTextures{
+-(void) initTextures
+{
     
     _hovelTexture = [SPTexture textureWithContentsOfFile:@"hovel.png"];
     _townTexture = [SPTexture textureWithContentsOfFile:@"town.png"];
     _fortTexture =[SPTexture textureWithContentsOfFile:@"fort.png"];
     _castleTexture =[SPTexture textureWithContentsOfFile:@"castle.png"];
     _destroyedTexture = [SPTexture textureWithContentsOfFile:@"tombstone.png"];
-
     
 }
 
--(void) initButtons{
+-(void) initButtons
+{
     
     
     SPImage* background = [SPImage imageWithContentsOfFile:@"hudpanel.png"];
@@ -463,24 +519,11 @@
     
     [self addChild:background];
     
-     //container for ui elements
-    
-
-    _middleX = _width/2;
+    //_middleX = _width/2;
     SPTexture* endTurnTexture = [SPTexture textureWithContentsOfFile:@"endturn.png"];
     SPTexture* buttonTexture = [SPTexture textureWithContentsOfFile:@"blankButton.png"];
     
-    
-    /* Settings Button
-    _settingsButton = [SPButton buttonWithUpState:buttonTexture];
-    _settingsButton.y = 0;
-    _settingsButton.height = 20; //Just Some magic number
-    _settingsButton.width = background.width - 10;
-    [sprite addChild:_settingsButton];
-*/
-    
-    
-    _village1 = [SPButton buttonWithUpState:buttonTexture];
+        _village1 = [SPButton buttonWithUpState:buttonTexture];
     _village1.x = 7;
     _village1.height = 100; //Just Some magic number
     _village1.width = background.width - 10;
@@ -494,21 +537,21 @@
     //
     _village1.y = 20;
     
-    /*
-    village1Picture = [SPImage imageWithContentsOfFile:@"fort.png"];
-    village1Picture.height = 40;
-    village1Picture.width = 40;
-    [_village1 addChild:village1Picture];
-    */
+/*
+     village1Picture = [SPImage imageWithContentsOfFile:@"fort.png"];
+     village1Picture.height = 40;
+     village1Picture.width = 40;
+     [_village1 addChild:village1Picture];
+     */
     
     [sprite addChild:_village1];
     
     [_village1 addEventListener:@selector(village1Touched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-
- 
+    
+    
     _village2.y = _village1.y +90;
     [sprite addChild:_village2];
-     [_village2 addEventListener:@selector(village2Touched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    [_village2 addEventListener:@selector(village2Touched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
     _leftButton = [SPButton buttonWithUpState:buttonTexture];
     _leftButton.x = 7;
@@ -561,7 +604,7 @@
     SPRectangle * bounds= [SPRectangle rectangleWithX:-31 y:-8 width:_saveGameButton.width height:_saveGameButton.height];
     
     _saveGameButton.textBounds = bounds;
-   //[SparrowHelper centerPivot:_saveGameButton];
+    //[SparrowHelper centerPivot:_saveGameButton];
     _saveGameButton.y = 1;
     _saveGameButton.x = 5;
     
@@ -632,15 +675,15 @@
         _village2Icon.x = 10;
         _village2Icon.y = 25;
         [_village2 addChild:_village2Icon];
-  
+        
         _woodField2 = [self newTextField];
         _woodField2.y = _woodField1.y;
         _woodField2.x = _woodField1.x;
-         _woodField2.text = @"Wood: ";
+        _woodField2.text = @"Wood: ";
         [_village2 addChild:_woodField2];
         
         _goldField2 = [self newTextField];
-         _goldField2.text = @"Gold: ";
+        _goldField2.text = @"Gold: ";
         _goldField2.y = _woodField2.height + _woodField2.y;
         _goldField2.x = _goldField1.x;
         [_village2 addChild:_goldField2];
@@ -696,8 +739,7 @@
         _homeCoordField1.x = 60;
         _homeCoordField1.fontSize = 10;
         [_village1 addChild:_homeCoordField2];
-   
-        
+    
     }
     
     else if([_listOfVillages count] ==0){
@@ -722,15 +764,14 @@
 
 -(void)village2Touched:(SPTouchEvent*) event
 {
-    
-    
+
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if (touch)
     {
-    
-    SPPoint* localPoint = [SPPoint pointWithX:_villageTile2.x y:_villageTile2.y];
-    TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
-    [self dispatchEvent:event];
+        
+        SPPoint* localPoint = [SPPoint pointWithX:_villageTile2.x y:_villageTile2.y];
+        TranslateWorldEvent* event = [[TranslateWorldEvent alloc] initWithType:EVENT_TYPE_TRANSLATE_WORLD point:localPoint];
+        [self dispatchEvent:event];
     }
 }
 
@@ -739,7 +780,9 @@
     SPTouch *touch = [[event touchesWithTarget:self andPhase:SPTouchPhaseEnded] anyObject];
     if (touch)
     {
-        NSLog(@"Quit Touched");
+        NSLog(@"Exit Touched");
+        GHEvent *event = [[GHEvent alloc] initWithType:EVENT_TYPE_EXIT_GAME];
+        [self dispatchEvent:event];
     }
 }
 

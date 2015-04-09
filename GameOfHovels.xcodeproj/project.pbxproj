@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C64E64FD1AD626A500AB9BC3 /* sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = C64E64FB1AD626A400AB9BC3 /* sound.caf */; };
+		C64E64FE1AD626A500AB9BC3 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = C64E64FC1AD626A500AB9BC3 /* sound3.caf */; };
+		C64E65001AD626C900AB9BC3 /* blankButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C64E64FF1AD626C900AB9BC3 /* blankButton.png */; };
+		C64E65021AD626D200AB9BC3 /* hudpanel.png in Resources */ = {isa = PBXBuildFile; fileRef = C64E65011AD626D200AB9BC3 /* hudpanel.png */; };
 		C6527ED21ABB551A0057F994 /* Sparrow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6527ED11ABB551A0057F994 /* Sparrow.framework */; };
 		C69BA93D1ABB721300F33BFC /* Sea.m in Sources */ = {isa = PBXBuildFile; fileRef = C69BA93C1ABB721300F33BFC /* Sea.m */; };
 		C6AEE74E1AD0750F008C9C9E /* Cannon.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AEE74D1AD0750F008C9C9E /* Cannon.m */; };
@@ -165,6 +169,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C64E64FB1AD626A400AB9BC3 /* sound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound.caf; sourceTree = "<group>"; };
+		C64E64FC1AD626A500AB9BC3 /* sound3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.caf; sourceTree = "<group>"; };
+		C64E64FF1AD626C900AB9BC3 /* blankButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankButton.png; sourceTree = "<group>"; };
+		C64E65011AD626D200AB9BC3 /* hudpanel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hudpanel.png; sourceTree = "<group>"; };
 		C6527ED11ABB551A0057F994 /* Sparrow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparrow.framework; path = "../../../../Downloads/Sparrow-Framework-v2.1/sparrow/bin/Sparrow.framework"; sourceTree = "<group>"; };
 		C69BA93B1ABB720600F33BFC /* Sea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sea.h; sourceTree = "<group>"; };
 		C69BA93C1ABB721300F33BFC /* Sea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sea.m; sourceTree = "<group>"; };
@@ -687,6 +695,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C64E64FA1AD626A400AB9BC3 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				C64E64FB1AD626A400AB9BC3 /* sound.caf */,
+				C64E64FC1AD626A500AB9BC3 /* sound3.caf */,
+			);
+			path = audio;
+			sourceTree = "<group>";
+		};
 		F38065B11A96441B009D3C56 = {
 			isa = PBXGroup;
 			children = (
@@ -893,7 +910,9 @@
 		F380662C1A964CED009D3C56 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				C64E64FF1AD626C900AB9BC3 /* blankButton.png */,
 				F380666B1A966387009D3C56 /* Hud.h */,
+				C64E65011AD626D200AB9BC3 /* hudpanel.png */,
 				F380666C1A966398009D3C56 /* Hud.m */,
 				F380662D1A964CFA009D3C56 /* ActionMenu.h */,
 				F380662E1A964CFA009D3C56 /* ActionMenu.m */,
@@ -1063,6 +1082,7 @@
 		F38066651A96515E009D3C56 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				C64E64FA1AD626A400AB9BC3 /* audio */,
 				F3D8ADF41ABB06D800920E99 /* GlobalFlags.h */,
 				F3D8ADF51ABB06D800920E99 /* GlobalFlags.m */,
 				F38065FC1A964C1A009D3C56 /* BasicSprite.h */,
@@ -2022,6 +2042,7 @@
 			files = (
 				C6AF02641AD499940022C018 /* blankButton.png in Resources */,
 				C6AF02461AD32C210022C018 /* NewGameTableViewController.xib in Resources */,
+				C64E64FE1AD626A500AB9BC3 /* sound3.caf in Resources */,
 				F38065C91A96441B009D3C56 /* Main.storyboard in Resources */,
 				F38066561A964F3B009D3C56 /* button.png in Resources */,
 				C6AF02711AD4A0A80022C018 /* cannon.xml in Resources */,
@@ -2039,9 +2060,11 @@
 				C6AF02781AD4A0A80022C018 /* soldier.png in Resources */,
 				C6AF02721AD4A0A80022C018 /* infantry.png in Resources */,
 				F38066551A964F3B009D3C56 /* tile_grass.png in Resources */,
+				C64E65001AD626C900AB9BC3 /* blankButton.png in Resources */,
 				F38066601A964F7A009D3C56 /* background.jpg in Resources */,
 				F3D8ADFA1ABB072E00920E99 /* tombstone.png in Resources */,
 				F38066571A964F3B009D3C56 /* archer1.png in Resources */,
+				C64E65021AD626D200AB9BC3 /* hudpanel.png in Resources */,
 				F38066681A9657DB009D3C56 /* tileset.png in Resources */,
 				F3A283601AC2261A00AE8BB5 /* archer.xml in Resources */,
 				C6AF02741AD4A0A80022C018 /* knight.png in Resources */,
@@ -2056,6 +2079,7 @@
 				F380665E1A964F7A009D3C56 /* atlas.png in Resources */,
 				F38066411A964F30009D3C56 /* sound.caf in Resources */,
 				F38066691A9657DB009D3C56 /* tileset.xml in Resources */,
+				C64E64FD1AD626A500AB9BC3 /* sound.caf in Resources */,
 				F38066591A964F3B009D3C56 /* hovel.png in Resources */,
 				C6AF02601AD4996C0022C018 /* hudpanel.png in Resources */,
 				F38065CB1A96441B009D3C56 /* Images.xcassets in Resources */,

@@ -218,7 +218,7 @@
         Tile* vTile = [connectedTiles objectAtIndex:arc4random() % connectedTiles.count];
         [vTile addVillage:HOVEL];
         vTile.village.player = p;
-        vTile.village.goldPile = 11;
+        vTile.village.goldPile = 100;
         vTile.village.woodPile = 100;
         for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
     }
@@ -664,8 +664,6 @@
     }
 }
 
-
-
 //makes a region neutral by removing units and village pointers and towers
 - (void)makeRegionNeutral:(NSMutableArray*)region
 {
@@ -740,9 +738,9 @@
     [self incomePhase];
     [self paymentPhase];
     [self buildPhase];
-    
-    
 }
+
+//send message to players about tree growing
 - (void)treeGrowthPhase
 {
     NSLog(@"Tree Growth Phase");
@@ -775,8 +773,6 @@
         }
     }
 }
-
-
 
 - (void)incomePhase
 {
@@ -1131,7 +1127,7 @@
 
 - (BOOL)isMyTurn
 {
-    return _gameEngine.currentPlayer == _gameEngine.mePlayer;
+    return [_messageLayer isMyTurn];
 }
 
 @end
