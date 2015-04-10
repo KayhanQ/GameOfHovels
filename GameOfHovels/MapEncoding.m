@@ -154,6 +154,7 @@
 {
     NSString* encodingString = [[NSString alloc] initWithData:encoding encoding:NSUTF8StringEncoding];
     NSArray *linesArray = [encodingString componentsSeparatedByString: @"\n"];
+    NSLog(@"%@",encodingString);
     
     NSMutableArray* encodingArray = [NSMutableArray array];
 	

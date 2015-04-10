@@ -109,7 +109,7 @@
     [self makeBasicMap];
     
     [self setNeighbours];
-    [self refreshTeritory];
+    [self refreshTeritory];    
 }
 
 - (void)makeBasicMap
@@ -355,7 +355,6 @@
     if (![self isMyTurn]) return false;
     if (!unit.movable) return false;
     if (![unitTile neighboursContainTile:destTile]) return false;
-    if (unit.distTravelled == unit.stamina) return false;
 
     for (NSNumber* n in moveTypes) {
         enum MovesType mType = [n intValue];
@@ -484,12 +483,10 @@
         
     }
     
-    unit.distTravelled++;
     //depending on whether we are merging units or not we take different action
     if (mergingUnits) {
         [destTile.unit transferPropertiesFrom:unitTile.unit];
         [unitTile removeUnit];
-        destTile.unit.distTravelled = destTile.unit.distTravelled + unit.distTravelled;
     }
     else {
         //the last thing we do is actually move the units on the tile

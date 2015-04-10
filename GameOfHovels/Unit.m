@@ -26,8 +26,6 @@
 @synthesize strength = _strength;
 @synthesize uType = _uType;
 @synthesize movable = _movable;
-@synthesize stamina = _stamina;
-@synthesize distTravelled = _distTravelled;
 @synthesize workState = _workState;
 @synthesize workstateCompleted = _workstateCompleted;
 @synthesize upgradeCost = _upgradeCost;
@@ -38,7 +36,6 @@
     if (self=[super init]) {
         //custom code here'
         _uType = uType;
-        _distTravelled = 0;
         _movable = true;
         _workstateCompleted = false;
         _upgradeCost = 10;
@@ -51,7 +48,6 @@
                 _strength = 1;
                 _buyCostGold = 10;
                 _upkeepCost = 2;
-                _stamina = 1000;
                 break;
                 
             }
@@ -60,7 +56,6 @@
                 _strength = 2;
                 _buyCostGold = 20;
                 _upkeepCost = 6;
-                _stamina = 1000;
                 break;
             }
             case SOLDIER:
@@ -68,7 +63,6 @@
                 _strength = 3;
                 _buyCostGold = 30;
                 _upkeepCost = 18;
-                _stamina = 1000;
                 break;
             }
             case RITTER:
@@ -76,7 +70,6 @@
                 _strength = 4;
                 _buyCostGold = 40;
                 _upkeepCost = 54;
-                _stamina = 1000;
                 break;
             }
             case CANNON:
@@ -85,16 +78,12 @@
                 _buyCostWood = 12;
                 _buyCostGold = 35;
                 _upkeepCost = 5;
-                _stamina = 1;
                 break;
             }
             default:
                 break;
         }
-        
-        
-        
-        
+    
         self.touchable = false;
     }
     return self;
@@ -173,13 +162,13 @@
 
 - (void)transferPropertiesFrom:(Unit*)u
 {
-    _distTravelled += u.distTravelled;
+
 }
 
 - (void)endTurnUpdates
 {
     [self incrementWorkstate];
-    _distTravelled = 0;
+
 }
 
 @end

@@ -10,7 +10,7 @@
 #import "GameEngine.h"
 @interface LoadGameTableViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource>{
 }
-@property (strong, nonatomic) NSMutableArray* dirContents;
+@property (strong, nonatomic) NSArray* dirContents;
 @property NSArray* listOfMaps;
 
 @end

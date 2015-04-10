@@ -142,6 +142,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 -(void)checkIfAllAccepted {
 	if ([_listOfPlayersWhoAcceptedTheGame count] == [_players count]) {
 		[_gameEngine makeOKActionTouchable];
+        [_listOfPlayersWhoAcceptedTheGame removeAllObjects];
 	}
 }
 
@@ -168,11 +169,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
             case kMessageTypePlayerLost:
             {
                 MessagePlayerLost* messageLost = (MessagePlayerLost*) [data bytes];
-                int playerLostID = messageLost->playerLostID;
-                NSString* idString = [NSString stringWithFormat:@"%d",playerLostID];
-                NSLog(@"message of type player lost!"); 
-                NSLog(@"%@", idString);
-                [self setLostForPlayerWithID:idString];
+                int playerLostColor = messageLost->playerColor;
+                NSLog(@"message of type player lost!");
+                [self setLostForPlayerWithColor:playerLostColor];
                 break;
             }
 			case kMessageTypeMove:
@@ -215,15 +214,16 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     }
 }
 
-- (void) sendGameAcceptedMessage{
+- (void)sendGameAcceptedMessage
+{
 	NSLog(@"send Game Accepted message");
 	MessageGameAccepted message;
 	message.message.messageType = kMessageTypeGameAccepted;
 	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameAccepted)];
-	[self sendData:data];
-	if(! [_listOfPlayersWhoAcceptedTheGame containsObject:_mePlayer.playerId]){
+	if(![_listOfPlayersWhoAcceptedTheGame containsObject:_mePlayer.playerId]){
 		[_listOfPlayersWhoAcceptedTheGame addObject:_mePlayer.playerId];
 	}
+    [self sendData:data];
 	[self checkIfAllAccepted];
 }
 
@@ -232,16 +232,16 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     NSLog(@"send message plaer loost");
     MessagePlayerLost message;
     message.message.messageType = kMessageTypePlayerLost;
-    message.playerLostID = [player.playerId intValue];
+    message.playerColor = player.pColor;
     NSData *data = [NSData dataWithBytes:&message length:sizeof(MessagePlayerLost)];
     [self sendData:data];
     
-    [self setLostForPlayerWithID:player.playerId];
+    [self setLostForPlayerWithColor:player.pColor];
 }
 
-- (void)weHaveAWinner
+- (void)weHaveAWinner:(GamePlayer*)winner
 {
-    [_gameEngine displayWinnerAndQuit:[_players objectAtIndex:0]];
+    [_gameEngine displayWinnerAndQuit:winner];
 }
 
 - (void)sendEndTurnMessage
@@ -343,24 +343,37 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[self sendData:data];
 }
 
-- (void)setLostForPlayerWithID:(NSString*)playerID
+- (int)numPlayersLost
+{
+    int numberPlayersLost = 0;
+    for (GamePlayer* player in _players) {
+        if ([player hasLost]) numberPlayersLost++;
+    }
+    return numberPlayersLost;
+}
+
+- (void)setLostForPlayerWithColor:(int)playerColor
 {
     for (GamePlayer* player in _players) {
-        if ([player.playerId isEqualToString:playerID]) {
+        if (player.pColor == playerColor) {
             player.hasLost = true;
             if (player == _mePlayer) {
-                [_gameEngine displayYouHaveLost];
+                if ([self numPlayersLost]<2) {
+                    [_gameEngine displayYouHaveLost];
+                }
             }
             break;
         }
     }
     
+    GamePlayer* winner;
     int numberPlayersLeft = _players.count;
     for (GamePlayer* player in _players) {
         if ([player hasLost]) numberPlayersLeft--;
+        else winner = player;
     }
     if (numberPlayersLeft == 1) {
-        [self weHaveAWinner];
+        [self weHaveAWinner:winner];
     }
 }
 
@@ -397,6 +410,10 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[self sendData:data];
 }
 
+- (void)resetPlayerFlags
+{
+    for (GamePlayer* player in _players) player.hasLost = false;
+}
 
 - (void)setLastError:(NSError *)error
 {

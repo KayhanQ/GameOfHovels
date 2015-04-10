@@ -32,10 +32,10 @@
 		dirContents = [fm contentsOfDirectoryAtPath:path error:nil];
 	}
 	
-	NSString * resourcePath = [[NSBundle mainBundle] resourcePath];
-	NSString * mapsPath = [resourcePath stringByAppendingPathComponent:@"maps"];
-	NSError * error;
-	_listOfMaps = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsPath error:&error];
+//	NSString * resourcePath = [[NSBundle mainBundle] resourcePath];
+//	NSString * mapsPath = [resourcePath stringByAppendingPathComponent:@"maps"];
+//	NSError * error;
+//	_listOfMaps = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsPath error:&error];
 
 
 	
@@ -61,7 +61,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 	NSLog(@"what up: %d",[dirContents count]);
-    return [dirContents count] + [_listOfMaps count];
+    return [dirContents count];
 }
 
 
@@ -77,9 +77,9 @@
 	if(indexPath.row < [dirContents count]){
 		cell.textLabel.text = [self.dirContents objectAtIndex:indexPath.row];
 	}
-	else{
-		cell.textLabel.text = [_listOfMaps objectAtIndex:(indexPath.row -[dirContents count])];
-	}
+//	else{
+//		cell.textLabel.text = [_listOfMaps objectAtIndex:(indexPath.row -[dirContents count])];
+//	}
 	
     return cell;
 }
@@ -104,13 +104,6 @@
 	ViewController* vc = [[ViewController alloc]init];
     [MessageLayer sharedMessageLayer].areHost = true;
 	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
-
-    // Create the game using the map we just decoded.
-	
-	
-	// write an init method in GameEngine that takes this map as input.
-	
-	//Create and present a "ViewController" with the game
 }
 
 

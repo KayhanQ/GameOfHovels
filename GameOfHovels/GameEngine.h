@@ -25,7 +25,7 @@
 - (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 - (void)playerExitedGame;
 - (void)acceptOrRejectMap;
-- (id)waitingForOtherPlayers;
+- (void)waitingForOtherPlayers;
 - (void)makeOKActionTouchable;
 - (void)displayWinnerAndQuit:(GamePlayer*)winner;
 - (void)displayYouHaveLost;

@@ -59,6 +59,7 @@
 - (void)selectTile;
 - (void)deselectTile;
 - (BOOL)canBeSelected;
+- (BOOL)isMyTile;
 - (BOOL)canHaveTree;
 - (BOOL)canHaveMeadow;
 - (BOOL)canHaveMarket;

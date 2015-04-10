@@ -92,7 +92,9 @@
 
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
-	
+    //resets the all players hasLost property to false
+    [_messageLayer resetPlayerFlags];
+    
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
@@ -109,16 +111,21 @@
 	
     _hud = [[Hud alloc] initWithMap:_map];
     [_contents addChild:_hud];
+    if ([_map getTilesWithMyVillages].count>0) [_hud update:[[_map getTilesWithMyVillages] objectAtIndex:0]];
+
     _map.hud = _hud;
 
-    
     _popupMenuSprite = [SPSprite sprite];
     [_world addChild:_popupMenuSprite];
+    
+    _world.scaleX = 0.5;
+    _world.scaleY = 0.5;
     
     [self enableScroll];
     [self addEventListener:@selector(translateScreenToTile:) atObject:self forType:EVENT_TYPE_TRANSLATE_WORLD];
     //you are always able to exit a game
     [self addEventListener:@selector(exitGame:) atObject:self forType:EVENT_TYPE_EXIT_GAME];
+    
     [self beginTurn];
 }
 
@@ -176,10 +183,11 @@
 	okAction.enabled = YES;
 }
 
--(UIAlertController*)waitingForOtherPlayers{
+- (void)waitingForOtherPlayers
+{
 	UIAlertController *alertController = [UIAlertController
 										  alertControllerWithTitle:@"Game Time!"
-										  message:@"Waiting for other players to accept your choice..."
+										  message:@"Waiting for other players to accept your map."
 										  preferredStyle:UIAlertControllerStyleAlert];
 	
 	UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc]
@@ -188,10 +196,11 @@
 	[alertController.view addSubview:loading];
 	
 	UIAlertAction *okAction = [UIAlertAction
-							   actionWithTitle:NSLocalizedString(@"Ready to Play!", @"OK action")
+							   actionWithTitle:NSLocalizedString(@"Start Game", @"OK action")
 							   style:UIAlertActionStyleDefault
 							   handler:^(UIAlertAction *action)
 							   {
+                                   _alertController = nil;
 							   }];
 	okAction.enabled = NO;
 	[alertController addAction:okAction];
@@ -199,16 +208,16 @@
 	_alertController = alertController;
 	
 	[Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
-	return alertController;
 }
 
--(void)acceptOrRejectMap{
+-(void)acceptOrRejectMap
+{
 	UIAlertController *alertController = [UIAlertController
 										  alertControllerWithTitle:@"Game Time!"
-										  message:@"Do you want to play this map?."
+										  message:@"Do you want to play this map?"
 										  preferredStyle:UIAlertControllerStyleAlert];
 	
-	UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"...no" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+	UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
 								   {
 									   
 									   [_messageLayer sendGameExitedMessage];
@@ -217,14 +226,14 @@
 	[alertController addAction:cancelAction];
 	
 	UIAlertAction *okAction = [UIAlertAction
-							   actionWithTitle:NSLocalizedString(@"YES!", @"OK action")
+							   actionWithTitle:NSLocalizedString(@"Yes", @"OK action")
 							   style:UIAlertActionStyleDefault
 							   handler:^(UIAlertAction *action)
 							   {
+                                   if (_messageLayer.listOfPlayersWhoAcceptedTheGame.count != _messageLayer.players.count) {
+                                       [self waitingForOtherPlayers];
+                                   }
 								   [_messageLayer sendGameAcceptedMessage];
-								   [[NSNotificationCenter defaultCenter] removeObserver:self
-																				   name:UITextFieldTextDidChangeNotification
-																				 object:nil];
 							   }];
 	okAction.enabled = YES;
 	[alertController addAction:okAction];
@@ -349,6 +358,9 @@
 
 - (void)displayYouHaveLost
 {
+    _hud.nextVillageButton.enabled = false;
+    _hud.nextVillageButton.touchable = false;
+    
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:@"You Lose"
                                           message:@"You have lost all your villages."
@@ -665,7 +677,7 @@
         {
             if ([tile canBeSelected]) {
                 [self selectTile:tile];
-                if ([tile hasUnit]) _currentPlayerAction.action = MOVEUNIT;
+                if ([tile hasUnit] && [tile isMyTile]) _currentPlayerAction.action = MOVEUNIT;
             }
             break;
         }

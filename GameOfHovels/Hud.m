@@ -15,6 +15,8 @@
 #import "Village.h"
 #import "Map.h"
 #import "MessageLayer.h"
+#import "GamePlayer.h"
+
 
 @implementation Hud {
     
@@ -22,13 +24,13 @@
     SPButton*_exitButton;
     SPButton* _endTurnButton;
     SPButton* _saveGameButton;
-    SPButton* _nextVillageButton;
 
     SPTextField* _woodField;
     SPTextField* _goldField;
     SPTextField* _healthField;
     SPTextField* _numTilesInRegion;
-
+    SPTextField* _colorField;
+    
     Tile* _currentTile;
     
     MessageLayer* _messageLayer;
@@ -40,6 +42,7 @@
 }
 
 @synthesize map = _map;
+@synthesize nextVillageButton = _nextVillageButton;
 
 -(id)initWithMap:(Map *)map
 {
@@ -88,6 +91,9 @@
         [_nextVillageButton addEventListener:@selector(nextVillageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
         
         
+        
+        _colorField = [self newTextField];
+        _colorField.text = @"Your Colour: ";
         
         _healthField = [self newTextField];
         _healthField.text = @"Village Health: ";
@@ -156,6 +162,28 @@
     
     NSString* healthString = [NSString stringWithFormat:@"Village Health: %d", v.health];
     _healthField.text = healthString;
+    
+    
+    NSString* colourString = @"?";
+    
+    switch (tile.village.player.pColor) {
+        case RED:
+            colourString = @"Red";
+            break;
+        case BLUE:
+            colourString = @"Blue";
+            break;
+        case GREY:
+            colourString = @"Grey";
+            break;
+        default:
+            break;
+    }
+    
+    colourString = [NSString stringWithFormat:@"Your Colour: %@", colourString];
+    if (tile.village.player == _messageLayer.mePlayer) {
+        _colorField.text = colourString;
+    }
     
     int tCount = [_map getTilesforVillage:v].count;
     NSString* _numTilesInRegionString = [NSString stringWithFormat:@"Numb Tiles: %d", tCount];

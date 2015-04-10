@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface GamePlayer : NSObject {
-    enum PlayerColor {NOCOLOR = 0, RED, BLUE, ORANGE, GREY};
+    enum PlayerColor {NOCOLOR = 0, RED, BLUE, GREY, ORANGE};
 }
 
 @property (nonatomic) enum PlayerColor pColor;

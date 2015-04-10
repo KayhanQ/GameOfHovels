@@ -32,8 +32,6 @@
 @property (nonatomic, readonly) int upkeepCost;
 @property (nonatomic, readonly) int upgradeCost;
 @property (nonatomic) BOOL movable;
-@property (nonatomic, readonly) int stamina;
-@property (nonatomic) int distTravelled;
 
 @property (nonatomic, readonly) enum UnitType uType;
 @property (nonatomic) enum WorkState workState;

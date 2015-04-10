@@ -17,6 +17,7 @@
 }
 
 @property (nonatomic, readonly, weak) Map* map;
+@property (nonatomic)SPButton* nextVillageButton;
 
 - (id)initWithMap:(Map*)map;
 - (void)update:(Tile*)tile;

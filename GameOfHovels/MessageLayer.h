@@ -66,7 +66,7 @@ typedef struct {
 
 typedef struct {
     Message message;
-    int playerLostID;
+    int playerColor;
 } MessagePlayerLost;
 
 typedef struct {
@@ -105,6 +105,7 @@ typedef enum {
 - (void)sendGameExitedMessage;
 - (void)sendGameAcceptedMessage;
 - (void)sendMessagePlayerLost:(GamePlayer*)player;
+- (void)resetPlayerFlags;
 
 @property (nonatomic) NSMutableArray* listOfPlayersWhoAcceptedTheGame;
 @property (nonatomic) GamePlayer* mePlayer;
