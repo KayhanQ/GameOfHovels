@@ -27,12 +27,17 @@ typedef enum {
     kMessageTypeGameState,
 	kMessageTypeGameOver,
     kMessageTypeGameExited,
-    kMessageTypeTurnEnded
+    kMessageTypeTurnEnded,
+	kMessageTypeGameAccepted
 } MessageType;
 
 typedef struct {
 	MessageType messageType;
 } Message;
+
+typedef struct {
+	Message message;
+} MessageGameAccepted;
 
 typedef struct {
 	Message message;
@@ -71,9 +76,7 @@ typedef enum {
 
 typedef enum {
 	kGameStateWaitingForMatch = 0,
-	kGameStateWaitingForRandomNumber,
 	kGameStateWaitingForStart,
-	kGameStateActive,
 	kGameStateDone
 } GameState;
 
@@ -94,14 +97,16 @@ typedef enum {
 - (void)reorderColorsOfPlayers;
 - (void)sendEndTurnMessage;
 - (void)sendGameExitedMessage;
+- (void)sendGameAcceptedMessage;
 
+@property (nonatomic) NSMutableArray* listOfPlayersWhoAcceptedTheGame;
 @property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;
 @property BOOL areHost;
 @property GameEngine* gameEngine;
 @property NSMutableArray *players;
 @property (nonatomic, strong) GameNavigationController* nav;
-@property BOOL isPlayer1, receivedAllRandomNumbers, receivedRandom, matchHasStarted, enableGameCenter, matchStarted;
+@property BOOL isPlayer1, receivedAllRandomNumbers, receivedRandom, matchHasStarted, enableGameCenter;
 @property GameState gameState;
 @property uint32_t ourRandom;
 @property (nonatomic, readonly) UIViewController *authenticationViewController;

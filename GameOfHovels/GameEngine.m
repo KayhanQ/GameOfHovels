@@ -146,7 +146,12 @@
     if ([MessageLayer sharedMessageLayer].areHost) {
         [MessageLayer sharedMessageLayer].mapData = [mapEncoder encodeMap:_map];
         [[MessageLayer sharedMessageLayer] sendData:[MessageLayer sharedMessageLayer].mapData];
+		[self waitingForOtherPlayers];
+		[_messageLayer sendGameAcceptedMessage];
     }
+	else{
+		[self acceptOrRejectMap];
+	}
 }
 
 
@@ -167,6 +172,71 @@
     [self removeEventListener:@selector(endTurn:) atObject:self forType:EVENT_TYPE_TURN_ENDED];
     [self removeEventListener:@selector(saveGame:) atObject:self forType:EVENT_TYPE_SAVE_GAME];
 }
+
+-(void)makeOKActionTouchable
+{
+	UIAlertAction* okAction = _alertController.actions.firstObject;
+	okAction.enabled = YES;
+}
+
+-(UIAlertController*)waitingForOtherPlayers{
+	UIAlertController *alertController = [UIAlertController
+										  alertControllerWithTitle:@"Game Time!"
+										  message:@"Waiting for other players to accept your choice..."
+										  preferredStyle:UIAlertControllerStyleAlert];
+	
+	UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc]
+										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+	loading.frame=CGRectMake(150, 150, 16, 16);
+	[alertController.view addSubview:loading];
+	
+	UIAlertAction *okAction = [UIAlertAction
+							   actionWithTitle:NSLocalizedString(@"Ready to Play!", @"OK action")
+							   style:UIAlertActionStyleDefault
+							   handler:^(UIAlertAction *action)
+							   {
+							   }];
+	okAction.enabled = NO;
+	[alertController addAction:okAction];
+	
+	_alertController = alertController;
+	
+	[Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+	return alertController;
+}
+
+-(void)acceptOrRejectMap{
+	UIAlertController *alertController = [UIAlertController
+										  alertControllerWithTitle:@"Game Time!"
+										  message:@"Do you want to play this map?."
+										  preferredStyle:UIAlertControllerStyleAlert];
+	
+	UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"...no" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+								   {
+									   
+									   [_messageLayer sendGameExitedMessage];
+									   [self completeExitFromGame];
+								   }];
+	[alertController addAction:cancelAction];
+	
+	UIAlertAction *okAction = [UIAlertAction
+							   actionWithTitle:NSLocalizedString(@"YES!", @"OK action")
+							   style:UIAlertActionStyleDefault
+							   handler:^(UIAlertAction *action)
+							   {
+								   [_messageLayer sendGameAcceptedMessage];
+								   [[NSNotificationCenter defaultCenter] removeObserver:self
+																				   name:UITextFieldTextDidChangeNotification
+																				 object:nil];
+							   }];
+	okAction.enabled = YES;
+	[alertController addAction:okAction];
+	
+	_alertController = alertController;
+	
+	[Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+}
+
 
 - (void)exitGame:(GHEvent*)event
 {

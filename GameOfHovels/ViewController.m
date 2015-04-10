@@ -45,52 +45,6 @@
     [_window makeKeyAndVisible];
 }
 
--(void)waitingForOtherPlayers{
-	UIAlertController *alertController = [UIAlertController
-										  alertControllerWithTitle:@"Game Time!"
-										  message:@"Waiting for other players to accept your choice..."
-										  preferredStyle:UIAlertControllerStyleAlert];
-	
-	UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc]
-										initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-	loading.frame=CGRectMake(150, 150, 16, 16);
-	[alertController.view addSubview:loading];
-	
-	_alertController = alertController;
-	
-	[Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
-
-}
--(void)acceptOrRejectMap{
-	UIAlertController *alertController = [UIAlertController
-										  alertControllerWithTitle:@"Game Time!"
-										  message:@"Do you want to play this map?."
-										  preferredStyle:UIAlertControllerStyleAlert];
-	
-	UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"...no" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
-								   {
-									   [self presentingViewController];
-								   }];
-	[alertController addAction:cancelAction];
-	
-	UIAlertAction *okAction = [UIAlertAction
-							   actionWithTitle:NSLocalizedString(@"YES YES YES YES", @"OK action")
-							   style:UIAlertActionStyleDefault
-							   handler:^(UIAlertAction *action)
-							   {
-								   [[NSNotificationCenter defaultCenter] removeObserver:self
-																				   name:UITextFieldTextDidChangeNotification
-																				 object:nil];
-							   }];
-	okAction.enabled = YES;
-	[alertController addAction:okAction];
-	
-	_alertController = alertController;
-	
-	[Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
-
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

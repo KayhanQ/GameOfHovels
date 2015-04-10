@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:6c4b015afab535b544042a19415b6aef:3e704419d8bce9e0349c6744e3df9acd:0d97a04b9fe17e5926aa718fd1336339$ -->
+<TextureAtlas imagePath="infantry.png">
+    <SubTexture name="been hit s0000" x="2" y="589" width="48" height="63" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0001" x="55" y="448" width="50" height="67" frameX="-43" frameY="-37" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0002" x="59" y="302" width="54" height="68" frameX="-38" frameY="-34" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0003" x="2" y="79" width="65" height="71" frameX="-30" frameY="-31" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0004" x="2" y="2" width="76" height="75" frameX="-22" frameY="-28" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0005" x="2" y="79" width="65" height="71" frameX="-30" frameY="-31" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0006" x="59" y="302" width="54" height="68" frameX="-38" frameY="-34" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0007" x="55" y="448" width="50" height="67" frameX="-43" frameY="-37" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="been hit s0008" x="2" y="589" width="48" height="63" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0000" x="2" y="654" width="48" height="63" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0001" x="53" y="517" width="49" height="62" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0002" x="2" y="525" width="49" height="62" frameX="-47" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0003" x="52" y="648" width="48" height="63" frameX="-48" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0004" x="2" y="525" width="49" height="62" frameX="-47" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0005" x="53" y="517" width="49" height="62" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0006" x="2" y="654" width="48" height="63" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0007" x="53" y="581" width="48" height="65" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0008" x="80" y="2" width="46" height="67" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0009" x="80" y="71" width="45" height="68" frameX="-47" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0010" x="80" y="2" width="46" height="67" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0011" x="53" y="581" width="48" height="65" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="looking s0012" x="2" y="654" width="48" height="63" frameX="-46" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0000" x="63" y="218" width="58" height="82" frameX="-40" frameY="-28" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0001" x="2" y="310" width="53" height="76" frameX="-42" frameY="-33" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0002" x="2" y="455" width="49" height="68" frameX="-45" frameY="-40" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0003" x="69" y="141" width="55" height="75" frameX="-43" frameY="-34" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0004" x="2" y="152" width="59" height="80" frameX="-41" frameY="-30" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0005" x="2" y="234" width="55" height="74" frameX="-43" frameY="-35" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0006" x="2" y="388" width="51" height="65" frameX="-44" frameY="-43" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="running s0007" x="57" y="372" width="53" height="74" frameX="-42" frameY="-35" frameWidth="128" frameHeight="128"/>
+</TextureAtlas>

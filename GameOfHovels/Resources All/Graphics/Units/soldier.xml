@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:5806a29b688278c5c844f16b4d9ec8cc:81d763fe403c1d1099d909ce5a0fd689:19c868f31204b7e70503822893e4f9d6$ -->
+<TextureAtlas imagePath="soldier.png">
+    <SubTexture name="attack s0000" x="52" y="724" width="41" height="73" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0001" x="52" y="648" width="41" height="74" frameX="-32" frameY="-17" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0002" x="2" y="1798" width="42" height="70" frameX="-32" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0003" x="2" y="930" width="47" height="73" frameX="-27" frameY="-15" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0004" x="2" y="494" width="48" height="75" frameX="-25" frameY="-14" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0005" x="2" y="847" width="47" height="81" frameX="-25" frameY="-8" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0006" x="2" y="1430" width="45" height="82" frameX="-27" frameY="-5" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0007" x="2" y="76" width="54" height="71" frameX="-29" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0008" x="2" y="354" width="50" height="69" frameX="-37" frameY="-20" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0009" x="2" y="1728" width="43" height="68" frameX="-37" frameY="-23" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0010" x="46" y="1847" width="42" height="70" frameX="-36" frameY="-21" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0011" x="49" y="1482" width="44" height="73" frameX="-33" frameY="-19" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="attack s0012" x="52" y="799" width="41" height="73" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0000" x="2" y="1294" width="46" height="66" frameX="-26" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0001" x="2" y="425" width="49" height="67" frameX="-24" frameY="-17" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0002" x="2" y="149" width="51" height="67" frameX="-22" frameY="-17" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0003" x="48" y="1632" width="44" height="66" frameX="-29" frameY="-17" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0004" x="2" y="1660" width="44" height="66" frameX="-29" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0005" x="2" y="1005" width="47" height="69" frameX="-29" frameY="-15" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0006" x="2" y="1514" width="45" height="69" frameX="-28" frameY="-15" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0007" x="2" y="1224" width="46" height="68" frameX="-27" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="paused s0008" x="2" y="1362" width="46" height="66" frameX="-26" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0000" x="2" y="2" width="55" height="72" frameX="-19" frameY="-21" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0001" x="2" y="218" width="51" height="67" frameX="-23" frameY="-22" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0002" x="2" y="711" width="48" height="66" frameX="-26" frameY="-23" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0003" x="2" y="571" width="48" height="68" frameX="-27" frameY="-22" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0004" x="2" y="1076" width="46" height="72" frameX="-29" frameY="-21" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0005" x="2" y="641" width="48" height="68" frameX="-27" frameY="-22" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0006" x="2" y="779" width="48" height="66" frameX="-26" frameY="-23" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="running s0007" x="2" y="287" width="51" height="65" frameX="-23" frameY="-22" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0000" x="2" y="1919" width="41" height="73" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0001" x="52" y="494" width="41" height="75" frameX="-32" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0002" x="51" y="874" width="42" height="73" frameX="-31" frameY="-15" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0003" x="51" y="1024" width="42" height="72" frameX="-31" frameY="-14" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0004" x="48" y="1700" width="43" height="71" frameX="-30" frameY="-13" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0005" x="47" y="1773" width="42" height="72" frameX="-31" frameY="-14" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0006" x="51" y="949" width="42" height="73" frameX="-31" frameY="-15" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0007" x="52" y="571" width="41" height="75" frameX="-32" frameY="-16" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="talking s0008" x="45" y="1919" width="41" height="73" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0000" x="2" y="1150" width="46" height="72" frameX="-28" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0001" x="49" y="1557" width="44" height="73" frameX="-30" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0002" x="50" y="1330" width="43" height="74" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0003" x="50" y="1176" width="43" height="75" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0004" x="50" y="1098" width="43" height="76" frameX="-31" frameY="-17" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0005" x="50" y="1253" width="43" height="75" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0006" x="50" y="1406" width="43" height="74" frameX="-31" frameY="-18" frameWidth="96" frameHeight="96"/>
+    <SubTexture name="walking s0007" x="2" y="1585" width="44" height="73" frameX="-30" frameY="-18" frameWidth="96" frameHeight="96"/>
+</TextureAtlas>

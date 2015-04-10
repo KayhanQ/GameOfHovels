@@ -25,7 +25,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 @synthesize mapData = _mapData;
 @synthesize mePlayer = _mePlayer;
 @synthesize currentPlayer = _currentPlayer;
-
+@synthesize listOfPlayersWhoAcceptedTheGame = _listOfPlayersWhoAcceptedTheGame;
 + (instancetype)sharedMessageLayer
 {
 	static MessageLayer *sharedMessageLayer;
@@ -41,11 +41,9 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	if( (self=[super init])) {
 		_enableGameCenter = YES;
         _areHost = false;
-        
+        _listOfPlayersWhoAcceptedTheGame = [NSMutableArray array];
 		// Set ourselves as player 1 and the game to active
-		self.isPlayer1 = YES;
-		[self setGameState:kGameStateActive];
-		
+		self.isPlayer1 = YES;		
 		self.ourRandom = arc4random();
 		NSLog(@"OurRandom=%d", self.ourRandom);
 		[self setGameState:kGameStateWaitingForMatch];
@@ -130,13 +128,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 			_receivedAllRandomNumbers = YES;
 		}
 	}
-	
-	if (!tie && self.receivedAllRandomNumbers) {
-		if (_gameState == kGameStateWaitingForRandomNumber) {
-			_gameState = kGameStateWaitingForStart;
-		}
-		[self tryStartGame];
-	}
 }
 
 - (void)sendData:(NSData *)data {
@@ -148,7 +139,11 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		[self matchEnded];
 	}
 }
-
+-(void)checkIfAllAccepted {
+	if ([_listOfPlayersWhoAcceptedTheGame count] == [_players count]) {
+		[_gameEngine makeOKActionTouchable];
+	}
+}
 
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
 	Message *message = (Message *) [data bytes];
@@ -160,7 +155,10 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 				[self didReceivePlayerOrderingRandomNumber:data fromPlayer:playerID];
 				break;
 			case kMessageTypeGameBegin:
-				[self setGameState:kGameStateActive];
+				break;
+			case kMessageTypeGameAccepted:
+				[_listOfPlayersWhoAcceptedTheGame addObject:playerID];
+				[self checkIfAllAccepted];
 				break;
             case kMessageTypeGameExited:
             {
@@ -207,6 +205,18 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     }
 }
 
+- (void) sendGameAcceptedMessage{
+	NSLog(@"send Game Accepted message");
+	MessageGameAccepted message;
+	message.message.messageType = kMessageTypeGameAccepted;
+	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameAccepted)];
+	[self sendData:data];
+	if(! [_listOfPlayersWhoAcceptedTheGame containsObject:_mePlayer.playerId]){
+		[_listOfPlayersWhoAcceptedTheGame addObject:_mePlayer.playerId];
+	}
+	[self checkIfAllAccepted];
+}
+
 - (void)sendEndTurnMessage
 {
     NSLog(@"send end turn message");
@@ -216,6 +226,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
     [self sendData:data];
     [self incrementCurrentPlayer];
 }
+
 - (void)sendGameExitedMessage
 {
     NSLog(@"send GAME EXITED MESSAGE");
@@ -235,27 +246,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 
 }
 
-- (void)tryStartGame {
-	NSLog(@"tryStartGame");
-	if (self.gameState == kGameStateWaitingForStart) {
-        if (_areHost) {
-            [self setGameState:kGameStateActive];
-            [self sendGameBegin];
-        }
-	}
-}
-
-- (void)matchStarted {
-	if (self.receivedRandom) {
-		self.gameState = kGameStateWaitingForStart;
-	} else {
-		self.gameState = kGameStateWaitingForRandomNumber;
-	}
-	[self sendRandomNumber];
-	[self tryStartGame];
-}
-
-
 // The player state changed (eg. connected or disconnected)
 - (void)match:(GKMatch *)match player:(NSString *)playerID didChangeState:(GKPlayerConnectionState)state {
 	if (_match != match) return;
@@ -264,7 +254,7 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 		case GKPlayerStateConnected:
 			NSLog(@"Player connected!");
 			if (!_matchHasStarted && match.expectedPlayerCount == 0) {
-				[self matchStarted];
+				[self sendRandomNumber];
 				NSLog(@"Ready to start match!");
 			}
 			break;
@@ -376,15 +366,6 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[self sendData:data];
 }
 
-- (void)sendGameBegin {
-	NSLog(@"sendGameBegin");
-	MessageGameBegin message;
-	message.message.messageType = kMessageTypeGameBegin;
-	NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
-	[self sendData:data];
-	
-}
-
 - (void)sendGameOver:(BOOL)player1Won {
     NSLog(@"Send Game Over");
 	MessageGameOver message;
@@ -429,9 +410,8 @@ NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 	[viewController dismissViewControllerAnimated:YES completion:nil];
 	self.match = match;
 	match.delegate = self;
-	if (!_matchHasStarted && match.expectedPlayerCount == 0) {
-		NSLog(@"Ready to start match!");
-		[self matchStarted];
+	if (!_matchHasStarted) {
+		[self sendRandomNumber];
 	}
 }
 

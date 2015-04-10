@@ -18,7 +18,7 @@
 	ViewController* vc = [[ViewController alloc]init];
     [MessageLayer sharedMessageLayer].areHost = true;
 	[[MessageLayer sharedMessageLayer].nav pushViewController:vc animated:YES];
-	[vc waitingForOtherPlayers];
+	
 }
 
 //load maps

@@ -40,7 +40,6 @@
 	MenuViewController *mvc = [[MenuViewController alloc]init];
 	[[MessageLayer sharedMessageLayer] findMatchWithMinPlayers:2 maxPlayers:2 viewController:mvc];
 
-	
 	[[MessageLayer sharedMessageLayer].nav pushViewController:mvc animated:YES];
 }
 
