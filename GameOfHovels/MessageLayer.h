@@ -27,13 +27,9 @@ typedef enum {
     kMessageTypeGameState,
 	kMessageTypeGameOver,
     kMessageTypeGameExited,
-<<<<<<< HEAD
     kMessageTypeTurnEnded,
-	kMessageTypeGameAccepted
-=======
-    kMessageTypePlayerLost,
-    kMessageTypeTurnEnded
->>>>>>> 43304713fb5b6d908d6449d2d880fb248d2a876a
+	kMessageTypeGameAccepted,
+    kMessageTypePlayerLost
 } MessageType;
 
 typedef struct {
