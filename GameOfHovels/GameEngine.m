@@ -290,6 +290,8 @@
 {
     NSLog(@"Exiting");
     [_channel stop];
+    
+    [MessageLayer sharedMessageLayer].areHost = false;
     [_messageLayer.nav popViewControllerAnimated:false];
 }
 
@@ -326,6 +328,7 @@
     
     NSLog(@"is your turn %hhd",[_messageLayer isMyTurn]);
     if ([_messageLayer isMyTurn]) {
+        [self beginTurnAlert];
         [self addTurnEventListeners];
         _map.touchable = true;
         [_hud beginTurn];
@@ -336,6 +339,24 @@
     else {
         [_hud endTurn];
     }
+}
+
+- (void)beginTurnAlert
+{
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Your Turn"
+                                          message:@"Play your Turn."
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction *yesAction = [UIAlertAction
+                                actionWithTitle:NSLocalizedString(@"Ok", @"Ok action")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction *action)
+                                {
+                                }];
+    [alertController addAction:yesAction];
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
 }
 
 //This method is important. Change stuff in it depending on what you want to do
