@@ -649,8 +649,8 @@
 {
     for (Tile* nT in nTiles) {
         NSMutableArray* region = [self getConnectedTiles:nT];
+        [self killAllVillagers:[self getVillageTile:eVillage]];
         [self convertRegionAfterTileTakenFrom:eVillage region:region];
-        [self killAllVillagers:nT];
         break;
     }
 }
