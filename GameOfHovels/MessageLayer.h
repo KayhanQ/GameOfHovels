@@ -27,6 +27,7 @@ typedef enum {
     kMessageTypeGameState,
 	kMessageTypeGameOver,
     kMessageTypeGameExited,
+    kMessageTypePlayerLost,
     kMessageTypeTurnEnded
 } MessageType;
 
@@ -57,6 +58,11 @@ typedef struct {
 	int tileIndex;
 	int destTileIndex;
 } MessageMove;
+
+typedef struct {
+    Message message;
+    int playerLostID;
+} MessagePlayerLost;
 
 typedef struct {
 	Message message;
@@ -94,6 +100,7 @@ typedef enum {
 - (void)reorderColorsOfPlayers;
 - (void)sendEndTurnMessage;
 - (void)sendGameExitedMessage;
+- (void)sendMessagePlayerLost:(GamePlayer*)player;
 
 @property (nonatomic) GamePlayer* mePlayer;
 @property (nonatomic) GamePlayer* currentPlayer;

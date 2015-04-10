@@ -17,11 +17,12 @@
 @synthesize pColor = _pColor;
 @synthesize playerId = _playerId;
 @synthesize randomNumber = _randomNumber;
+@synthesize hasLost = _hasLost;
 
 - (id)initWithNumber:(int)number
 {
     _pColor = number;
-
+    _hasLost = false;
     return self;
 }
 

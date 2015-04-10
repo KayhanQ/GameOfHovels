@@ -24,5 +24,7 @@
 - (void)beginTurn;
 - (void)playOtherPlayersMove:(enum ActionType)aType tileIndex:(int)tileIndex destTileIndex:(int)destTileIndex;
 - (void)playerExitedGame;
+- (void)displayWinnerAndQuit:(GamePlayer*)winner;
+- (void)displayYouHaveLost;
 
 @end
