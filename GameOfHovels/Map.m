@@ -164,8 +164,8 @@
         Tile* vTile = [connectedTiles objectAtIndex:arc4random() % connectedTiles.count];
         [vTile addVillage:HOVEL];
         vTile.village.player = p;
-        vTile.village.goldPile = 100;
-        vTile.village.woodPile = 100;
+//        vTile.village.goldPile = 7;
+//        vTile.village.woodPile = 0;
         for (Tile* nTile in connectedTiles) nTile.village = vTile.village;
     }
 }

@@ -69,6 +69,8 @@
                 break;
         }
         
+        _goldPile = 7;
+        _woodPile = 0;
         self.touchable = false;
     }
     return self;
