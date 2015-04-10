@@ -89,6 +89,8 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
+    [MessageLayer sharedMessageLayer].areHost = true;
+
 	//Get the cell
 	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 	NSFileManager *fm = [NSFileManager defaultManager];
