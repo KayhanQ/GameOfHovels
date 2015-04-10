@@ -27,8 +27,13 @@ typedef enum {
     kMessageTypeGameState,
 	kMessageTypeGameOver,
     kMessageTypeGameExited,
+<<<<<<< HEAD
     kMessageTypeTurnEnded,
 	kMessageTypeGameAccepted
+=======
+    kMessageTypePlayerLost,
+    kMessageTypeTurnEnded
+>>>>>>> 43304713fb5b6d908d6449d2d880fb248d2a876a
 } MessageType;
 
 typedef struct {
@@ -62,6 +67,11 @@ typedef struct {
 	int tileIndex;
 	int destTileIndex;
 } MessageMove;
+
+typedef struct {
+    Message message;
+    int playerLostID;
+} MessagePlayerLost;
 
 typedef struct {
 	Message message;
@@ -98,6 +108,7 @@ typedef enum {
 - (void)sendEndTurnMessage;
 - (void)sendGameExitedMessage;
 - (void)sendGameAcceptedMessage;
+- (void)sendMessagePlayerLost:(GamePlayer*)player;
 
 @property (nonatomic) NSMutableArray* listOfPlayersWhoAcceptedTheGame;
 @property (nonatomic) GamePlayer* mePlayer;

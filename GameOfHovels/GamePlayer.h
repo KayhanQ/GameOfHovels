@@ -13,6 +13,7 @@
 }
 
 @property (nonatomic) enum PlayerColor pColor;
+@property (nonatomic) BOOL hasLost;
 @property NSString* playerId;
 @property long randomNumber;
 

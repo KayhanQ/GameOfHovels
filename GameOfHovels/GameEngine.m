@@ -93,9 +93,6 @@
     //Create the Message Layer
     _messageLayer = [MessageLayer sharedMessageLayer];
 	
-    GamePlayer * mP = _messageLayer.mePlayer;
-    GamePlayer * cP =_messageLayer.currentPlayer;
-    
     _contents = [SPSprite sprite];
     [self addChild:_contents];
     
@@ -285,8 +282,33 @@
     NSLog(@"Exiting");
     [_channel stop];
     [_messageLayer.nav popViewControllerAnimated:false];
+}
+
+- (void)displayWinnerAndQuit:(GamePlayer*)winner
+{
+    NSString* endMessage;
+    if (winner == _messageLayer.mePlayer) {
+        endMessage = [NSString stringWithFormat:@"You win!"];
+    }
+    else {
+        endMessage = [NSString stringWithFormat:@"You lose."];
+    }
     
-    //[Sparrow.currentController dismissViewControllerAnimated:true completion:nil];
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Game Ended"
+                                          message:endMessage
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction *yesAction = [UIAlertAction
+                                actionWithTitle:NSLocalizedString(@"Ok", @"Ok action")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction *action)
+                                {
+                                    [self completeExitFromGame];
+                                }];
+    [alertController addAction:yesAction];
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)beginTurn
@@ -298,6 +320,9 @@
         [self addTurnEventListeners];
         _map.touchable = true;
         [_hud beginTurn];
+        if ([_messageLayer.mePlayer hasLost]) {
+            [self endTurnCompletion];
+        }
     }
     else {
         [_hud endTurn];
@@ -307,15 +332,39 @@
 //This method is important. Change stuff in it depending on what you want to do
 - (void)endTurn:(GHEvent*)event
 {
+    [self endTurnCompletion];
+}
+
+- (void)endTurnCompletion
+{
     _map.touchable = false;
     [self removeActionMenu];
     [self deselectTile:_currentPlayerAction.selectedTile];
     [_map endTurnUpdates];
     [_hud endTurn];
     [self removeTurnEventListeners];
-
+    
     [_messageLayer sendEndTurnMessage];
 }
+
+- (void)displayYouHaveLost
+{
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"You Lose"
+                                          message:@"You have lost all your villages."
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction *yesAction = [UIAlertAction
+                                actionWithTitle:NSLocalizedString(@"Ok", @"Ok action")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction *action)
+                                {
+                                }];
+    [alertController addAction:yesAction];
+    [Sparrow.currentController presentViewController:alertController animated:YES completion:nil];
+}
+
 
 - (void)translateScreenToTile:(TranslateWorldEvent*)event
 {

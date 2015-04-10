@@ -572,6 +572,7 @@
     
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
     Village* enemyPlayersVillage = destTile.village;
+    GamePlayer* enemyPlayer = enemyPlayersVillage.player;
     
     //if we are taking over a village we have to transfer the supplies and remove it
     if (takingOverEnemyVillage) {
@@ -619,6 +620,14 @@
             [self makeRegionNeutral:region];
         }
     }
+    
+    if ([_messageLayer isMyTurn]) {
+        //check if the player has any villages left, if not end the game for him
+        if ([self getTilesWithVillagesForPlayer:enemyPlayer].count == 0) {
+            [_messageLayer sendMessagePlayerLost:enemyPlayer];
+        }
+    }
+
 }
 
 - (void)takeOverEnemyVillageTileWithNeighbours:(NSMutableArray*)nTiles enemyVillage:(Village*)eVillage
@@ -959,6 +968,17 @@
     NSMutableArray* tiles = [NSMutableArray array];
     for (Tile* t in _tilesSprite) {
         if ([t isVillage] && t.village.player == _messageLayer.mePlayer) {
+            [tiles addObject:t];
+        }
+    }
+    return tiles;
+}
+
+- (NSMutableArray*)getTilesWithVillagesForPlayer:(GamePlayer*)p
+{
+    NSMutableArray* tiles = [NSMutableArray array];
+    for (Tile* t in _tilesSprite) {
+        if ([t isVillage] && t.village.player == p) {
             [tiles addObject:t];
         }
     }
