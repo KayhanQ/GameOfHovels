@@ -81,7 +81,7 @@
     [Media initSound];      // loads all your sounds    -> see Media.h/Media.m
     [self addEventListener:@selector(onResize:) atObject:self forType:SP_EVENT_TYPE_RESIZE];
     
-    BOOL hasMusic = false;
+    BOOL hasMusic = true;
     if (hasMusic) {
         SPSound* sound = [[SPSound alloc] initWithContentsOfFile:@"sound3.caf"];
         _channel = [sound createChannel];

@@ -202,6 +202,8 @@
     }
     unitTile.village.woodPile--;
 
+    unitTile.unit.movable = false;
+    
     NSMutableArray* nTiles = [destTile getNeighboursOfSameRegion];
     Village* enemyPlayersVillage = destTile.village;
     BOOL areAttackingVillage = [destTile isVillage];
@@ -240,11 +242,17 @@
     //get the tiles of the old village and set the village to the new one after upgrading
     NSMutableArray* tiles = [self getTilesforVillage:tile.village];
     [tile upgradeVillageTo: vType];
-        
+    
+    for (Tile* t in tiles) {
+        if ([t hasUnit]) t.unit.movable = false;
+    }
+    
     for (Tile* t in tiles) t.village = tile.village;
     
+    tile.village.woodPile -= tile.village.cost;
+
+
     if ([self isMyTurn]) {
-        tile.village.woodPile -= tile.village.cost;
         [self updateHud:tile];
         [_messageLayer sendMoveWithType:UPGRADEVILLAGE tile:tile destTile:nil];
     }
@@ -431,6 +439,10 @@
         return;
     }
 
+    if (unit.uType == CANNON) {
+        unit.movable = false;
+    }
+    
     //We now have the assurance that simply making the move will not violate any rules.
     BOOL mergingUnits = false;
 
@@ -451,17 +463,22 @@
             }
             case TOTOMBSTONE:
             {
+                unit.movable = false;
                 [destTile removeStructure];
                 break;
             }
             case TONEUTRALTILE:
             {
+                if (unit.uType == PEASANT) {
+                    unit.movable = false;
+                }
                 [self takeOverTile:unitTile tile:destTile];
                 break;
             }
             case TOENEMYTILE:
             {
                 [self takeOverTile:unitTile tile:destTile];
+                unit.movable = false;
                 break;
             }
             case TOOWNUNIT:
@@ -487,6 +504,7 @@
     if (mergingUnits) {
         [destTile.unit transferPropertiesFrom:unitTile.unit];
         [unitTile removeUnit];
+        destTile.unit.movable = false;
     }
     else {
         //the last thing we do is actually move the units on the tile
@@ -632,6 +650,7 @@
     for (Tile* nT in nTiles) {
         NSMutableArray* region = [self getConnectedTiles:nT];
         [self convertRegionAfterTileTakenFrom:eVillage region:region];
+        [self killAllVillagers:nT];
         break;
     }
 }
@@ -856,6 +875,9 @@
         for (Tile* t in [self getTilesforVillage:vTile.village]) {
             if([t hasUnit]) {
                 vTile.village.goldPile -= t.unit.upkeepCost;
+                if (t.unit.workState == NOWORKSTATE) {
+                    t.unit.movable = true;
+                }
             }
         }
         vTile.village.goldPile -= vTile.village.upkeepCost;
